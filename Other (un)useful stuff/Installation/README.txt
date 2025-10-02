@@ -43,3 +43,6 @@ Check install:
 ---------------------------------
 Done! You can now compile LaTeX files
 directly in VS Code into PDFs.
+
+P.S. 
+Also, in this folder, you’ll find my latex.json with my snippets. I’ll be updating it over time.
