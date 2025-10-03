@@ -55,3 +55,23 @@ This project aims to capture, if it exists, the underlying patterns of the funni
 Steps: Feature extraction (analyze captions for textual features such as length, word choice, sentence structure, use of quantifiers, and positive/negative phrasing, etc.); Create a dataset with these features as columns for each caption; Apply multivariate techniques (e.g., PCA) to identify which features most strongly correlate with perceived funniness; Investigate the key variables identified to understand their influence on fun perception; Draw conclusions.
 If time allows: explore patterns in votes versus fun ratings and investigate why they behave like this (fun: exponential, neutral: linear, not funny: log) and whether this behavior observed in some images is the norm or a special case.
 
+
+\section*{Amelie's Ideas}
+1. Tops and Flops: Mapping humor styles
+Here the goal is to build a typology of humor in the New Yorker Caption Contest. 
+We would try to describe the diversity of humor styles and their prevalence. Do certain categories such as wordplay, dark humor, irony, absurdism... dominate? Can we cluster captions into clear stylistic groups, and how stable are these clusters across time? 
+Once we have that, we could see if some humor styles tend to appear only occasionally, while others are overrepresented. A further step would be to analyze wether certain images encourage specific types of humor, for instance wether office settings atttract political jokes or surreal drawings trigger absurd responses. 
+I think that combining clustering methods, linguistic feature extraction and doing the analysis with cartoon types will produce a kind of "map of humor".
+
+2. Can we laugh at everything? A cultural lens of humor
+This topic would approach the dataset as a reflection of cultural and social dynamics. The central question is not just which captions win, but what they reveal about the humor in the american society. Do taboo or dark jokes ever make it far, or are they always rejected? Do captions mirror political or cultural event such as the elections, economic crisis, wars... ?
+An additional angle is sentiment: have captions grown more cynical, angry or ironic over time, or do they tend to remain playful and light? 
+Another intersting point would be universality. Styles like absurd humor may travel weel, while dense puns or niche cultural references might struggle because they are not accessible to all. 
+The project would compare how the crowd and the editors handle sensitive humor. Through sentiment analysis, topic modeling and contextualisation with real-world event, this project would highlight humor as a cultural barometer rather than just a contest.
+
+3. How to win the caption contest: A predictive recipe
+Here, we want to test wether it is possible to predict contest winners and finalists:
+Can we quantify humor well enough to model editorial decisions ? Features such as caption length, readability, syntax and the presence of a punchline could be extracted to train a classifier. 
+We could also measure staying close to the cartoon incresases chances of success. Another angle is dynamics: do early votes snowball into popularity, and does voter fatigue bias later judgments? 
+Finally some participants win multiple times, do they have a distinctive style that we can detect ? By building and evaluating predictive models while also interpreting the key features, this project would produce a playful yet data-driven “guide to winning the New Yorker Caption Contest.”
+
