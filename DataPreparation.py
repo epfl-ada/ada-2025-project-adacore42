@@ -1,23 +1,31 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[43]:
+# In[106]:
 
 
 def warning1(text):
     print("WARNING!!! ", text)
 
+ACTIVATE_PRINTS = False
+
 
 # # Initialisation –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-# In[44]:
+# In[ ]:
 
 
 import pandas as pd
 import numpy as np
 import re
+import os
+from pathlib import Path
 
-pathToData = "newyorker_caption_contest_virgin"
+# Automatically detect whether running in a notebook or as a script
+base_dir = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+
+# Build the correct path to your data folder (relative to this notebook/script)
+pathToData = (base_dir / "newyorker_caption_contest_virgin").resolve()
 
 
 # Further we will use fillowing naming: 
@@ -52,7 +60,7 @@ pathToData = "newyorker_caption_contest_virgin"
 
 # # CSV –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-# In[45]:
+# In[ ]:
 
 
 dataA_exceptions = [525, 540]
@@ -103,7 +111,7 @@ dataA1[1].head(5)
 # 
 # 
 
-# In[46]:
+# In[ ]:
 
 
 dataA2 = []
@@ -116,7 +124,7 @@ for i, data in enumerate(dataA1):
             data = data.set_index('rank')
             dataA2.append(data)
         else: 
-            print("WHF???")
+            if ACTIVATE_PRINTS: print("WHF???")
 
     else:
         data = data.sort_values('mean', ascending=False)
@@ -135,7 +143,7 @@ dataA2[300]
 
 # Test if there are any NaN
 
-# In[47]:
+# In[ ]:
 
 
 def dataA_verifcation(dataA):
@@ -144,9 +152,10 @@ def dataA_verifcation(dataA):
     for data in dataA: 
         isAnyNull = data.isnull().values.any()
 
-    if isAnyNull == True: warning1("There are still some Nulls")
+    if isAnyNull == True: 
+        if ACTIVATE_PRINTS: warning1("There are still some Nulls")
 
-
+    
 
 
 # Since data not contain some values, we are searching the NaN and replacing. 
@@ -162,7 +171,7 @@ def dataA_verifcation(dataA):
 # ```
 # - For dataframe i fill ALL na values with 'text'
 
-# In[48]:
+# In[ ]:
 
 
 dataA3 = dataA2.copy()
@@ -180,7 +189,7 @@ dataA_verifcation(dataA3)
 
 # # JSON ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-# In[49]:
+# In[ ]:
 
 
 dataC_lastGoodID = 251
@@ -193,7 +202,7 @@ dataC = dataC1.copy()
 dataC1.head()
 
 
-# In[50]:
+# In[ ]:
 
 
 dataC2 = dataC1.copy()
@@ -204,9 +213,10 @@ dataC2 = pd.concat([dataC2, dataC2_metadata], axis=1)
 
 dataC = dataC2.copy()
 
-print(dataC2.iloc[100])
-print("–––––––––––––––––––––––––––––––––")
-print(dataC2.iloc[300])
+if ACTIVATE_PRINTS: 
+    print(dataC2.iloc[100])
+    print("–––––––––––––––––––––––––––––––––")
+    print(dataC2.iloc[300])
 
 
 # ## Other
@@ -222,7 +232,7 @@ print(dataC2.iloc[300])
 # 
 # but use ```python re.search()``` for single cell (string) values.
 
-# In[51]:
+# In[ ]:
 
 
 dataC3 = dataC2.copy()
@@ -232,12 +242,12 @@ def dataC_verifcation(dataC, missingRows):
     dataC_lenght = dataC.shape[0]
     dataA_lenght = len(dataA0)
     if dataC_lenght != dataA_lenght: 
-        print(f"WARNING: Different size: JSON ({dataC_lenght}) vs CSV ({dataA_lenght})")
+        if ACTIVATE_PRINTS: print(f"WARNING: Different size: JSON ({dataC_lenght}) vs CSV ({dataA_lenght})")
 
     for i, row in dataC.iterrows():
         i += len(missingRows)
         if row['contest_id'] != i + dataA_startID:
-            print("WARNING: Missing row at: ", i+dataA_startID)
+            if ACTIVATE_PRINTS: print("WARNING: Missing row at: ", i+dataA_startID)
             missingRows.append(i + dataA_startID)
             continue
 
@@ -246,10 +256,10 @@ def dataC_verifcation(dataC, missingRows):
         match_data  = int(re.search(r"\d+", row["data"]).group())
 
         if (match_contest_id == match_data == match_image) == False: 
-            print("WARNING: Unconsistent data at: ", i+dataA_startID)
+            if ACTIVATE_PRINTS: print("WARNING: Unconsistent data at: ", i+dataA_startID)
 
         if row['contest_id'] - dataA_startID != i: 
-            print("WARNING: ID do not math contest_id")
+            if ACTIVATE_PRINTS: print("WARNING: ID do not math contest_id")
 
 dataC = dataC3.copy()
 dataC_verifcation(dataC3, dataC_missingRows)
@@ -266,7 +276,7 @@ dataC_verifcation(dataC3, dataC_missingRows)
 # 
 # So here we remove contest_id columns contest_id, image and data.
 
-# In[52]:
+# In[ ]:
 
 
 dataC4 = dataC3.copy()
@@ -279,11 +289,120 @@ dataC = dataC4.copy()
 dataC4.head(5)
 
 
+# # Temporal data –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+# The following webpage has dates of some of the contests. I will add it to the dataC table, as a new column:
+# "https://nextml.github.io/caption-contest-data/"
+# 
+# I fill follow the next steps, all in the same block of code so it can be re-run without issue. It looks a bit dense but it really doesn't do much.
+# 1. I read the webpage, and get a "contest_id" for each image: Initially, the name of each contest is only given as "### Dashboard", and i remove the "Dashboard" from the name. To fit with the previous format of dataC, I reset the index. We need to watch out, 540 exists in the new table. I will need to remove it.
+# 
+# 2. Additionally, the date here is the day the finalist was announced, not the date the cartoon came out... something to keep in mind.
+# 
+# 3. I will clean the format of the dates. Sometimes there is an "estimated" keyword, sometimes there is two dates, and sometimes, the year is missing. When there are two dates, I only keep the last date. When a year is missing from a date, I look at the previous entry and take the year from there.
+# 
+# 4. We can convert the 'date' column of the dates_table dataframe to a correct date format by using pd.to_datetime.
+# 
+# 5. The dates are prepared now and can be merged with our dataset. 
+
+# In[ ]:
+
+
+url = "https://nextml.github.io/caption-contest-data/"
+tables = pd.read_html(url)
+dates_table = tables[0].copy()
+
+# Get contest_id
+dates_table['contest_id'] = dates_table['Contest Dashboard'].str.extract(r'(\d+)\s*Dashboard').astype(int)
+
+# Keeping only relevant columns
+dates_table = dates_table.rename(columns={"Finalists Announced (date of issue)": "date"})
+dates_table = dates_table[['contest_id', 'date']]
+
+#Removing row with contest_id 540
+dates_table = dates_table[dates_table['contest_id'] != 540]
+dates_table = dates_table.reset_index(drop=True)
+
+# Remove "Estimated"
+dates_table['date'] = dates_table['date'].str.replace(r'\s*\(estimated\)\s*$', '', regex=True, flags=re.IGNORECASE)
+
+# Month-day & Month-day -> keep second "Month day[, Year]"
+dates_table['date'] = dates_table['date'].str.replace(
+    r'^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\s*&\s*'
+    r'(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(,\s*\d{4})?$',
+    r'\2 \3\4',
+    regex=True,
+    flags=re.IGNORECASE,
+)
+
+# Month-day & day[, Year]  -> keep "Month day2[, Year]"
+dates_table['date'] = dates_table['date'].str.replace(
+    r'^(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\s*&\s*(\d{1,2})(,\s*\d{4})?$',
+    r'\1 \2\3',
+    regex=True,
+    flags=re.IGNORECASE,
+)
+
+# day & day Month[, Year]  -> keep "Month day2[, Year]"
+dates_table['date'] = dates_table['date'].str.replace(
+    r'^(\d{1,2})\s*&\s*(\d{1,2})\s+'
+    r'(January|February|March|April|May|June|July|August|September|October|November|December)(,\s*\d{4})?$',
+    r'\3 \2\4',
+    regex=True,
+    flags=re.IGNORECASE,
+)
+
+# Ensure sorted by contest_id
+dates_table = dates_table.sort_values('contest_id').reset_index(drop=True)
+
+# Detect whether a row already has a 4-digit year
+has_year = dates_table['date'].str.contains(r'\b(?:19|20)\d{2}\b', na=False)
+
+# The previous row's year (immediate previous entry only)
+prev_year = dates_table['date'].str.extract(r'\b((?:19|20)\d{2})\b', expand=False).shift(1)
+
+# Rows needing a year AND where the previous row had a year
+mask = (~has_year) & prev_year.notna()
+
+# Append ", YYYY" from the previous entry's year
+dates_table.loc[mask, 'date'] = (
+    dates_table.loc[mask, 'date']
+      .str.replace(r',\s*$', '', regex=True)   # remove any trailing comma
+      + ', ' + prev_year[mask]
+)
+
+# Converting to datetime
+dt = pd.to_datetime(dates_table['date'].str.strip().str.replace(r'\s+', ' ', regex=True),
+                    errors='coerce')
+
+# In case some dates are still NaT (not a time), try the explicit 'Month D, YYYY' pattern
+mask = dt.isna()
+if mask.any():
+    dt.loc[mask] = pd.to_datetime(dates_table.loc[mask, 'date'],
+                                  format='%B %d, %Y', errors='coerce')
+
+# Reset the date column to the parsed dates
+dates_table['date'] = dt
+
+# Drop the contest_id
+dates_table = dates_table.drop(columns=['contest_id'])
+
+dataC5 = dataC4.copy()
+dataC5 = pd.merge(dataC5, dates_table, left_index=True, right_index=True)
+dataC5.head()
+
+
 # # Conclusion –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 # So here you can test and see the final form of CSVs and JSONs:
 
-# In[53]:
+# In[ ]:
+
+
+dataC = dataC5.copy()
+
+
+# In[ ]:
 
 
 def print_initialData():
@@ -314,23 +433,4 @@ def print_initialData():
     print("dataC.iloc[dataC_lastGoodId]––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––")
     print("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––")
     display(dataC.iloc[dataC_lastGoodID+1])
-
-
-# In[54]:
-
-
-# ======================================================
-# Export global variables 
-# ======================================================
-
-__all__ = [
-    "dataA",
-    "dataC",
-    "dataA_startID",
-    "dataA_endID",
-    "dataC_lastGoodID",
-    "print_initialData"
-]
-
-print("DataPreparation variables exported successfully.")
 
