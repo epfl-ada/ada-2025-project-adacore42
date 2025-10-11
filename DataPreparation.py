@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[106]:
+# In[108]:
 
 
 def warning1(text):
@@ -12,7 +12,7 @@ ACTIVATE_PRINTS = False
 
 # # Initialisation –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-# In[ ]:
+# In[109]:
 
 
 import pandas as pd
@@ -60,7 +60,7 @@ pathToData = (base_dir / "newyorker_caption_contest_virgin").resolve()
 
 # # CSV –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-# In[ ]:
+# In[110]:
 
 
 dataA_exceptions = [525, 540]
@@ -111,7 +111,7 @@ dataA1[1].head(5)
 # 
 # 
 
-# In[ ]:
+# In[111]:
 
 
 dataA2 = []
@@ -143,7 +143,7 @@ dataA2[300]
 
 # Test if there are any NaN
 
-# In[ ]:
+# In[112]:
 
 
 def dataA_verifcation(dataA):
@@ -171,7 +171,7 @@ def dataA_verifcation(dataA):
 # ```
 # - For dataframe i fill ALL na values with 'text'
 
-# In[ ]:
+# In[113]:
 
 
 dataA3 = dataA2.copy()
@@ -189,7 +189,7 @@ dataA_verifcation(dataA3)
 
 # # JSON ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-# In[ ]:
+# In[114]:
 
 
 dataC_lastGoodID = 251
@@ -202,7 +202,7 @@ dataC = dataC1.copy()
 dataC1.head()
 
 
-# In[ ]:
+# In[115]:
 
 
 dataC2 = dataC1.copy()
@@ -232,7 +232,7 @@ if ACTIVATE_PRINTS:
 # 
 # but use ```python re.search()``` for single cell (string) values.
 
-# In[ ]:
+# In[116]:
 
 
 dataC3 = dataC2.copy()
@@ -276,7 +276,7 @@ dataC_verifcation(dataC3, dataC_missingRows)
 # 
 # So here we remove contest_id columns contest_id, image and data.
 
-# In[ ]:
+# In[117]:
 
 
 dataC4 = dataC3.copy()
@@ -305,7 +305,7 @@ dataC4.head(5)
 # 
 # 5. The dates are prepared now and can be merged with our dataset. 
 
-# In[ ]:
+# In[118]:
 
 
 url = "https://nextml.github.io/caption-contest-data/"
@@ -396,13 +396,13 @@ dataC5.head()
 
 # So here you can test and see the final form of CSVs and JSONs:
 
-# In[ ]:
+# In[119]:
 
 
 dataC = dataC5.copy()
 
 
-# In[ ]:
+# In[120]:
 
 
 def print_initialData():
@@ -434,3 +434,17 @@ def print_initialData():
     print("––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––")
     display(dataC.iloc[dataC_lastGoodID+1])
 
+# ======================================================
+# Export global variables 
+# ======================================================
+
+__all__ = [
+    "dataA",
+    "dataC",
+    "dataA_startID",
+    "dataA_endID",
+    "dataC_lastGoodID",
+    "print_initialData"
+]
+
+print("DataPreparation variables exported successfully.")
