@@ -1,10 +1,26 @@
 import pickle
 import os
+import sys
+from pathlib import Path
 import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+root = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+while root.parent != root:
+    if ((root / ".git").exists() and 
+        (root / "README.txt").exists() and 
+        (root / "results.ipynb").exists()):
+        break
+    root = root.parent
+if str(root) not in sys.path:
+    sys.path.insert(0, str(root))
+
+# ---------------------------------------------------------------------------------------------
+# Import reusable project paths
+# ---------------------------------------------------------------------------------------------
+from src.utils.paths import STORED_DATAPREP_PKL_PATH, STORED_PLOTSGUI_PKL_PATH
 
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -16,9 +32,12 @@ plotsGUI = []
 
 class PlotGUI(ABC):
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))     # current folder (_gui)
-    filePath = os.path.join(base_dir, "plots_gui.pkl")         # always inside _gui/
-    data_path = os.path.join(base_dir, "../_DataPreparation/dataPrepared.pkl")
+
+
+    filePath = root / STORED_PLOTSGUI_PKL_PATH
+    data_path = root /  STORED_DATAPREP_PKL_PATH
+
+
 
     # Load the default dataset ONCE, at class level
     with open(os.path.normpath(data_path), "rb") as f:
