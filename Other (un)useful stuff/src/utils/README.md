@@ -1,1 +1,0 @@
-# Utilities used in the project

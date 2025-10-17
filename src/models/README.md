@@ -16,3 +16,12 @@ preds_train = method_obj.fit(xtrain, ytrain)
 
 3. Predict on unseen data\
 preds = method_obj.predict(xtest)
+
+
+
+
+# Contained elements
+- DataPreparation.ipynb: clean the initial data (ex: newyorker caption database), then save it in src/data/dataPrepared.pkl
+- gui.py: tiny window to select and display all stored plots in plots_gui.pkl
+- plots_gui.py: class defintion for plot-obects(store additional info about the plot + useful methods such as show the plot or save/load plots)
+
