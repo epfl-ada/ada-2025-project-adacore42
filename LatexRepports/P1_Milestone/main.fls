@@ -1,8 +1,8 @@
-PWD /Users/43rt1k/Documents/EPFL/_MASTER/ADA/ADAcore42/LatexRepports/P1_Milestone
+PWD /Users/todorovkatia/Documents/EPFL/MA3/ADA/Projet/ada-2025-project-adacore42/LatexRepports/P1_Milestone
 INPUT /usr/local/texlive/2025/texmf.cnf
 INPUT /usr/local/texlive/2025/texmf-dist/web2c/texmf.cnf
 INPUT /usr/local/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /Users/43rt1k/Documents/EPFL/_MASTER/ADA/ADAcore42/LatexRepports/P1_Milestone/main.tex
+INPUT /Users/todorovkatia/Documents/EPFL/MA3/ADA/Projet/ada-2025-project-adacore42/LatexRepports/P1_Milestone/main.tex
 OUTPUT main.log
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/base/report.cls
 INPUT /usr/local/texlive/2025/texmf-dist/tex/latex/base/report.cls
