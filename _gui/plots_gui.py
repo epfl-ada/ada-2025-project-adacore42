@@ -5,17 +5,7 @@ from abc import ABC, abstractmethod
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# Get prepared data
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-
-base_dir = os.path.dirname(os.path.abspath(__file__))  # directory of this script
-data_path = os.path.join(base_dir, "../_DataPreparation/dataPrepared.pkl")
-
-
-with open(os.path.normpath(data_path), "rb") as f:
-    data = pickle.load(f)
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Default plot class adapted for GUI
@@ -26,7 +16,14 @@ plotsGUI = []
 
 class PlotGUI(ABC):
 
-    
+    base_dir = os.path.dirname(os.path.abspath(__file__))     # current folder (_gui)
+    filePath = os.path.join(base_dir, "plots_gui.pkl")         # always inside _gui/
+    data_path = os.path.join(base_dir, "../_DataPreparation/dataPrepared.pkl")
+
+    # Load the default dataset ONCE, at class level
+    with open(os.path.normpath(data_path), "rb") as f:
+        default_data = pickle.load(f)
+
     # ---------------------------------------------------------------------------------------------
     
 
@@ -36,11 +33,12 @@ class PlotGUI(ABC):
 
     # ---------------------------------------------------------------------------------------------
 
-    def __init__(self, title: str = "No Title", description: str = "No Description", xlabel: str = "X-axis", ylabel: str = "Y-axis"):
+    def __init__(self, title: str = "No Title", description: str = "No Description", xlabel: str = "X-axis", ylabel: str = "Y-axis", data=None):
         self.title = title
         self.description = description
         self.xlabel = xlabel
         self.ylabel = ylabel
+        self.data = data if data is not None else PlotGUI.default_data
 
     # ---------------------------------------------------------------------------------------------
 
@@ -136,19 +134,18 @@ class PlotGUI(ABC):
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 class HistPlotGUI(PlotGUI):
+ 
     def define_plot(self, ax: plt.Axes) -> plt.Axes:
-        ax.hist(data['dataA'][0]["mean"], bins=30, color='skyblue', edgecolor='black')
+        ax.hist(self.data['dataA'][0]["mean"], bins=30, color='skyblue', edgecolor='black')
         return ax
-
 
 class ScatterPlotGUI(PlotGUI):
-    dataA = data['dataA']
     def define_plot(self, ax: plt.Axes) -> plt.Axes:
-        x = [len(df) for df in self.dataA]              # total captions per contest
-        y = [df["votes"].sum() for df in self.dataA]    # total votes per contest
+        dataA = self.data['dataA']          # list of DataFrames
+        x = [len(df) for df in dataA]       # number of captions per contest
+        y = [df["votes"].sum() for df in dataA]  # total votes per contest
         ax.scatter(x, y, alpha=0.7, color='skyblue', edgecolor='black')
         return ax
-
 
 
 

@@ -12,6 +12,11 @@ signal.signal(signal.SIGINT, signal.SIG_DFL)
 from plots_gui import PlotGUI
 
 
+WINDOW_SIZE = (1000, 600)
+
+
+
+
 
 # ===============================================================
 #  PANEL CLASSES
@@ -67,7 +72,10 @@ class DisplayPanel(QWidget):
     def show_plot(self, plotData: PlotGUI):
         """Display a matplotlib FigureCanvas."""
         self.clear()
-        self.layout.addWidget(QLabel(plotData.description), stretch=1)
+        desctription = QLabel(plotData.description)
+        desctription.setWordWrap(True)                      # allow multiline wrapping
+
+        self.layout.addWidget(desctription, stretch=1)
         self.layout.addWidget(plotData.get_canvas(), stretch=10)
 
 
@@ -79,7 +87,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Data & Plot Viewer")
-        self.resize(1000, 800)
+        self.resize(WINDOW_SIZE[0], WINDOW_SIZE[1])
 
         # Keep reference to module so we can reload it
         self.plots = PlotGUI.load_plots()
