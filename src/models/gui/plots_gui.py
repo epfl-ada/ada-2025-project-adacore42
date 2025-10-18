@@ -46,12 +46,6 @@ class PlotGUI(ABC):
     data_path = root / STORED_DATAPREP_PKL_PATH              # Path – location of pre-processed data (.pkl)
 
 
-
-    # Load the default dataset ONCE, at class level
-    # Default dataset – shared across all instances of PlotGUI and its subclasses
-    with open(os.path.normpath(data_path), "rb") as f:
-        default_data = pickle.load(f)
-
     # ---------------------------------------------------------------------------------------------
     # Legacy directory reference – maintained for backward compatibility
     # Always points to the _gui/ folder (current directory)
@@ -63,12 +57,18 @@ class PlotGUI(ABC):
     # ---------------------------------------------------------------------------------------------
     # Class constructor – initializes title, labels, and data reference
     # ---------------------------------------------------------------------------------------------
-    def __init__(self, title: str = "No Title", description: str = "No Description", xlabel: str = "X-axis", ylabel: str = "Y-axis", data=None):
+    def __init__(self, title: str = "No Title", description: str = "No Description", xlabel: str = "X-axis", ylabel: str = "Y-axis", data=None, plotParams = None):
         self.title = title                     # Title – plot title text
         self.description = description         # Description – optional long text
         self.xlabel = xlabel                   # X-axis label
         self.ylabel = ylabel                   # Y-axis label
-        self.data = data if data is not None else PlotGUI.default_data   # Data – default if not provided
+        self.plotParams = plotParams         # Plot parameters – dictionary for custom settings
+
+    def set_data_default(self):
+        # Load the default dataset ONCE, at class level
+        # Default dataset – shared across all instances of PlotGUI and its subclasses
+        with open(os.path.normpath(PlotGUI.data_path), "rb") as f:
+            return pickle.load(f)
 
     # ---------------------------------------------------------------------------------------------
     # Base plot definition placeholder – overridden by subclasses
@@ -115,7 +115,6 @@ class PlotGUI(ABC):
         """Display the plot in a matplotlib window."""
         fig = self.get_fig()
         fig.show()
-
 
     # ---------------------------------------------------------------------------------------------
     # Static method – loads all saved plots from the pickle file (plots_gui.pkl)
@@ -195,13 +194,48 @@ class HistPlotGUI(PlotGUI):
 # Example subclass – Scatter plot
 # Each subclass defines its own plotting logic while reusing PlotGUI infrastructure
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
+# Generic scatter plot class for GUI
 class ScatterPlotGUI(PlotGUI):
+    def __init__(
+        self,
+        title: str = "Scatter Plot",
+        description: str = "Default scatter plot description.",
+        xlabel: str = "X-axis",
+        ylabel: str = "Y-axis",
+        dataX=None,
+        dataY=None,
+        s=20,                    # Marker area in points² (controls size)
+        c="skyblue",             # Marker face color (can be single or array)
+        marker="o",              # Marker shape ('o', 'x', '^', etc.)
+        cmap=None,               # Colormap (used if 'color' is numeric)
+        norm=None,               # Normalization object for colormap scaling
+        vmin=None,               # Lower bound for colormap normalization
+        vmax=None,               # Upper bound for colormap normalization
+        alpha=0.7,               # Marker transparency (0.0–1.0)
+        linewidths=None,         # Edge line width of markers
+        edgecolors="black",      # Marker edge color
+        plotnonfinite=False):     # Whether to plot NaN or inf points
+
+        super().__init__(title, description, xlabel, ylabel)
+
+        self.plotParams = dict( s=s,
+                                c=c,
+                                marker=marker,
+                                cmap=cmap,
+                                norm=norm,
+                                vmin=vmin,
+                                vmax=vmax,
+                                alpha=alpha,
+                                linewidths=linewidths,
+                                edgecolors=edgecolors,
+                                plotnonfinite=plotnonfinite,)
+        
+        self.dataX = dataX
+        self.dataY = dataY
+
+
     def define_plot(self, ax: plt.Axes) -> plt.Axes:
-        dataA = self.data['dataA']                           # List – DataFrames for each contest
-        x = [len(df) for df in dataA]                        # X – number of captions per contest
-        y = [df["votes"].sum() for df in dataA]              # Y – total votes per contest
-        ax.scatter(x, y, alpha=0.7, color='skyblue', edgecolor='black')
+        ax.scatter(self.dataX, self.dataY, **self.plotParams)                     # Scatter plot with custom attributes
         return ax
 
 
@@ -211,16 +245,99 @@ class ScatterPlotGUI(PlotGUI):
 # Demonstrates persistence between runs
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Representative examples of ScatterPlotGUI instantiation
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+import numpy as np
+
+plotsGUI = []
+
+# 1. Simple linear relation
 plotsGUI.append(
-    HistPlotGUI( 
-        title="ExempleTitele", 
-        description="ExempleDescription ExempleDescription ExempleDescription ExempleDescription ExempleDescription ExempleDescription", 
-        xlabel="ExempleXlabel", 
-        ylabel="ExempleYlabel"))  
+    ScatterPlotGUI(
+        title="Simple Linear",
+        description="Basic X–Y linear relation example.",
+        xlabel="X values",
+        ylabel="Y values",
+        dataX=[1, 2, 3, 4, 5],
+        dataY=[2, 4, 6, 8, 10],
+    )
+)
 
-# Save plots (duplicates are ignored by title)
-PlotGUI.save_plots(plotsGUI)  # Save the plots list to file (ignoring duplicates by title)
+# 2. Random scatter
+plotsGUI.append(
+    ScatterPlotGUI(
+        title="Random Distribution",
+        description="Random points with transparency.",
+        dataX=np.random.randn(100),
+        dataY=np.random.randn(100),
+        c="tomato",
+        alpha=0.5,
+        s=40,
+    )
+)
 
+# 3. Parabolic curve
+x = np.linspace(-3, 3, 60)
+y = x**2
+plotsGUI.append(
+    ScatterPlotGUI(
+        title="Parabola Shape",
+        description="Y = X² curve with filled circles.",
+        xlabel="X",
+        ylabel="Y = X²",
+        dataX=x,
+        dataY=y,
+        c="royalblue",
+        s=70,
+        marker="o",
+        edgecolors="black",
+    )
+)
+
+# 4. Color-mapped sine wave
+x = np.linspace(0, 10, 100)
+y = np.sin(x)
+plotsGUI.append(
+    ScatterPlotGUI(
+        title="Color-mapped Sine Wave",
+        description="Sine wave with color gradient by Y value.",
+        dataX=x,
+        dataY=y,
+        c=y,
+        cmap="viridis",
+        s=80,
+        alpha=0.8,
+        marker="^",
+    )
+)
+
+# 5. Two groups for comparison
+plotsGUI.append(
+    ScatterPlotGUI(
+        title="Group A",
+        description="First data cluster.",
+        dataX=[1, 2, 3, 4],
+        dataY=[1, 1.5, 1.8, 2.2],
+        c="green",
+        marker="o",
+    )
+)
+
+plotsGUI.append(
+    ScatterPlotGUI(
+        title="Group B",
+        description="Second data cluster overlaid.",
+        dataX=[2, 3, 4, 5],
+        dataY=[3, 2.7, 2.5, 2.2],
+        c="orange",
+        marker="x",
+    )
+)
+
+
+PlotGUI.save_plots(plotsGUI)
 
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
