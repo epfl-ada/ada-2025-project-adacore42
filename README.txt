@@ -49,3 +49,7 @@ ADACORE42
 ├── pip_requirements.txt                 <- Python dependencies
 ├── README.txt                           <- Project overview and structure
 └── results.ipynb                        <- Final analysis and visual results
+
+
+
+# Most part of Doinics code was commented by ChatGPT
