@@ -57,12 +57,13 @@ class PlotGUI(ABC):
     # ---------------------------------------------------------------------------------------------
     # Class constructor – initializes title, labels, and data reference
     # ---------------------------------------------------------------------------------------------
-    def __init__(self, title: str = "No Title", description: str = "No Description", xlabel: str = "X-axis", ylabel: str = "Y-axis", data=None, plotParams = None):
+    def __init__(self, title: str = "No Title", description: str = "No Description", xlabel: str = "X-axis", ylabel: str = "Y-axis", mode=0, plotParams = None):
         self.title = title                     # Title – plot title text
         self.description = description         # Description – optional long text
         self.xlabel = xlabel                   # X-axis label
         self.ylabel = ylabel                   # Y-axis label
         self.plotParams = plotParams         # Plot parameters – dictionary for custom settings
+        self.mode = mode
 
     def set_data_default(self):
         # Load the default dataset ONCE, at class level
@@ -183,7 +184,7 @@ class PlotGUI(ABC):
 # Implements its own version of define_plot()
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-class HistPlotGUI(PlotGUI):
+class HistPlotGUI(PlotGUI): #ça devrait pas marcher
  
     def define_plot(self, ax: plt.Axes) -> plt.Axes:
         ax.hist(self.data['dataA'][0]["mean"], bins=30, color='skyblue', edgecolor='black')
@@ -202,8 +203,10 @@ class ScatterPlotGUI(PlotGUI):
         description: str = "Default scatter plot description.",
         xlabel: str = "X-axis",
         ylabel: str = "Y-axis",
+
         dataX=None,
         dataY=None,
+        mode=0,
         s=20,                    # Marker area in points² (controls size)
         c="skyblue",             # Marker face color (can be single or array)
         marker="o",              # Marker shape ('o', 'x', '^', etc.)
@@ -216,7 +219,7 @@ class ScatterPlotGUI(PlotGUI):
         edgecolors="black",      # Marker edge color
         plotnonfinite=False):     # Whether to plot NaN or inf points
 
-        super().__init__(title, description, xlabel, ylabel)
+        super().__init__(title, description, xlabel, ylabel , mode)
 
         self.plotParams = dict( s=s,
                                 c=c,
@@ -233,12 +236,23 @@ class ScatterPlotGUI(PlotGUI):
         self.dataX = dataX
         self.dataY = dataY
 
-
+    #Le changement d'affichage se fait soir par choix de mode.
     def define_plot(self, ax: plt.Axes) -> plt.Axes:
+        match self.mode:
+            case 1:
+                return self.plot_1(ax)
+            case _:                     # default / else
+                return self.plot_0(ax)
+        
+    #Par exemple un plot normal
+    def plot_0(self, ax: plt.Axes) -> plt.Axes:
+        ax.scatter(self.dataX, self.dataY, **self.plotParams)                     
+        return ax
+    
+    #Et ici un plot en log. 
+    def plot_1(self, ax: plt.Axes) -> plt.Axes:
         ax.scatter(self.dataX, self.dataY, **self.plotParams)                     # Scatter plot with custom attributes
         return ax
-
-
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Example usage – instantiate a histogram plot and save to the pickle file
