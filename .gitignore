@@ -1,2 +1,4 @@
 /andras_analysis/data
 *.pyc
+
+*.pkl

@@ -1,0 +1,89 @@
+\documentclass[fleqn]{report}
+\usepackage[a4paper, top=1.5cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{array}
+\usepackage{booktabs} 
+\usepackage{enumitem}
+\usepackage{cancel}
+\usepackage{caption} 
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage{sectsty}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage[table]{xcolor}
+\usetikzlibrary{arrows.meta, positioning, shapes.multipart, backgrounds, fit}
+
+
+\definecolor{myred}{RGB}{200,50,50}
+\definecolor{myblue}{RGB}{0,90,160}
+\definecolor{mypurple}{RGB}{140,70,160}
+\definecolor{myorange}{RGB}{230,120,30}
+\definecolor{lightblue}{RGB}{200,230,255}
+\definecolor{lightgreen}{RGB}{200,255,200}
+\definecolor{lightpurple}{RGB}{230,200,255}
+
+\definecolor{myred}{RGB}{200,50,50}
+\definecolor{myblue}{RGB}{0,90,160}
+\definecolor{mypurple}{RGB}{140,70,160}
+\definecolor{mygray}{RGB}{100,100,100}
+\definecolor{myorange}{RGB}{230,120,30}
+% Change section and subsection colors
+\sectionfont{\color{myred}}       % sets colour of sections
+\subsectionfont{\color{mypurple}}     % sets colour of subsections
+\subsubsectionfont{\color{myorange}} % sets colour of subsubsections
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{ADAcore42}
+\fancyhead[C]{EPFL}
+\fancyhead[R]{October 2025}
+\fancyfoot[C]{\thepage}
+
+\titlespacing*{\section}{0pt}{*3}{*1}
+\titlespacing*{\subsection}{0pt}{*3}{*1}
+\titlespacing*{\subsubsection}{0pt}{*2}{*1}
+\renewcommand{\thesection}{\arabic{section}}
+
+\newcommand{\sectionline}{
+    \rule{0.9\textwidth}{0.4pt}
+}
+\setlist[description]{itemsep=0pt}
+
+\tcbset{
+  redbox/.style={
+    enhanced,
+    colframe=myred,
+    colback=red!20,
+    boxrule=0pt,
+    sharp corners,
+    rounded corners,
+    left=4pt, right=4pt, top=2pt, bottom=2pt
+  },
+  greenhl/.style={
+    enhanced,
+    colback=green!20,
+    boxrule=0pt,
+    sharp corners,
+    rounded corners,
+    left=2pt, right=2pt, top=0pt, bottom=0pt
+  }
+}
+
+\begin{document}
+\input{TitlePage/TitlePage.tex}
+
+
+\input{content.tex}
+
+
+\end{document}
