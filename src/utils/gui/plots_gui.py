@@ -31,8 +31,6 @@ from src.utils.paths import STORED_DATAPREP_PKL_PATH, STORED_PLOTSGUI_PKL_PATH
 # This file defines a generic plot interface used by graphical components
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-plotsGUI = []   # Global list storing all instantiated GUI plot objects
-
 
 class PlotGUI(ABC):
 
@@ -44,15 +42,6 @@ class PlotGUI(ABC):
 
     filePath = root / STORED_PLOTSGUI_PKL_PATH              # Path – location of stored GUI plots (.pkl)
     data_path = root / STORED_DATAPREP_PKL_PATH              # Path – location of pre-processed data (.pkl)
-
-
-    # ---------------------------------------------------------------------------------------------
-    # Legacy directory reference – maintained for backward compatibility
-    # Always points to the _gui/ folder (current directory)
-    # ---------------------------------------------------------------------------------------------
-    base_dir = os.path.dirname(os.path.abspath(__file__))     # Path – current folder (_gui)
-    filePath = os.path.join(base_dir, "plots_gui.pkl")         # Path – local pickle file inside _gui/
-
 
     # ---------------------------------------------------------------------------------------------
     # Class constructor – initializes title, labels, and data reference
@@ -142,8 +131,8 @@ class PlotGUI(ABC):
     # Ensures continuity between GUI sessions
     # ---------------------------------------------------------------------------------------------
     @staticmethod
-    def save_plots(plotsGUI):
-        """Static method — Save plotsGUI list to file, ignoring duplicates by title."""
+    def add_plots(plotsGUI):
+        """Static method — add plotsGUI list to file, ignoring duplicates by title."""
         if not plotsGUI:
             print("⚠️ No plots to save.")
             return 
@@ -177,6 +166,75 @@ class PlotGUI(ABC):
             print(f"✅ Added {added} new plots.")
         else:
             print("ℹ️ No new plots were added (all already present).")
+
+    @staticmethod
+    def replace_plots(plotsGUI):
+        """Static method — Replace all plots in the pickle file with the provided list."""
+        if not plotsGUI:
+            print("⚠️ No plots provided. Nothing to save.")
+            return
+
+        # Overwrite the file directly with new plots
+        with open(PlotGUI.filePath, "wb") as f:
+            pickle.dump({"plotsGUI": plotsGUI}, f)
+
+        print(f"💾 Replaced all plots in {PlotGUI.filePath}")
+        print(f"✅ Saved {len(plotsGUI)} new plots.")
+
+
+    @staticmethod
+    def replace_plot(new_plot):
+        """Static method — Replace an existing plot (matched by title) with a new one."""
+        if not os.path.exists(PlotGUI.filePath):
+            print("⚠️ No existing plots file found. Abort.")
+            return
+
+        with open(PlotGUI.filePath, "rb") as f:
+            data = pickle.load(f)
+            plotsGUI = data.get("plotsGUI", [])
+
+        replaced = False
+        for i, p in enumerate(plotsGUI):
+            if p.title == new_plot.title:
+                plotsGUI[i] = new_plot
+                replaced = True
+                break
+
+        if not replaced:
+            plotsGUI.append(new_plot)
+            print(f"⚠️ No existing plot titled '{new_plot.title}' — added as new.")
+        else:
+            print(f"🔁 Replaced existing plot titled '{new_plot.title}'.")
+
+        with open(PlotGUI.filePath, "wb") as f:
+            pickle.dump({"plotsGUI": plotsGUI}, f)
+
+        print(f"💾 Saved {len(plotsGUI)} total plots to {PlotGUI.filePath}")
+
+    @staticmethod
+    def delete_plot_by_title(title: str):
+        """Static method — Delete a specific plot (by title) from the stored plots file."""
+        if not os.path.exists(PlotGUI.filePath):
+            print("⚠️ No existing plots file found.")
+            return
+
+        with open(PlotGUI.filePath, "rb") as f:
+            data = pickle.load(f)
+            plotsGUI = data.get("plotsGUI", [])
+
+        # Filter out the plot with matching title
+        new_plots = [p for p in plotsGUI if p.title != title]
+
+        if len(new_plots) == len(plotsGUI):
+            print(f"⚠️ No plot found with title '{title}'.")
+            return
+
+        # Save updated list
+        with open(PlotGUI.filePath, "wb") as f:
+            pickle.dump({"plotsGUI": new_plots}, f)
+
+        print(f"🗑️ Deleted plot '{title}' from {PlotGUI.filePath}")
+        print(f"💾 Remaining plots: {len(new_plots)}")
 
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -253,108 +311,3 @@ class ScatterPlotGUI(PlotGUI):
     def plot_1(self, ax: plt.Axes) -> plt.Axes:
         ax.scatter(self.dataX, self.dataY, **self.plotParams)                     # Scatter plot with custom attributes
         return ax
-
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# Example usage – instantiate a histogram plot and save to the pickle file
-# Demonstrates persistence between runs
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# Representative examples of ScatterPlotGUI instantiation
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-
-import numpy as np
-
-plotsGUI = []
-
-# 1. Simple linear relation
-plotsGUI.append(
-    ScatterPlotGUI(
-        title="Simple Linear",
-        description="Basic X–Y linear relation example.",
-        xlabel="X values",
-        ylabel="Y values",
-        dataX=[1, 2, 3, 4, 5],
-        dataY=[2, 4, 6, 8, 10],
-    )
-)
-
-# 2. Random scatter
-plotsGUI.append(
-    ScatterPlotGUI(
-        title="Random Distribution",
-        description="Random points with transparency.",
-        dataX=np.random.randn(100),
-        dataY=np.random.randn(100),
-        c="tomato",
-        alpha=0.5,
-        s=40,
-    )
-)
-
-# 3. Parabolic curve
-x = np.linspace(-3, 3, 60)
-y = x**2
-plotsGUI.append(
-    ScatterPlotGUI(
-        title="Parabola Shape",
-        description="Y = X² curve with filled circles.",
-        xlabel="X",
-        ylabel="Y = X²",
-        dataX=x,
-        dataY=y,
-        c="royalblue",
-        s=70,
-        marker="o",
-        edgecolors="black",
-    )
-)
-
-# 4. Color-mapped sine wave
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
-plotsGUI.append(
-    ScatterPlotGUI(
-        title="Color-mapped Sine Wave",
-        description="Sine wave with color gradient by Y value.",
-        dataX=x,
-        dataY=y,
-        c=y,
-        cmap="viridis",
-        s=80,
-        alpha=0.8,
-        marker="^",
-    )
-)
-
-# 5. Two groups for comparison
-plotsGUI.append(
-    ScatterPlotGUI(
-        title="Group A",
-        description="First data cluster.",
-        dataX=[1, 2, 3, 4],
-        dataY=[1, 1.5, 1.8, 2.2],
-        c="green",
-        marker="o",
-    )
-)
-
-plotsGUI.append(
-    ScatterPlotGUI(
-        title="Group B",
-        description="Second data cluster overlaid.",
-        dataX=[2, 3, 4, 5],
-        dataY=[3, 2.7, 2.5, 2.2],
-        c="orange",
-        marker="x",
-    )
-)
-
-
-PlotGUI.save_plots(plotsGUI)
-
-
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# Optional demonstration block – explicitly showing plot save process
-# Ensures output consistency and informs about skipped/added plots
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––

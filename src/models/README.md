@@ -25,3 +25,6 @@ preds = method_obj.predict(xtest)
 - gui.py: tiny window to select and display all stored plots in plots_gui.pkl
 - plots_gui.py: class defintion for plot-obects(store additional info about the plot + useful methods such as show the plot or save/load plots)
 
+
+Model definitions and training logic.
+- some_model.py defining neural nets, regressors, etc.  - Code for model initialization, loss, optimizer, forward pass.

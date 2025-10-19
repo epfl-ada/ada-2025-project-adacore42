@@ -1,0 +1,14 @@
+root - path to project folder
+
+- maintenant TEOUTES les data( que se soir le virgin, ou toute autre donnée .pkl, csv, etc...) sont stoqueés uniquement dans root/data. 
+    - dataPrepared.pkl et plots_gui.pkl sont là
+- dans root/src/data ya touts les trucs qui traitent le code (DataPreparation.ipynb)
+- gui folder is now in root/src/utils since its a utility to process plots and display them 
+- pour matcher les nouveaux paths le paths.py a ete updaté avec les nouveaux paths
+- toute la folder root/data a ete rajoutéé au gitignore 
+- gui_plots.py 
+    - added: 
+        - add_plots - juste ajouter des plots
+        - replace_plots - remplaces tous les plots par les nouveaux
+        - replace_plot - remplacer un seul plot (selection par title)
+        - delete_plot_by_title - deleter  un plot par son title
