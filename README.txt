@@ -54,7 +54,7 @@ ADACORE42
 ## Title : "Humor as a mirror : Social attitudes, politics, and biases in the The New Yorker Caption Contest"
 
 ## Abstract: A 150 word description of the project idea and goals. What’s the motivation behind your project? What story would you like to tell, and why?
-
+The story we want to tell is to depict how humor is an important indicator of the .. 
 
 ## Research Questions: A list of research questions you would like to address during the project.
 
