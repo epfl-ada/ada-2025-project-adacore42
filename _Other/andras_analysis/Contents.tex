@@ -24,7 +24,7 @@ where the weights
 \]
 were found using a linear regresion. Using this, a funniness score is attached to each caption, which will be used to order comments on how funny they are. 
 
-After identifying common stopwords in english, the captions are preprocessed. This means a new column is created in each dataframe called 'tokens'. Fig.\ \ref{fig:most_common_words} shows the twenty most common words that occur in all captions. Similarly, Fig.\ \ref{fig:top_10_not_1000} displays the words which occur at least three times in the top 100 comments but not in the worst 1000 comments.
+After identifying common stopwords in english, the captions are preprocessed. This means a new column is created in each dataframe called 'tokens'. Fig.\ \ref{fig:most_common_words} shows the twenty most common words that occur in all captions. Similarly, Fig.\ \ref{fig:top_10_not_1000} displays the words which occur at least three times in the top 100 comments but not in the worst 1000 comments. Of course, when doing this, stopwords like 'the', 'and' etc.\ are ignored.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.4\textwidth]{images/most_common_words.png}
@@ -33,9 +33,191 @@ After identifying common stopwords in english, the captions are preprocessed. Th
 \begin{figure}[h]
     \centering
     \includegraphics[width = 0.4\textwidth]{images/top_10_not_1000.png}
-    \caption{Words that occur in the 100 top performing comments at leat 3 times, but not in the least performing 1000 comments.}\label{fig:top_10_not_1000}
+    \caption{Words that occur in the 100 top performing comments at least 3 times, but not in the least performing 1000 comments.}\label{fig:top_10_not_1000}
 \end{figure}
-\subsection*{Frequency of entities in the captions and their average score}
+
+\subsection*{Exploring the metadata of the contests}
+In the metadata of the contests, there are several interesting features that can be explored. There are features such as a normal and a uncanny description of the cartoon, the location of the cartoon, some form of question related to the cartoon, the number of votes and the number of captions submitted. As a first step, the most common nouns in the description of the cartoons were extracted. To do this, I have created my own list of categories, which is very shallowed and needs to be expanded in future work. The categories are the following: people, animals, objects, places, nature, fantasy, work, food, death, and abstract. Fig.\ \ref{fig:categories} shows the distribution of these categories in the cartoon descriptions and in the questions related to the cartoons.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/categories.png}
+    \caption{Distribution of categories in cartoon descriptions and questions related to the cartoons.}\label{fig:categories}
+\end{figure}
+A further study looks at how often men occur compared to women in the descriptions of the cartoons. It is found that women only occur around 1 times for every 4 times men occur. Here further analysis is needed to see what words are used to describe men and women in the descriptions. This was indeed attempted but with little success. A more interesting study was conducted on what words actually occur in captions that have women-related words present. This is shown in Fig.\ \ref{fig:women_words} and the same is done for men-related words in Fig.\ \ref{fig:men_words}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/women_words.png}
+    \caption{Most common words in captions that contain women-related words.}\label{fig:women_words}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/men_words.png}
+    \caption{Most common words in captions that contain men-related words.}\label{fig:men_words}
+\end{figure}
+
+\subsection*{Most common occupations in captions}
+Another interesting analysis is to see what occupations occur most often in the captions. To do this, we used US census data from 2019 that contains a list of occupations as well as a code to indicate the general field of work. Using this data, we extracted the occupations from the captions and grouped them by their field of work. Fig.\ \ref{fig:occupations} shows the most common occupations in the captions. Fig.\ \ref{fig:grouped_occupations} shows the distribution of occupations grouped by their field of work.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/occupations.png}
+    \caption{Most common occupations in captions.}\label{fig:occupations}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/grouped_occupations.png}
+    \caption{Distribution of occupations grouped by their field of work.}\label{fig:grouped_occupations}
+\end{figure}
+
+\subsection*{Political topics in captions}
+A further analysis was conducted to see how often political topics occur in the captions. A list of political topics was created, which includes words such as 'election', 'government', 'president', 'vote', etc. Fig.\ \ref{fig:political_topics} shows the frequency of political topics in the captions over time. This list is not perfect and word like 'left' and 'right' can have multiple meanings, so further refinement is needed.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/political_topics.png}
+    \caption{Frequency of political topics in captions over time.}\label{fig:political_topics}
+\end{figure}
+
+\subsection*{Temporal evolution of topics}
+Finally, an analysis was conducted to see how the frequency of certain topics behave over time. The data is shown for yearly total mentions as well as monthly counts. The topics analysed are 'politics', 'religion', 'animals', 'relationships', 'work', 'technology', 'food', and 'death'. To identify the dates of certain contests without explicit date, the following approach was taken:
+\begin{itemize}
+    \item Identify a block of missing dates
+    \item Look for the two dates wrapping the block.
+    \item Calculate the number of days between the two dates, and divide them by the size of the block
+    \item Assign chronologically the new dates inferred from the average 'distance' between contests.
+\end{itemize}
+Finally, each plot has a normalisation by the total number of captions in the corresponding time period, else the trends may be misleading.
+% ===================== FIGURE (Part 1) =====================
+\begin{figure}[htbp]
+    \centering
+    
+    % Row 1
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/politics_year.png}
+        \caption{}
+        \label{fig:sub1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/politics_month.png}
+        \caption{}
+        \label{fig:sub2}
+    \end{subfigure}
+    
+    \vspace{0.5em}
+    
+    % Row 2
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/religion_year.png}
+        \caption{}
+        \label{fig:sub3}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/religion_month.png}
+        \caption{}
+        \label{fig:sub4}
+    \end{subfigure}
+    
+    \vspace{0.5em}
+    
+    % Row 3
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/animals_year.png}
+        \caption{}
+        \label{fig:sub5}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/animals_month.png}
+        \caption{}
+        \label{fig:sub6}
+    \end{subfigure}
+    
+    \vspace{0.5em}
+    
+    % Row 4
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/relationship_year.png}
+        \caption{}
+        \label{fig:sub7}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/relationship_month.png}
+        \caption{}
+        \label{fig:sub8}
+    \end{subfigure}
+    
+    \caption{Overview of temporal evolution of various topics in captions over years (left) and months (right), part 1.}
+    \label{fig:all_images_part1}
+\end{figure}
+
+% ===================== FIGURE (Part 2 - Continued) =====================
+\begin{figure}[htbp]\ContinuedFloat
+    \centering
+
+    % Row 5
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/work_year.png}
+        \caption{}
+        \label{fig:sub9}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/work_month.png}
+        \caption{}
+        \label{fig:sub10}
+    \end{subfigure}
+    
+    \vspace{0.5em}
+    
+    % Row 6
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/tech_year.png}
+        \caption{}
+        \label{fig:sub11}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/tech_month.png}
+        \caption{}
+        \label{fig:sub12}
+    \end{subfigure}
+    
+    \vspace{0.5em}
+    
+    % Row 7
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/food_year.png}
+        \caption{}
+        \label{fig:sub13}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/food_month.png}
+        \caption{}
+        \label{fig:sub14}
+    \end{subfigure}
+    
+    \vspace{0.5em}
+    
+    % Row 8
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/death_year.png}
+        \caption{}
+        \label{fig:sub15}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{images/death_month.png}
+        \caption{}
+        \label{fig:sub16}
+    \end{subfigure}
+
+    \caption{Overview of temporal evolution of various topics in captions over years (left) and months (right), continued.}
+    \label{fig:all_images_part2}
+\end{figure}
+
+
 
 \section*{Discussion}
 \section*{Conclusion}

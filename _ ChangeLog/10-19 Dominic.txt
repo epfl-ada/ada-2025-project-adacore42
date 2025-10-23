@@ -11,4 +11,4 @@ root - path to project folder
         - add_plots - juste ajouter des plots
         - replace_plots - remplaces tous les plots par les nouveaux
         - replace_plot - remplacer un seul plot (selection par title)
-        - delete_plot_by_title - deleter  un plot par son title
+        - delete_plot_by_title - deleter un plot par son title

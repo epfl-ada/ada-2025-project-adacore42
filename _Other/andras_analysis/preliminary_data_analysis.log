@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.12.3)  16 OCT 2025 10:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2024.12.3)  23 OCT 2025 10:37
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**c:/Users/andra/OneDrive/Desktop/MA1_2025-2026/Applied_data_analysis/project/ada-2025-project-adacore42/andras_analysis/preliminary_data_analysis.tex
-(c:/Users/andra/OneDrive/Desktop/MA1_2025-2026/Applied_data_analysis/project/ada-2025-project-adacore42/andras_analysis/preliminary_data_analysis.tex
+**c:/Users/andra/OneDrive/Desktop/MA1_2025-2026/Applied_data_analysis/project/ada-2025-project-adacore42/_Other/andras_analysis/preliminary_data_analysis.tex
+(c:/Users/andra/OneDrive/Desktop/MA1_2025-2026/Applied_data_analysis/project/ada-2025-project-adacore42/_Other/andras_analysis/preliminary_data_analysis.tex
 LaTeX2e <2024-11-01>
 L3 programming layer <2024-11-02>
 (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/latex/base\report.cls
@@ -618,61 +618,85 @@ Package: colortbl 2024/07/06 v1.0i Color table columns (DPC)
 \everycr=\toks45
 \minrowclearance=\skip69
 \rownum=\count341
+) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/latex/caption\subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count342
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count343
+) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty
+Package: longtable 2024-10-27 v4.22 Multi-page Table package (DPC)
+\LTleft=\skip70
+\LTright=\skip71
+\LTpre=\skip72
+\LTpost=\skip73
+\LTchunksize=\count344
+\LTcapwidth=\dimen323
+\LT@head=\box87
+\LT@firsthead=\box88
+\LT@foot=\box89
+\LT@lastfoot=\box90
+\LT@gbox=\box91
+\LT@cols=\count345
+\LT@rows=\count346
+\c@LT@tables=\count347
+\c@LT@chunks=\count348
+\LT@p@ftn=\toks46
 ) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibraryarrows.meta.code.tex
 File: pgflibraryarrows.meta.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfarrowinset=\dimen323
-\pgfarrowlength=\dimen324
-\pgfarrowwidth=\dimen325
-\pgfarrowlinewidth=\dimen326
+\pgfarrowinset=\dimen324
+\pgfarrowlength=\dimen325
+\pgfarrowwidth=\dimen326
+\pgfarrowlinewidth=\dimen327
 ) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryshapes.multipart.code.tex
 File: tikzlibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
  (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries/shapes\pgflibraryshapes.multipart.code.tex
 File: pgflibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfnodepartlowerbox=\box87
-\pgfnodeparttwobox=\box88
-\pgfnodepartthreebox=\box89
-\pgfnodepartfourbox=\box90
-\pgfnodeparttwentybox=\box91
-\pgfnodepartnineteenbox=\box92
-\pgfnodeparteighteenbox=\box93
-\pgfnodepartseventeenbox=\box94
-\pgfnodepartsixteenbox=\box95
-\pgfnodepartfifteenbox=\box96
-\pgfnodepartfourteenbox=\box97
-\pgfnodepartthirteenbox=\box98
-\pgfnodeparttwelvebox=\box99
-\pgfnodepartelevenbox=\box100
-\pgfnodeparttenbox=\box101
-\pgfnodepartninebox=\box102
-\pgfnodeparteightbox=\box103
-\pgfnodepartsevenbox=\box104
-\pgfnodepartsixbox=\box105
-\pgfnodepartfivebox=\box106
+\pgfnodepartlowerbox=\box92
+\pgfnodeparttwobox=\box93
+\pgfnodepartthreebox=\box94
+\pgfnodepartfourbox=\box95
+\pgfnodeparttwentybox=\box96
+\pgfnodepartnineteenbox=\box97
+\pgfnodeparteighteenbox=\box98
+\pgfnodepartseventeenbox=\box99
+\pgfnodepartsixteenbox=\box100
+\pgfnodepartfifteenbox=\box101
+\pgfnodepartfourteenbox=\box102
+\pgfnodepartthirteenbox=\box103
+\pgfnodeparttwelvebox=\box104
+\pgfnodepartelevenbox=\box105
+\pgfnodeparttenbox=\box106
+\pgfnodepartninebox=\box107
+\pgfnodeparteightbox=\box108
+\pgfnodepartsevenbox=\box109
+\pgfnodepartsixbox=\box110
+\pgfnodepartfivebox=\box111
 )) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibrarybackgrounds.code.tex
 File: tikzlibrarybackgrounds.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgf@layerbox@background=\box107
-\pgf@layerboxsaved@background=\box108
+\pgf@layerbox@background=\box112
+\pgf@layerboxsaved@background=\box113
 ) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibraryfit.code.tex
 File: tikzlibraryfit.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (preliminary_data_analysis.aux)
 \openout1 = `preliminary_data_analysis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
+LaTeX Font Info:    ... okay on input line 85.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -710,17 +734,17 @@ LaTeX Font Info:    ... okay on input line 82.
 
 (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count342
-\scratchdimen=\dimen327
-\scratchbox=\box109
-\nofMPsegments=\count343
-\nofMParguments=\count344
-\everyMPshowfont=\toks46
-\MPscratchCnt=\count345
-\MPscratchDim=\dimen328
-\MPnumerator=\count346
-\makeMPintoPDFobject=\count347
-\everyMPtoPDFconversion=\toks47
+\scratchcounter=\count349
+\scratchdimen=\dimen328
+\scratchbox=\box114
+\nofMPsegments=\count350
+\nofMParguments=\count351
+\everyMPshowfont=\toks47
+\MPscratchCnt=\count352
+\MPscratchDim=\dimen329
+\MPnumerator=\count353
+\makeMPintoPDFobject=\count354
+\everyMPtoPDFconversion=\toks48
 ) (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -729,12 +753,16 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: listings package is loaded.
+Package caption Info: longtable package is loaded.
+ (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/latex/caption\ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+)
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count348
+\c@lstlisting=\count355
  (C:\Users\andra\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
 Package: inputenc 2024/02/08 v1.3d Input encoding file
-\inpenc@prehook=\toks48
-\inpenc@posthook=\toks49
+\inpenc@prehook=\toks49
+\inpenc@posthook=\toks50
 ) (TitlePage/TitlePage.tex
 <TitlePage/logo-epfl.png, id=40, 1927.2pt x 1084.05pt>
 File: TitlePage/logo-epfl.png Graphic file (type png)
@@ -768,28 +796,160 @@ Package pdftex.def Info: images/top_10_not_1000.png  used on input line 35.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+<images/categories.png, id=52, 732.8178pt x 422.0568pt>
+File: images/categories.png Graphic file (type png)
+<use images/categories.png>
+Package pdftex.def Info: images/categories.png  used on input line 43.
+(pdftex.def)             Requested size: 216.23764pt x 124.53787pt.
+<images/women_words.png, id=53, 570.933pt x 308.5929pt>
+File: images/women_words.png Graphic file (type png)
+<use images/women_words.png>
+Package pdftex.def Info: images/women_words.png  used on input line 49.
+(pdftex.def)             Requested size: 216.23764pt x 116.87569pt.
+<images/men_words.png, id=54, 570.933pt x 308.5929pt>
+File: images/men_words.png Graphic file (type png)
+<use images/men_words.png>
+Package pdftex.def Info: images/men_words.png  used on input line 54.
+(pdftex.def)             Requested size: 216.23764pt x 116.87569pt.
 
 
-[1 <./images/most_common_words.png>])
+[1 <./images/most_common_words.png>]
 
-[2 <./images/top_10_not_1000.png>] (preliminary_data_analysis.aux)
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<images/occupations.png, id=63, 682.2288pt x 365.6862pt>
+File: images/occupations.png Graphic file (type png)
+<use images/occupations.png>
+Package pdftex.def Info: images/occupations.png  used on input line 62.
+(pdftex.def)             Requested size: 216.23764pt x 115.90599pt.
+<images/grouped_occupations.png, id=64, 703.1871pt x 426.393pt>
+File: images/grouped_occupations.png Graphic file (type png)
+<use images/grouped_occupations.png>
+Package pdftex.def Info: images/grouped_occupations.png  used on input line 67.
+(pdftex.def)             Requested size: 216.23764pt x 131.11995pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<images/political_topics.png, id=65, 714.7503pt x 426.393pt>
+File: images/political_topics.png Graphic file (type png)
+<use images/political_topics.png>
+Package pdftex.def Info: images/political_topics.png  used on input line 75.
+(pdftex.def)             Requested size: 216.23764pt x 128.99892pt.
+
+
+[2 <./images/top_10_not_1000.png> <./images/categories.png> <./images/women_words.png>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<images/politics_year.png, id=72, 570.933pt x 281.853pt>
+File: images/politics_year.png Graphic file (type png)
+<use images/politics_year.png>
+Package pdftex.def Info: images/politics_year.png  used on input line 94.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/politics_month.png, id=73, 714.7503pt x 354.123pt>
+File: images/politics_month.png Graphic file (type png)
+<use images/politics_month.png>
+Package pdftex.def Info: images/politics_month.png  used on input line 100.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+<images/religion_year.png, id=74, 570.933pt x 281.853pt>
+File: images/religion_year.png Graphic file (type png)
+<use images/religion_year.png>
+Package pdftex.def Info: images/religion_year.png  used on input line 109.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/religion_month.png, id=75, 714.7503pt x 354.123pt>
+File: images/religion_month.png Graphic file (type png)
+<use images/religion_month.png>
+Package pdftex.def Info: images/religion_month.png  used on input line 115.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+<images/animals_year.png, id=76, 570.933pt x 281.853pt>
+File: images/animals_year.png Graphic file (type png)
+<use images/animals_year.png>
+Package pdftex.def Info: images/animals_year.png  used on input line 124.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/animals_month.png, id=77, 714.7503pt x 354.123pt>
+File: images/animals_month.png Graphic file (type png)
+<use images/animals_month.png>
+Package pdftex.def Info: images/animals_month.png  used on input line 130.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+<images/relationship_year.png, id=78, 570.933pt x 281.853pt>
+File: images/relationship_year.png Graphic file (type png)
+<use images/relationship_year.png>
+Package pdftex.def Info: images/relationship_year.png  used on input line 139.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/relationship_month.png, id=79, 714.7503pt x 354.123pt>
+File: images/relationship_month.png Graphic file (type png)
+<use images/relationship_month.png>
+Package pdftex.def Info: images/relationship_month.png  used on input line 145.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+<images/work_year.png, id=80, 570.933pt x 281.853pt>
+File: images/work_year.png Graphic file (type png)
+<use images/work_year.png>
+Package pdftex.def Info: images/work_year.png  used on input line 160.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/work_month.png, id=81, 714.7503pt x 354.123pt>
+File: images/work_month.png Graphic file (type png)
+<use images/work_month.png>
+Package pdftex.def Info: images/work_month.png  used on input line 166.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+<images/tech_year.png, id=82, 570.933pt x 281.853pt>
+File: images/tech_year.png Graphic file (type png)
+<use images/tech_year.png>
+Package pdftex.def Info: images/tech_year.png  used on input line 175.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/tech_month.png, id=83, 714.7503pt x 354.123pt>
+File: images/tech_month.png Graphic file (type png)
+<use images/tech_month.png>
+Package pdftex.def Info: images/tech_month.png  used on input line 181.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+<images/food_year.png, id=84, 570.933pt x 281.853pt>
+File: images/food_year.png Graphic file (type png)
+<use images/food_year.png>
+Package pdftex.def Info: images/food_year.png  used on input line 190.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/food_month.png, id=85, 714.7503pt x 354.123pt>
+File: images/food_month.png Graphic file (type png)
+<use images/food_month.png>
+Package pdftex.def Info: images/food_month.png  used on input line 196.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+<images/death_year.png, id=86, 570.933pt x 281.853pt>
+File: images/death_year.png Graphic file (type png)
+<use images/death_year.png>
+Package pdftex.def Info: images/death_year.png  used on input line 205.
+(pdftex.def)             Requested size: 259.48683pt x 128.10568pt.
+<images/death_month.png, id=87, 714.7503pt x 354.123pt>
+File: images/death_month.png Graphic file (type png)
+<use images/death_month.png>
+Package pdftex.def Info: images/death_month.png  used on input line 211.
+(pdftex.def)             Requested size: 259.48683pt x 128.56487pt.
+)
+
+[3{C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-ts1.enc} <./images/men_words.png> <./images/occupations.png>]
+
+[4 <./images/grouped_occupations.png> <./images/political_topics.png>]
+
+[5 <./images/politics_year.png> <./images/politics_month.png> <./images/religion_year.png> <./images/religion_month.png> <./images/animals_year.png> <./images/animals_month.png> <./images/relationship_year.png> <./images/relationship_month.png>]
+
+[6 <./images/work_year.png> <./images/work_month.png> <./images/tech_year.png> <./images/tech_month.png> <./images/food_year.png> <./images/food_month.png> <./images/death_year.png> <./images/death_month.png>] (preliminary_data_analysis.aux)
  ***********
 LaTeX2e <2024-11-01>
 L3 programming layer <2024-11-02>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 25910 strings out of 473682
- 562350 string characters out of 5719216
- 1065460 words of memory out of 5000000
- 48535 multiletter control sequences out of 15000+600000
- 562536 words of font info for 53 fonts, out of 8000000 for 9000
+ 26379 strings out of 473682
+ 572559 string characters out of 5719216
+ 1073073 words of memory out of 5000000
+ 48994 multiletter control sequences out of 15000+600000
+ 563170 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 86i,12n,117p,1153b,356s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on preliminary_data_analysis.pdf (3 pages, 462587 bytes).
+ 86i,11n,117p,1160b,588s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on preliminary_data_analysis.pdf (7 pages, 2213250 bytes).
 PDF statistics:
- 93 PDF objects out of 1000 (max. 8388607)
+ 162 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 172 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 282 words of extra memory for PDF output out of 10000 (max. 10000000)
 
