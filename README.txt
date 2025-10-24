@@ -26,6 +26,11 @@ Organization within the team: A list of internal milestones up until project Mil
 Questions for TAs (optional): Add here any questions you have for us related to the proposed project.
 
 
+Source :
+[1] Powell, C. (1988). A Phenomenological Analysis of Humour in Society. In: Powell, C., Paton, G.E.C. (eds) 
+    Humour in Society. Palgrave Macmillan, London. https://doi.org/10.1007/978-1-349-19193-2_5
+[2] Palagi, E., Caruana, F., & de Waal, F. B. M. (2022). The naturalistic approach to laughter in humans and 
+    other animals: Towards a unified theory. Philosophical Transactions of the Royal Society B: Biological Sciences, 
+    377(1863), 20210175. https://doi.org/10.1098/rstb.2021.0175
 
 
-# Most part of Doinics code was commented by ChatGPT
