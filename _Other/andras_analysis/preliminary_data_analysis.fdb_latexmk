@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1761208640.46475 "c:/Users/andra/OneDrive/Desktop/MA1_2025-2026/Applied_data_analysis/project/ada-2025-project-adacore42/_Other/andras_analysis/preliminary_data_analysis.tex" "preliminary_data_analysis.pdf" "preliminary_data_analysis" 1761208644.09055 0
+["pdflatex"] 1761209508.52058 "c:/Users/andra/OneDrive/Desktop/MA1_2025-2026/Applied_data_analysis/project/ada-2025-project-adacore42/_Other/andras_analysis/preliminary_data_analysis.tex" "preliminary_data_analysis.pdf" "preliminary_data_analysis" 1761209512.15164 0
   "C:/Users/andra/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1759396787 279613 fe62a258ff6d99cc2243c3a2d16aa767 ""
   "C:/Users/andra/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1733248144 11986913 7cad7e6c59251050cee667c32bd1227e ""
   "C:/Users/andra/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1001775420 2900 1537cc8184ad1792082cd229ecc269f4 ""
@@ -188,7 +188,7 @@
   "C:/Users/andra/AppData/Local/Programs/MiKTeX/tex/latex/varwidth/varwidth.sty" 1238469540 10894 d359a13923460b2a73d4312d613554c8 ""
   "C:/Users/andra/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
   "C:/Users/andra/AppData/Local/Programs/MiKTeX/tex/latex/xkeyval/xkeyval.sty" 1656236919 4937 4ce600ce9bd4ec84d0250eb6892fcf4f ""
-  "Contents.tex" 1761208635 13262 6b00f8258e041b43824973581ac3e334 ""
+  "Contents.tex" 1761209503 13272 bf7aaf55e8969ab32404fa5d8842a05f ""
   "TitlePage/TitlePage.tex" 1761047385 577 46d6226d3db57e9b2461ff8ec229c87b ""
   "TitlePage/logo-epfl.png" 1761047385 4969 dc9283fc97a789b04d0b8f46a1faf275 ""
   "c:/Users/andra/OneDrive/Desktop/MA1_2025-2026/Applied_data_analysis/project/ada-2025-project-adacore42/_Other/andras_analysis/preliminary_data_analysis.tex" 1761208586 2324 3691283c5f024b3a22bd30e97ee88b77 ""
@@ -216,7 +216,7 @@
   "images/women_words.png" 1761144546 307657 267be367b8ab1f69c5dbd57de3faefa9 ""
   "images/work_month.png" 1761207754 74016 6c8566c263e8f40bd6653b2f159dc458 ""
   "images/work_year.png" 1761207772 26634 6132af60d58f164bf5ac5b52b522167f ""
-  "preliminary_data_analysis.aux" 1761208643 4111 f46f9fe9af7b2ba331866e9f383f63a9 "pdflatex"
+  "preliminary_data_analysis.aux" 1761209511 4111 3b8c712520d41d5c0446fbedb2cdd1dc "pdflatex"
   "preliminary_data_analysis.tex" 1761208586 2324 3691283c5f024b3a22bd30e97ee88b77 ""
   (generated)
   "preliminary_data_analysis.aux"
