@@ -1,0 +1,30 @@
+# _Other\cycy_analysis\similarity_between_captions.ipynb
+
+A jupyter notebook where I try to build a similarity metric bewteen 2 captions.
+- semantic similarity
+- structure similarity
+- combined similarity
+A similarity matrix is created comparing similarity between each pair of captions within one contest.
+--> heatmap plot of this captions similarity matrix within one contest
+--> scatterplot of the score v.s. similarity within one contest
+==> *WHAT'S NEXT ?* To be ameliorated !
+
+I also try to plot a network of common themes within one contest using cleaned_data from Andras's preprocessing and lemification/tokenisation,
+but not sucessful for the moment.
+==> *WHAT'S NEXT ?* To be changed !
+
+
+
+
+# src\utils\general_utils.py
+
+A python file where we can put general utilities useful in different scripts.
+- absolute_index2contest_index
+- contest_index2absolute_index
+
+For the moment, just two function that allow us to find easily the corresponding indexes in absolut or contest
+==> *WHAT'S NEXT ?* I plan maybe to add a cosinus distance function, helpful for many distance metrics (mostly used in text processing)
+
+
+
+la bise (si consentie)
