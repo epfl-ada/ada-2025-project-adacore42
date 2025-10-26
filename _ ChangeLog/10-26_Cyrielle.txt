@@ -8,6 +8,8 @@ A similarity matrix is created comparing similarity between each pair of caption
 --> heatmap plot of this captions similarity matrix within one contest
 --> scatterplot of the score v.s. similarity within one contest
 ==> *WHAT'S NEXT ?* To be ameliorated !
+     + create a MATCHING index mask (associates pairs of similar caption to create two groups with a similar distribution, to perform hypothesis testing)
+     + maybe try to perform a clusterization of captions from this metric
 
 I also try to plot a network of common themes within one contest using cleaned_data from Andras's preprocessing and lemification/tokenisation,
 but not sucessful for the moment.
