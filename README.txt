@@ -2,7 +2,7 @@ Title : "Humor as a mirror : Social attitudes, politics, and biases in the The N
 
 Abstract: A 150 word description of the project idea and goals. What’s the motivation behind your project? What story would you like to tell, and why?
 
-Humor is a universal yet complex form of expression. The more we think about it and the more complexes it beacomes !
+Humor is a universal yet complex form of expression. The more we think about it and the more complexes it becomes !
 An example of humor purposes could be in the way of dealing with more ‘serious’ matters [1] or easing social 
 tensions and establishing social bonds [2].
 

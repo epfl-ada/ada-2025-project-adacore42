@@ -1,0 +1,10 @@
+# _Other\amelie_analysis\gender_roles.ipynb
+
+A jupyter notebook where I'll do my analysis, for now there is just 
+a big mardown that explains my first ideas on how to tackle the theme
+based on what Cyrielle sent on Whatsapp. 
+
+
+# README.txt 
+
+Small typo I fixed
