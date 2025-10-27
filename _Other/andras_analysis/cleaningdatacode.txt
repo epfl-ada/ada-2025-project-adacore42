@@ -1,0 +1,92 @@
+def preprocess_text(text, min_len=2):
+    """
+    Preprocess text by:
+    - Lowercasing
+    - Removing punctuation
+    - Expanding contractions
+    - Optional typo correction
+    - Removing stopwords
+    - Removing short tokens
+    - Lemmatization
+    """
+    # Lowercase
+    text = text.lower()
+    
+    # Expand contractions
+    text = contractions.fix(text)
+    
+    # typo correction
+    text = str(TextBlob(text).correct())
+    
+    # Remove punctuation
+    text = text.translate(str.maketrans('', '', string.punctuation))
+    
+    # Tokenise
+    tokens = word_tokenize(text)
+    
+    # Remove stopwords and very short tokens
+    tokens = [word for word in tokens if word not in stop_words and len(word) >= min_len]
+    
+    # Lemmatize
+    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    
+    return ' '.join(tokens)
+
+# apply preprocessing to captions in dataA
+size = len(dataA)
+for i, df in enumerate(dataA):
+    df['cleaned_caption'] = df['caption'].apply(preprocess_text)
+    print(f"done with {(i+1)/size*100:.2f}%")
+
+def preprocess_text_list(entry, min_len=2):
+    """Preprocess a list of text entries or a single string."""
+    if isinstance(entry, list):
+        text = " ".join(entry)
+    elif isinstance(entry, str):
+        text = entry
+    else:
+        return ""
+
+    # Lowercase
+    text = text.lower()
+
+    # Expand contractions
+    text = contractions.fix(text)
+
+    # Typo correction
+    text = str(TextBlob(text).correct())
+
+    # Remove punctuation
+    text = text.translate(str.maketrans('', '', string.punctuation))
+
+    # Tokenize
+    tokens = word_tokenize(text)
+
+    # Remove stopwords and short tokens
+    tokens = [word for word in tokens if word not in stop_words and len(word) >= min_len]
+
+    # Lemmatize
+    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+
+    return ' '.join(tokens)
+# apply preprocessing to image_locations, questions, image_uncanny_descriptions, image_descriptions
+dataC['cleaned_image_locations'] = dataC['image_locations'].apply(preprocess_text_list)
+print("done with image_locations")
+dataC['cleaned_questions'] = dataC['questions'].apply(preprocess_text_list)
+print("done with questions")
+dataC['cleaned_image_uncanny_descriptions'] = dataC['image_uncanny_descriptions'].apply(preprocess_text_list)
+print("done with image_uncanny_descriptions")
+dataC['cleaned_image_descriptions'] = dataC['image_descriptions'].apply(preprocess_text_list)
+print("done with image_descriptions")
+# new name for the updated text, save as cleaned_...
+# Save the dataframes with cleaned text back to pickle
+saveloc = '../../data/cleaned_data_prepared.pkl'
+with open(saveloc, "wb") as f:
+    pickle.dump({
+        "dataA_startID": dataA_startID,
+        "dataA_endID": dataA_endID,
+        "dataC_lastGoodID": dataC_lastGoodID,
+        "dataA": dataA,
+        "dataC": dataC
+    }, f)
+print(f"Cleaned data saved to {saveloc}")
