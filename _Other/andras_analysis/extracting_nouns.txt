@@ -1,0 +1,25 @@
+
+def extract_nouns(text):
+    # Ensure the input is a string, not a list
+    if not isinstance(text, str):
+        text = " ".join(text)
+    doc = nlp(text.lower())
+    return [token.text for token in doc if token.pos_ in ("NOUN", "PROPN")]
+
+# Apply to each dataframe in your list
+for i, df in enumerate(dataA_cleaned0):
+    df['captions_nouns'] = df['cleaned_caption'].apply(extract_nouns)
+    dataA_cleaned0[i] = df
+    print(f"Extracting nouns .......... {(i+1)/len(dataA_cleaned0):.2%} complete.")
+    
+# saving into pickle file
+noun_datafile = '../../data/cleaned_data_nouns.pkl'
+with open(noun_datafile, "wb") as f:
+    pickle.dump({
+        "dataA_nouns": dataA_cleaned0,
+        "dataC_nouns": dataC_cleaned0,
+        "dataA_startID": dataA_startID,
+        "dataA_endID": dataA_endID,
+        "dataC_lastGoodID": dataC_lastGoodID
+    }, f)
+print("Noun-extracted data saved successfully.")
