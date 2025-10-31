@@ -23,3 +23,13 @@ We will need to push said file on github so we all have access to it.
 
 # data\cleaned_data_prepared.pkl
 This pickle file is the same as the data\cleaned_data_nouns.pkl file, minus the extracted nouns from the captions.
+
+
+#_Other\andras_analysis\occupations.ipynb
+This is the full document used to clean multiple datasets that contain occupations. I used EU statistics, US census data, US labour statistics, and two databases from Kaggle.
+I cleaned all the occupations, found some synonyms and ended up with roughly 30k jobs that we can look for, including very specific jobs but also general ones.
+All jobs in the occupations column are (should be) singular terms, and the synonyms contain the plural of the occupations column and the synonyms and their plural forms.
+The list is quite comprehensive this way, so any algorithm counting all occurences will take a really long time.
+
+#_Other\andras_analysis\final_combined_occupations_with_synonyms.csv
+The aforementioned database of jobs.
