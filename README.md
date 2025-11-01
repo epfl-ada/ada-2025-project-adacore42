@@ -1,7 +1,7 @@
-# <center> **Humor as a Mirror: Social Attitudes, Politics, and Biases in the The New Yorker Caption Contest**
+# **Humor as a Mirror: Social Attitudes, Politics, and Biases in the The New Yorker Caption Contest**
 
 ## **Abstract**  
-<center> *A 150-word description of the project idea and goals. What’s the motivation behind your project? What story would you like to tell, and why?*
+*A 150-word description of the project idea and goals. What’s the motivation behind your project? What story would you like to tell, and why?*
 
 Humor is a universal yet complex form of expression. The more we think about it and the more complexes it becomes! An example of humor purposes could be in the way of dealing with more ‘serious’ matters [1] or easing social  tensions and establishing social bonds [2].
 
@@ -31,7 +31,7 @@ The project is divided into **4 axes of research directions**:
 
 ## **Proposed Additional Datasets**  
 
-<center> *List the additional dataset(s) you want to use (if any), and some ideas on how you expect to get, manage, process, and enrich it/them. Show that you’ve read the docs and some examples, and that you have a clear idea on what to expect. Discuss data size and format if relevant. It is your responsibility to check that what you propose is feasible.*
+*List the additional dataset(s) you want to use (if any), and some ideas on how you expect to get, manage, process, and enrich it/them. Show that you’ve read the docs and some examples, and that you have a clear idea on what to expect. Discuss data size and format if relevant. It is your responsibility to check that what you propose is feasible.*
 
 1. **Five datasets are used to construct an exhaustive list of occupations**:  
    - [**O*NET**](https://www.onetonline.org/find/all)  
@@ -74,7 +74,8 @@ For the website presentation, it could be interesting to include **annotated car
 *FILL*
 
 ### **Organization within the Team**  
-<center>*A list of **internal milestones** up until **Project Milestone P3***<center>
+*A list of **internal milestones** up until **Project Milestone P3***
+
 *FILL*
 
 ### **Questions for TAs (optional)**  
