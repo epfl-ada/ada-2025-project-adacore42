@@ -13,19 +13,23 @@ The project is divided into **4 axes of research directions**:
 
 ### **1. Axis: Professions & Politics → Humor about Authority and Power: *"What are people laughing about?"***  
 <center><i>When I Grow Up, I'll Be Anything but a Politician: Professions and Social Attitudes in the New Yorker Caption Contest</i></center> ??
+
 - “Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?” What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
 - Do captions reflect partisan leanings (Democrat vs. Republican) or mock political figures more broadly? Are the political jokes rated differently?
 
 ### **2. Axis: Humor in Time → Historical & Contextual Dimensions: *"When and why do jokes resonate?"*** 
 <center><i>Politics and Humor in context: How news shapes our fun.</i></center> ??
+
 *FILL*
 
 ### **3. Axis: Social Norms → Gender Roles & Taboos: *"What’s acceptable or not?"***  
 <center><i>Can we laugh at everything? A cultural lens of humor. Gender Roles, stereotipes, and Taboo Themes.</i></center> ??
+
 *FILL*
 
 ### **4. Axis: Biases → Psychological and Cultural Mechanisms: *"Why do we find it funny?"***  
 <center><i>Why cognitive biases make jokes funnier?</i></center> ??
+
 *FILL*
 
 
