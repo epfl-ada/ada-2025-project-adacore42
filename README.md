@@ -75,8 +75,25 @@ For the website presentation, it could be interesting to include **annotated car
 
 ### **Organization within the Team**  
 *A list of **internal milestones** up until **Project Milestone P3***
-
-*FILL*
+**Main team meeting on Fridays 15pm-->**
+ - 12.11:
+   - 
+   - 
+ - 19.11:
+   - 
+   - 
+ - 26.11:
+   - 
+   - 
+ - 03.12:
+   - 
+   - 
+ - 10.12:
+   - 
+   - 
+ - 17.12:
+   - 
+   - 
 
 ### **Questions for TAs (optional)**  
 Add here any questions you have for the TAs related to the proposed project.  
