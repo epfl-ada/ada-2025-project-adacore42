@@ -7,6 +7,7 @@ from pathlib import Path
 DATAPREP_PKL_FILENAME = "data_prepared.pkl"
 PLOTSGUI_PKL_FILENAME = "plots_gui.pkl"
 CONSTESTS_JSON_FILENAME = "contests.json"
+DATA_PREPARATION_PY_FILENAME = "DataPreparation.py"
 
 # ------------------------------------------------------------------------------
 # Paths to initial data folders and files
@@ -27,3 +28,12 @@ VNCC_CONTESTS_JSON_PATH = VNCC_MAIN_DIR_PATH / CONSTESTS_JSON_FILENAME
 STORED_DATAPREP_PKL_PATH = STORED_MAIN_DIR_PATH / DATAPREP_PKL_FILENAME
 STORED_PLOTSGUI_PKL_PATH = STORED_MAIN_DIR_PATH / PLOTSGUI_PKL_FILENAME
 
+
+# ----------------------------------------------------------------
+# Paths to Python scripts
+# ----------------------------------------------------------------
+
+SRC_MAIN_DIR_PATH = Path("src")
+
+DATA_DIR_PATH = SRC_MAIN_DIR_PATH / "data"
+DATA_PREPARATION_PY_PATH = DATA_DIR_PATH / DATA_PREPARATION_PY_FILENAME
