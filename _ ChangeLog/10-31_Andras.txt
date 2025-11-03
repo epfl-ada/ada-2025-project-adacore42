@@ -1,0 +1,35 @@
+# \_Other\andras_analysis\axis1.ipynb
+
+A jupyter notebook which will deal with axis 1 of the document Cyrielle completed. So far, this file:
+ - tokenised and lemmatised the huge datafile. This means I removed stopwords, corrected grammar, split contractions
+ - From the tokens, it extracted all the nouns in a separate column
+ - Both of these blocks of code are no longer in the notebook, but exist in txt files: cleaningdatacode.txt and extracting_nouns.txt resp.
+ - Loads and cleans an external database (US census 2018 on occupations) to identify possible occupations. The cleaning is not complete yet
+
+Current problems to be solved:
+ - How do we identify occupations in text? the external US census has official job titles, while these job titles do not occur in this way in colloquial speech...
+ - How to cut down on the number of occupations that captures all jobs that occur in speech? The list has top be exhaustive but not too longer
+ - The remaining points of axis 1 have not yet been dealt with.
+
+
+# data\cleaned_data_nouns.pkl
+This pickle file only exists on my computer, as pickle files are not pushed on our github. It is the most complete pickle of my work so far.
+It contains:
+ - The prepared data as done by Dominic
+ - The tokenisation of captions, image_descriptions, uncanny_image_descriptions, questions (the latter three are concerning the metadata)
+ - The nouns extracted from all the captions.
+
+We will need to push said file on github so we all have access to it.
+
+# data\cleaned_data_prepared.pkl
+This pickle file is the same as the data\cleaned_data_nouns.pkl file, minus the extracted nouns from the captions.
+
+
+#_Other\andras_analysis\occupations.ipynb
+This is the full document used to clean multiple datasets that contain occupations. I used EU statistics, US census data, US labour statistics, and two databases from Kaggle.
+I cleaned all the occupations, found some synonyms and ended up with roughly 30k jobs that we can look for, including very specific jobs but also general ones.
+All jobs in the occupations column are (should be) singular terms, and the synonyms contain the plural of the occupations column and the synonyms and their plural forms.
+The list is quite comprehensive this way, so any algorithm counting all occurences will take a really long time.
+
+#_Other\andras_analysis\final_combined_occupations_with_synonyms.csv
+The aforementioned database of jobs.

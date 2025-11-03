@@ -6,3 +6,24 @@
 
 /data
 /_Other/andras_analysis/venv
+_Other/andras_analysis/all_data_M_2024.xlsx
+_Other/andras_analysis/All_Occupations.csv
+_Other/andras_analysis/final_combined_occupations_with_synonyms_normalised.csv
+_Other/andras_analysis/census_occupations_cleaned.csv
+_Other/andras_analysis/eu_occupations_cleaned.csv
+_Other/andras_analysis/expanded_occupations_with_synonyms.csv
+_Other/andras_analysis/final_combined_occupations_with_synonyms_normalized.csv
+_Other/andras_analysis/kaggle_occupations_cleaned.csv
+_Other/andras_analysis/job_descriptions.csv
+_Other/andras_analysis/most_common_words.csv
+_Other/andras_analysis/most_common_words_eu.csv
+_Other/andras_analysis/most_common_words_kaggle.csv
+_Other/andras_analysis/most_common_words_census.csv
+_Other/andras_analysis/most_common_words_us.csv
+_Other/andras_analysis/occupations.csv
+_Other/andras_analysis/occupations1.csv
+_Other/andras_analysis/occupations_en.csv
+_Other/andras_analysis/todo_milestone2.txt
+_Other/andras_analysis/us_bls_occupations_cleaned.csv
+_Other/andras_analysis/us_census_occupations_cleaned.csv
+_Other/andras_analysis/occupation_categories.csv
