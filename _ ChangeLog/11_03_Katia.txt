@@ -1,0 +1,7 @@
+Hello :)
+
+I added the explanation of the metric I did in the resultss notebook, in the part data prepocessing. 
+I did not yet added my code in the DataPreparation files.
+
+# small change on the nome of the jokes about 42 at the end of the notebook
+
