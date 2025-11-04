@@ -69,6 +69,7 @@ def preprocess_text_list(entry, min_len=2):
     tokens = [lemmatizer.lemmatize(word) for word in tokens]
 
     return ' '.join(tokens)
+    
 # apply preprocessing to image_locations, questions, image_uncanny_descriptions, image_descriptions
 dataC['cleaned_image_locations'] = dataC['image_locations'].apply(preprocess_text_list)
 print("done with image_locations")

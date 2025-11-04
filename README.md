@@ -12,23 +12,19 @@ With this in mind, this project aim to investigate how jokes reflect societal tr
 The project is divided into **4 axes of research directions**:
 
 ### **1. Axis: Professions & Politics → Humor about Authority and Power: *"What are people laughing about?"***  
-<center><i>When I Grow Up, I'll Be Anything but a Politician: Professions and Social Attitudes in the New Yorker Caption Contest</i></center> ??
 
 - “Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?” What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
 - Do captions reflect partisan leanings (Democrat vs. Republican) or mock political figures more broadly? Are the political jokes rated differently?
 
 ### **2. Axis: Humor in Time → Historical & Contextual Dimensions: *"When and why do jokes resonate?"*** 
-<center><i>Politics and Humor in context: How news shapes our fun.</i></center> ??
 
 *FILL*
 
 ### **3. Axis: Social Norms → Gender Roles & Taboos: *"What’s acceptable or not?"***  
-<center><i>Can we laugh at everything? A cultural lens of humor. Gender Roles, stereotipes, and Taboo Themes.</i></center> ??
 
 *FILL*
 
 ### **4. Axis: Biases → Psychological and Cultural Mechanisms: *"Why do we find it funny?"***  
-<center><i>Why cognitive biases make jokes funnier?</i></center> ??
 
 *FILL*
 
@@ -43,15 +39,19 @@ The project is divided into **4 axes of research directions**:
    - [**ESCO (ESCO dataset v1.2.0)**](https://esco.ec.europa.eu/en/use-esco/download)   
    - [**Kaggle Job Description Dataset**](https://www.kaggle.com/datasets/ravindrasinghrana/job-description-dataset)  
    - [**US Labor Statistics (May 2024, all data)** ](https://www.bls.gov/oes/tables.htm)   
-   - : [**US Census Data (2018 Census Occupation Index)**](https://www.census.gov/topics/employment/industry-occupation/guidance/indexes.html)
+   - [**US Census Data (2018 Census Occupation Index)**](https://www.census.gov/topics/employment/industry-occupation/guidance/indexes.html)
 
-   While these datasets contain their own methods of categorising jobs, the main concern for the project at this stage is **solely to construct a full list of occupations**, ranging from very specific titles to more general terms.  In total, these datasets add up to **~33,000 distinct occupations**, once the data is cleaned and treated. The list could be further enriched by including **synonyms and colloquial terms** for each job.
+   While these datasets contain their own methods of categorising jobs, the main concern for the project at this stage is **solely to construct a full list of occupations**, ranging from very specific titles to more general terms. In total, these datasets add up to **~33,000 distinct occupations**, once the data is cleaned and treated. The list could be further enriched by including **synonyms and colloquial terms** for each job.
 
 *FILL*
 
 ## **Methods**
 
-### **Axis 1: Professions & Politics**  
+### **Axis 1: What Is Considered Funny**  
+
+*FILL*
+
+### **Axis 2: Professions, Politics, and Power** 
 
 The first step is to construct a **comprehensive, clean list of occupations**, which can be **specific** (e.g., *electromagnetic engineer*) or **general** (e.g., *physicist, nurse, doctor*). This has already been partially done by cleaning and merging the aforementioned occupation datasets.  
 
@@ -73,36 +73,38 @@ A similar approach is taken for the **political research** of this axis:
 
 For the website presentation, it could be interesting to include **annotated cartoons** to display jobs being ridiculed.
 
+### Axis 3: Gender Roles
+
 *FILL*
 
 ## **Proposed Timeline**
-*FILL*
+-12/11 : 
+  - conduct analysis 
+-19/11 : 
+  - conduct analysis
+	- present intermediate result to the group
+- 26/11 : 
+	- final result of each part ?
+- 03/12 : 
+	- start HTML writing and design the web page
+	- discuss results that are the most important and should be uploaded on website 
+- 10/12 : 
+  - update all result on website
+
+- 17/12 : HANDOUT P3 (schedule meeting tuesday before for last reading and modification and cheers with vin chaud)
 
 ### **Organization within the Team**  
-*A list of **internal milestones** up until **Project Milestone P3***
-**Main team meeting on Fridays 15pm-->**
- - 12.11:
-   - 
-   - 
- - 19.11:
-   - 
-   - 
- - 26.11:
-   - 
-   - 
- - 03.12:
-   - 
-   - 
- - 10.12:
-   - 
-   - 
- - 17.12:
-   - 
-   - 
 
-### **Questions for TAs (optional)**  
-Add here any questions you have for the TAs related to the proposed project.  
-- [Question 1]  
+**Main team meeting on Fridays 15pm-->**
+ - General Statistical necessities: Cyrielle
+ - Axis 1: Katia & Cyrielle
+ - Axis 2: Andras
+ - Axis 3: Amelie
+ - Organisation of github & website: Dominic
+
+
+### **Questions for TAs**  
+- For axis 3, we are using the metadata of the images. The metadata is missing about half the data (compared to the captions data) so we will throw out missing data from this analysis. Is it scientifically okay that for axis 1 & 2 we use all the data, but for axis 3 we only use half the data? 
 - [Question 2] 
 *FILL*
 
