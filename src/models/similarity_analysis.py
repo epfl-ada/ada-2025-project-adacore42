@@ -193,7 +193,7 @@ class CaptionClustering:
         umap_embeddings = reducer.fit_transform(self.embeddings)
 
         df_clusters = df.copy()
-        df_clusters['cluster'] = self.cluster_labels
+        df_clusters['cluster'] = self.cluster_labels.astype(str)
         df_clusters['umap_x'] = umap_embeddings[:, 0]
         df_clusters['umap_y'] = umap_embeddings[:, 1]
         df_clusters['umap_z'] = umap_embeddings[:, 2]
@@ -283,6 +283,6 @@ class SimilarHumorAnalysis:
 
         results_df = pd.DataFrame(results)
         sns.histplot(results_df['spearman'], bins=20)
-        plt.title("Distribution des corrélations humour/similarité (Spearman) par cluster")
+        plt.title("Correlation humour scores/similarity (Spearman) by cluster")
         plt.show()
         return results_df
