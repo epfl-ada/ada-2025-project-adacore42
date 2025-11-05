@@ -16,7 +16,7 @@ The project is divided into **3 axes of research directions**:
 
 ### **Axis 2: Professions, Politics, and Power** 
 
-- “Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?” What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
+- Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?” What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
 - Do captions reflect partisan leanings (Democrat vs. Republican) or mock political figures more broadly? Are the political jokes rated differently?
 
 
@@ -58,7 +58,7 @@ Finally, to capture multivariate and non-linear relationships, we will train a R
 
 ### **Axis 2: Professions, Politics, and Power** 
 
-The first step is to construct a **comprehensive list of occupations**. This was done by cleaning and merging the aforementioned occupation datasets.  
+First, we build a **comprehensive list of occupations**. This is done by merging aforementioned datasets. 
 
 **Analysis**
 The **jobs in each caption must be extracted**, allowing us to:  
@@ -72,10 +72,9 @@ Similar approach taken for the **political research**:
 - Analyse the **funniness score** of the captions and evolution of volume.
 
 **Visualisations:**  
-- **Bar charts** for frequency of occupations/political topics.
-- **Scatterplots** for some data visualisation.
-- **Bar charts** for average funniness scores per category.
-- **Heatmaps** cross-tabulating professions and sentiments.
+- **Bar charts**: frequency of occupations/political topics.
+- **Bar charts**: average funniness scores per category.
+- **Heatmaps**: cross-tabulating professions and sentiments.
 
 ### **Axis 3: Gender Roles**
 
@@ -100,17 +99,17 @@ This section investigates how men and women are depicted in cartoons and caption
 - Conduct analysis :
   - Axis 1 : get all attributes wanted + similarity metric
   - Axis 2 : Polish occupational datase + do political terms dataset
-  - Axis 3 : get a wider gender dictionnary + work on language patterns over time
+  - Axis 3 : widen gender dictionnary + work on language patterns over time
 ### 19/11 : 
 - Conduct analysis : 
-  - Axis 1 : perform statistical test + start random forest
-  - Axis 2 : perform analysis of occupations + politics and their influence on funniness
+  - Axis 1 : statistical test + start random forest
+  - Axis 2 : analysis of occupations + politics and their influence on funniness
   - Axis 3 : audience response
 - Present intermediate result to the group
 ### 26/11 : 
 - Conduct analysis : 
     - Axis 1 : finish random forest
-    - Axis 2 : perform analysis of sentiment and stereotypes
+    - Axis 2 : analysis of sentiment and stereotypes
     - Axis 3 : polish plots and structure of the analysis
 ### 03/12 : 
 - Start HTML writing and design the web page
@@ -122,7 +121,6 @@ This section investigates how men and women are depicted in cartoons and caption
 
 ### Organization within the Team**
 
-**Main team meeting on Fridays 15pm-->**
  - General Statistical necessities: Cyrielle
  - Axis 1: Katia & Cyrielle
  - Axis 2: Andras
