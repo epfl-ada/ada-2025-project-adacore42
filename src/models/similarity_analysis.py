@@ -166,7 +166,7 @@ class CaptionClustering:
             semantic_sim_cluster = sim_model.compute_semantic_similarity(subset, text_col)
             structural_sim_cluster = sim_model.compute_structure_similarity(subset, text_col)
             combined_sim_cluster = sim_model.compute_combined_similarity(semantic_sim_cluster, structural_sim_cluster, semantic_weight=semantic_weight, structural_weight=structural_weight)
-
+            
             # Moyenne intra-cluster (hors diagonale)
             n = len(subset)
             mean_sim = (combined_sim_cluster.sum().sum() - n) / (n**2 - n)
@@ -178,15 +178,14 @@ class CaptionClustering:
                 sim_model.plot_similarity_matrix(combined_sim_cluster, subset[text_col].tolist())
 
         cluster_df = pd.DataFrame(cluster_stats)
-        print(cluster_df)
         sns.histplot(cluster_df['mean_comb_sim'], bins=20)
-        plt.title("Distribution des similarités intra-cluster")
+        plt.title("Distribution of intra-cluster similarities")
         plt.show()
         return cluster_df
 
 
 
-
+    # ajouter couleur par score d’humour ?
     def UMAP_reduction(self, df, umap_n_components=3, umap_n_neighbors=15, umap_min_dist=0.1, umap_metric='cosine'):
         print("UMAP dimensional reduction")
         reducer = umap.UMAP(n_components=umap_n_components, n_neighbors=umap_n_neighbors, min_dist=umap_min_dist, metric=umap_metric, random_state=42)
