@@ -117,9 +117,9 @@ For the website presentation, it could be interesting to include **annotated car
 
 
 ### **Questions for TAs**  
-- For axis 3, we are using the metadata of the images. The metadata is missing about half the data (compared to the captions data) so we will throw out missing data from this analysis. Is it scientifically okay that for axis 1 & 2 we use all the data, but for axis 3 we only use half the data? 
-- [Question 2] 
-*FILL*
+- 1)  For axis 3, we are using the metadata of the images. The metadata is missing about half the data (compared to the captions data) so we will throw out missing data from this analysis. Is it scientifically okay that for axis 1 & 2 we use all the data, but for axis 3 we only use half the data? 
+- 2) Concerning the part 'Building a similarity metric'. We have done : _[**1.** SBERT embeddings for the captions. **2.** K-Means clusters based on those embeddings - intended to group semantically similar captions. **3.** A custom similarity metric (e.g., cosine similarity on semantic and structural similarities) to quantify how close two captions are.]_ The idea behing those implementations was we suspected that unbalanced text content could bias your further comparisons (wherever it would be).
+So we want to use this clustering to balance the dataset - e.g., by pairing or grouping captions that are “semantically equivalent” but differ in another variable (like treatment/control, date of publication, elements presents in the cartoon, etc.), so that comparisons (hypothesis tests) are meaningful. But the questions are : when this approach is appropriate (for which type of problems) and how to implement it in practice ? Secondly, this metric is not perfect (as explained in results.ipynb, because of noises in classification, and only focus on semantic similarity) could it create misleading “similar” pairs and affect our analysis ?
 
 ## **Sources**
 
