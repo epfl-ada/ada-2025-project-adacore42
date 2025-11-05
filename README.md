@@ -26,7 +26,9 @@ The project is divided into **3 axes of research directions**:
 
 ### **Axis 3: Gender Roles**  
 
-*FILL*
+- How are men and women depicted in New Yorker cartoons and captions, and do these depictions reflect traditional gender roles or stereotypes?
+
+- How does audience response (e.g., votes or winning captions) relate to gendered content—do captions about one gender receive more positive attention, and does this reinforce or challenge stereotypes?
 
 ## **Proposed Additional Datasets**  
 
@@ -39,7 +41,10 @@ The project is divided into **3 axes of research directions**:
 
    While these datasets contain their own methods of categorising jobs, the main concern for the project at this stage is **solely to construct a full list of occupations**, ranging from very specific titles to more general terms. In total, these datasets add up to **~33,000 distinct occupations**, once the data is cleaned and treated. The list could be further enriched by including **synonyms and colloquial terms** for each job.
 
-*FILL*
+2. **Dictionary of gendered words**:
+
+This dictionary was constructed based on Danielle Sucher's "Jailbreak the Patriarchy" 
+(https://github.com/DanielleSucher/Jailbreak-the-Patriarchy)
 
 ## **Methods**
 
@@ -79,7 +84,20 @@ For the website presentation, it could be interesting to include **annotated car
 
 ### **Axis 3: Gender Roles**
 
-*FILL*
+This section investigates how men and women are depicted in cartoons and captions, the language patterns associated with each gender, and how audience responses relate to these depictions.
+
+**Data Preparation**
+- Gender annotation: Identify men, women, or gender-neutral characters in cartoons and captions using a gendered dictionary.
+- Feature extraction: Capture lexical features (word frequency, co-occurrences, role categories), sentiment (polarity, subjectivity), and audience metrics (votes, winning captions).
+
+**Analysis**
+- Language Patterns: Analyze word usage and co-occurrences, generate word clouds, and track changes over time.
+- Audience Response: Compare sentiment and success of captions mentioning men vs women, and assess whether stereotypical portrayals are rewarded.
+
+**Visualizations**
+- Bar charts for gender frequencies and mentions
+- Word clouds and co-occurrence heatmaps
+- Temporal plots for shifts in depictions and language
 
 ## **Proposed Timeline**
 -12/11 : 
