@@ -1,28 +1,30 @@
-# **Humor as a Mirror: Social Attitudes, Politics, and Biases in the The New Yorker Caption Contest**
+# ** Humor as a Mirror: The New Yorker Captions as Reflections of Society, Politics, and Stereotypes **
 
 ## **Abstract**  
-*A 150-word description of the project idea and goals. What’s the motivation behind your project? What story would you like to tell, and why?*
-
 Humor is a universal yet complex form of expression. The more we think about it and the more complexes it becomes! An example of humor purposes could be in the way of dealing with more ‘serious’ matters [1] or easing social  tensions and establishing social bonds [2].
 
 With this in mind, this project aim to investigate how jokes reflect societal traits and values. Our analysis will focus on three major themes: politics, gender, and taboos (or social biases). We will begin by examining what is generally perceived as “funny” and “unfunny,” and then explore how humor operates within each of these social domains. Finally, we will synthesize our findings to understand what humor reveals about the norms, power structures, and sensitivities of contemporary society.
 
 
 ## **Research Questions**  
-The project is divided into **4 axes of research directions**:### **Axis 1: What Is Considered Funny** 
+The project is divided into **3 axes of research directions**:
 
-*FILL*
+### **Axis 1: What Is Considered Funny**  
+- Are shorter captions rated as funnier?
+- Does the use of punctuation (e.g., ?, !, …) increase perceived humor?
+- Does lexical diversity or the presence of unexpected words correlate with funniness?
+- Do sentiment polarity and emotional tone (positive vs. negative) influence humor ratings?
+- Are captions that are semantically less aligned with their paired image (i.e., more surprising) perceived as funnier?
+- what are the funniest themes? 
+- Which of the above attiributes contribute most to makes a caption funny?
 
 ### **Axis 2: Professions, Politics, and Power** 
 
 - “Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?” What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
 - Do captions reflect partisan leanings (Democrat vs. Republican) or mock political figures more broadly? Are the political jokes rated differently?
 
-### **2. Axis: Humor in Time → Historical & Contextual Dimensions: *"When and why do jokes resonate?"*** 
 
-*FILL*
-
-### **Axis 3: Gender Roles**
+### **Axis 3: Gender Roles**  
 
 *FILL*
 
@@ -43,7 +45,15 @@ The project is divided into **4 axes of research directions**:### **Axis 1: What
 
 ### **Axis 1: What Is Considered Funny**  
 
-*FILL*
+This part aims to understand which characteristics of a caption explain its perceived funniness.
+
+Data preparation : Each caption is associated with:
+- Its funniness score (target variable).
+- A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using tools such as VADER or TextBlob), Semantic alignment with the image.
+
+To address the first research questions, we will use correlation and non-parametric tests such as Spearman’s ρ, Kruskal–Wallis test and Mann–Whitney U to assess how each feature individually relates to funniness. To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
+
+Finally, to capture multivariate and non-linear relationships, we will train a Random Forest model using all features simultaneously. The features of importance would then be deduce as the higher nodes in the decision trees correspond to features with stronger predictive power.
 
 ### **Axis 2: Professions, Politics, and Power** 
 
@@ -65,25 +75,36 @@ A similar approach is taken for the **political research** of this axis:
 - **Bar charts** for average funniness scores per category  
 - Possibly **heatmaps** cross-tabulating professions and sentiments  
 
+For the website presentation, it could be interesting to include **annotated cartoons** to display jobs being ridiculed.
+
 ### **Axis 3: Gender Roles**
 
 *FILL*
 
 ## **Proposed Timeline**
 -12/11 : 
-  - conduct analysis 
+  - conduct analysis :
+    - axis 1 : get all attributes wanted + similarity metric
+    - axis 2 : 
+    - axis 3 : 
 -19/11 : 
-  - conduct analysis
+  - conduct analysis : 
+    - axis 1 : perform statistical test + start random forest
+    - axis 2 : 
+    - axis 3 : 
 	- present intermediate result to the group
 - 26/11 : 
-	- final result of each axis?
+	- conduct analysis : 
+    - axis 1 : finish random forest
+    - axis 2 : 
+    - axis 3 : 
 - 03/12 : 
 	- start HTML writing and design the web page
 	- discuss results that are the most important and should be uploaded on website 
 - 10/12 : 
   - update all result on website
 
-- 17/12 : HANDOUT P3 (schedule meeting tuesday before for last reading and modification and cheers with vin chaud)
+- 17/12 : HANDOUT P3 (last reading and modification. Cheers with vin chaud :) )
 
 ### **Organization within the Team**  
 
