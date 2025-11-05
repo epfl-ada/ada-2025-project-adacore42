@@ -10,13 +10,9 @@ With this in mind, this project aim to investigate how jokes reflect societal tr
 The project is divided into **3 axes of research directions**:
 
 ### **Axis 1: What Is Considered Funny**  
-- Are shorter captions rated as funnier?
-- Does the use of punctuation (e.g., ?, !, …) increase perceived humor?
-- Does lexical diversity or the presence of unexpected words correlate with funniness?
-- Do sentiment polarity and emotional tone (positive vs. negative) influence humor ratings?
-- Are captions that are semantically less aligned with their paired image (i.e., more surprising) perceived as funnier?
-- what are the funniest themes? 
-- Which of the above attiributes contribute most to makes a caption funny?
+- How do linguistic features (caption length, punctuation, lexical diversity, unexpected words, sentiment polarity) affect perceived funniness?
+- What are the funniest themes?
+- Which of the above attributes contribute most to making a caption funny?
 
 ### **Axis 2: Professions, Politics, and Power** 
 
