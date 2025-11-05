@@ -1,3 +1,6 @@
+from scipy.stats import zscore
+import numpy as n
+
 def compute_funny_ranking(data, by_image=False):
     """
     Compute humor ranking metrics for caption data.
