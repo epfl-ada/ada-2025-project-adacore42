@@ -39,7 +39,7 @@ The project is divided into **3 axes of research directions**:
    - [**US Labor Statistics (May 2024, all data)** ](https://www.bls.gov/oes/tables.htm)   
    - [**US Census Data (2018 Census Occupation Index)**](https://www.census.gov/topics/employment/industry-occupation/guidance/indexes.html)
 
-   While these datasets contain their own methods of categorising jobs, the main concern for the project at this stage is **solely to construct a full list of occupations**, ranging from very specific titles to more general terms. In total, these datasets add up to **~33,000 distinct occupations**, once the data is cleaned and treated. The list could be further enriched by including **synonyms and colloquial terms** for each job.
+   The main purpose of these datasets is to construct a comprehensive list of occupations. Other data in said datasets is not used.
 
 2. **Dictionary of gendered words**:
 
@@ -62,25 +62,24 @@ Finally, to capture multivariate and non-linear relationships, we will train a R
 
 ### **Axis 2: Professions, Politics, and Power** 
 
-The first step is to construct a **comprehensive list of occupations**, which can be **specific** (e.g., *electromagnetic engineer*) or **general** (e.g., *physicist, nurse, doctor*). This was done by cleaning and merging the aforementioned occupation datasets.  
+The first step is to construct a **comprehensive list of occupations**. This was done by cleaning and merging the aforementioned occupation datasets.  
 
-After this, the **jobs in each caption must be extracted and saved**, allowing us to:  
+**Analysis**
+The **jobs in each caption must be extracted**, allowing us to:  
 - Track the **count of occupations**.
 - Analyse **where and when** they occur.
 - Identify **co-occurring words** to label **recurrent stereotypes, ridicule, and mockery** of jobs.
 
-A similar approach is taken for the **political research** of this axis:  
+Similar approach taken for the **political research**:
 - Create a **list of political words**.
-- Treat **ambiguous words** with care (e.g., *left* and *right* may or may not be political).
-- Once political words are located, analyse the **funniness score** of the caption.
+- Treat **ambiguous words** with care (e.g., *left* and *right*).
+- Analyse the **funniness score** of the captions and evolution of volume.
 
-**Visualisations produced by this axis include:**  
-- **Bar charts** and **word clouds** for frequency of occupations/political topics.
-- **Histograms** for frequency of professions/politics over time.
+**Visualisations:**  
+- **Bar charts** for frequency of occupations/political topics.
+- **Scatterplots** for some data visualisation.
 - **Bar charts** for average funniness scores per category.
-- Possibly **heatmaps** cross-tabulating professions and sentiments.
-
-For the website presentation, it could be interesting to include **annotated cartoons** to display jobs being ridiculed.
+- **Heatmaps** cross-tabulating professions and sentiments.
 
 ### **Axis 3: Gender Roles**
 
