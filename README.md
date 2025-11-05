@@ -15,6 +15,7 @@ The project is divided into **3 axes of research directions**:
 - Does lexical diversity or the presence of unexpected words correlate with funniness?
 - Do sentiment polarity and emotional tone (positive vs. negative) influence humor ratings?
 - Are captions that are semantically less aligned with their paired image (i.e., more surprising) perceived as funnier?
+- what are the funniest themes? 
 - Which of the above attiributes contribute most to makes a caption funny?
 
 ### **Axis 2: Professions, Politics, and Power** 
@@ -55,7 +56,7 @@ Data preparation : Each caption is associated with:
 - Its funniness score (target variable).
 - A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using tools such as VADER or TextBlob), Semantic alignment with the image.
 
-To address the first research questions, we will use correlation and non-parametric tests such as Spearman’s ρ and Mann–Whitney U to assess how each feature individually relates to funniness. To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
+To address the first research questions, we will use correlation and non-parametric tests such as Spearman’s ρ, Kruskal–Wallis test and Mann–Whitney U to assess how each feature individually relates to funniness. To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
 
 Finally, to capture multivariate and non-linear relationships, we will train a Random Forest model using all features simultaneously. The features of importance would then be deduce as the higher nodes in the decision trees correspond to features with stronger predictive power.
 
