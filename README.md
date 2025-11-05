@@ -85,7 +85,7 @@ For the website presentation, it could be interesting to include **annotated car
 -12/11 : 
   - conduct analysis :
     - axis 1 : get all attributes wanted + similarity metric
-    - axis 2 : 
+    - axis 2 : Polish occupational datase + do political terms dataset
     - axis 3 : 
 -19/11 : 
   - conduct analysis : 

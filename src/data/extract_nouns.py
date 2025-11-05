@@ -39,8 +39,8 @@ def save_noun_data(dataA_cleaned0, dataC_cleaned0, dataA_startID, dataA_endID, d
         }, f)
     print("Noun-extracted data saved successfully.")
 
-if __name__ == "__main__":
-    dataA, dataC, dataA_startID, dataA_endID, dataC_lastGoodID = load_data(filepath='../../data/cleaned_data_prepared.pkl')
-    dataA_cleaned0 = apply_noun_extraction(dataA)
-    dataC_cleaned0 = dataC  # Assuming no changes to dataC
-    save_noun_data(dataA_cleaned0, dataC_cleaned0, dataA_startID, dataA_endID, dataC_lastGoodID, filepath='../../data/cleaned_data_nouns_copy.pkl')
+#if __name__ == "__main__":
+    #dataA, dataC, dataA_startID, dataA_endID, dataC_lastGoodID = load_data(filepath='../../data/cleaned_data_prepared.pkl')
+    #dataA_cleaned0 = apply_noun_extraction(dataA)
+    #dataC_cleaned0 = dataC  # Assuming no changes to dataC
+    #save_noun_data(dataA_cleaned0, dataC_cleaned0, dataA_startID, dataA_endID, dataC_lastGoodID, filepath='../../data/cleaned_data_nouns_copy.pkl')

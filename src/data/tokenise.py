@@ -105,7 +105,7 @@ def save_data(dataA, dataC, dataA_startID, dataA_endID, dataC_lastGoodID, filepa
         }, f)
     print(f"Cleaned data saved to {filepath}")
 
-if __name__ == "__main__":
-    dataA, dataC, dataA_startID, dataA_endID, dataC_lastGoodID = load_data(filepath='../../data/data_prepared.pkl') # Load data
-    dataA1, dataC1 = apply_preprocessing(dataA, dataC) # Tokenise and clean data
-    save_data(dataA1, dataC1, dataA_startID, dataA_endID, dataC_lastGoodID, filepath='../../data/cleaned_data_prepared_copy.pkl')
+#if __name__ == "__main__":
+#    dataA, dataC, dataA_startID, dataA_endID, dataC_lastGoodID = load_data(filepath='../../data/data_prepared.pkl') # Load data
+#    dataA1, dataC1 = apply_preprocessing(dataA, dataC) # Tokenise and clean data
+#    save_data(dataA1, dataC1, dataA_startID, dataA_endID, dataC_lastGoodID, filepath='../../data/cleaned_data_prepared_copy.pkl')
