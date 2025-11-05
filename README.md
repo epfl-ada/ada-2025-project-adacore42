@@ -1,4 +1,4 @@
-# ** Humor as a Mirror: The New Yorker Captions as Reflections of Society, Politics, and Stereotypes **
+# Humor as a Mirror: The New Yorker Captions as Reflections of Society, Politics, and Stereotypes 
 
 ## **Abstract**  
 Humor is a universal yet complex form of expression. The more we think about it and the more complexes it becomes! An example of humor purposes could be in the way of dealing with more ‘serious’ matters [1] or easing social  tensions and establishing social bonds [2].
@@ -65,20 +65,20 @@ Finally, to capture multivariate and non-linear relationships, we will train a R
 The first step is to construct a **comprehensive list of occupations**, which can be **specific** (e.g., *electromagnetic engineer*) or **general** (e.g., *physicist, nurse, doctor*). This was done by cleaning and merging the aforementioned occupation datasets.  
 
 After this, the **jobs in each caption must be extracted and saved**, allowing us to:  
-- Track the **count of occupations**  
-- Analyze **where and when** they occur  
-- Identify **co-occurring words** to label **recurrent stereotypes, ridicule, and mockery** of jobs  
+- Track the **count of occupations**.
+- Analyze **where and when** they occur.
+- Identify **co-occurring words** to label **recurrent stereotypes, ridicule, and mockery** of jobs.
 
 A similar approach is taken for the **political research** of this axis:  
-- Create a **list of political words**  
-- Treat **ambiguous words** with care (e.g., *left* and *right* may or may not be political)  
-- Once political words are located, analyse the **funniness score** of the caption  
+- Create a **list of political words**.
+- Treat **ambiguous words** with care (e.g., *left* and *right* may or may not be political).
+- Once political words are located, analyse the **funniness score** of the caption.
 
 **Visualisations produced by this axis include:**  
-- **Bar charts** and **word clouds** for frequency of occupations/political topics  
-- **Histograms** for frequency of professions/politics over time  
-- **Bar charts** for average funniness scores per category  
-- Possibly **heatmaps** cross-tabulating professions and sentiments  
+- **Bar charts** and **word clouds** for frequency of occupations/political topics.
+- **Histograms** for frequency of professions/politics over time.
+- **Bar charts** for average funniness scores per category.
+- Possibly **heatmaps** cross-tabulating professions and sentiments.
 
 For the website presentation, it could be interesting to include **annotated cartoons** to display jobs being ridiculed.
 
@@ -95,48 +95,48 @@ This section investigates how men and women are depicted in cartoons and caption
 - Audience Response: Compare sentiment and success of captions mentioning men vs women, and assess whether stereotypical portrayals are rewarded.
 
 **Visualizations**
-- Bar charts for gender frequencies and mentions
-- Word clouds and co-occurrence heatmaps
-- Temporal plots for shifts in depictions and language
+- Bar charts for gender frequencies and mentions.
+- Word clouds and co-occurrence heatmaps.
+- Temporal plots for shifts in depictions and language.
 
 ## **Proposed Timeline**
--12/11 : 
-  - conduct analysis :
-    - axis 1 : get all attributes wanted + similarity metric
-    - axis 2 : 
-    - axis 3 : get a wider gender dictionnary + work on language patterns over time
--19/11 : 
-  - conduct analysis : 
-    - axis 1 : perform statistical test + start random forest
-    - axis 2 : 
-    - axis 3 : audience response
-	- present intermediate result to the group
-- 26/11 : 
-	- conduct analysis : 
-    - axis 1 : finish random forest
-    - axis 2 : 
-    - axis 3 : polish plots and structure of the analysis
-- 03/12 : 
-	- start HTML writing and design the web page
-	- discuss results that are the most important and should be uploaded on website 
-- 10/12 : 
-  - update all result on website
+### 12/11 : 
+- Conduct analysis :
+  - Axis 1 : get all attributes wanted + similarity metric
+  - Axis 2 : 
+  - Axis 3 : get a wider gender dictionnary + work on language patterns over time
+### 19/11 : 
+- Conduct analysis : 
+  - Axis 1 : perform statistical test + start random forest
+  - Axis 2 : 
+  - Axis 3 : audience response
+- Present intermediate result to the group
+### 26/11 : 
+- Conduct analysis : 
+    - Axis 1 : finish random forest
+    - Axis 2 : 
+    - Axis 3 : polish plots and structure of the analysis
+### 03/12 : 
+- Start HTML writing and design the web page
+	- Discuss results that are the most important and should be uploaded on website 
+### 10/12 : 
+  - Update all result on website
 
-- 17/12 : HANDOUT P3 (last reading and modification. Cheers with vin chaud :) )
+### 17/12 : HANDOUT P3 (last reading and modification. Cheers with vin chaud :) )
 
-### **Organization within the Team**  
+### Organization within the Team**
 
 **Main team meeting on Fridays 15pm-->**
  - General Statistical necessities: Cyrielle
  - Axis 1: Katia & Cyrielle
  - Axis 2: Andras
  - Axis 3: Amelie
- - Organisation of github & website: Dominic
+ - Data preprocessing & website: Dominic
 
 
 ### **Questions for TAs**  
-- 1)  For axis 3, we are using the metadata of the images. The metadata is missing about half the data (compared to the captions data) so we will throw out missing data from this analysis. Is it scientifically okay that for axis 1 & 2 we use all the data, but for axis 3 we only use half the data? 
-- 2) Concerning the part 'Building a similarity metric'. We have done : _[**1.** SBERT embeddings for the captions. **2.** K-Means clusters based on those embeddings - intended to group semantically similar captions. **3.** A custom similarity metric (e.g., cosine similarity on semantic and structural similarities) to quantify how close two captions are.]_ The idea behing those implementations was we suspected that unbalanced text content could bias your further comparisons (wherever it would be).
+1)  For axis 3, we are using the metadata of the images. The metadata is missing about half the data (compared to the captions data) so we will throw out missing data from this analysis. Is it scientifically okay that for axis 1 & 2 we use all the data, but for axis 3 we only use half the data? 
+2) Concerning the part 'Building a similarity metric'. We have done : _[**1.** SBERT embeddings for the captions. **2.** K-Means clusters based on those embeddings - intended to group semantically similar captions. **3.** A custom similarity metric (e.g., cosine similarity on semantic and structural similarities) to quantify how close two captions are.]_ The idea behing those implementations was we suspected that unbalanced text content could bias your further comparisons (wherever it would be).
 So we want to use this clustering to balance the dataset - e.g., by pairing or grouping captions that are “semantically equivalent” but differ in another variable (like treatment/control, date of publication, elements presents in the cartoon, etc.), so that comparisons (hypothesis tests) are meaningful. But the questions are : when this approach is appropriate (for which type of problems) and how to implement it in practice ? Secondly, this metric is not perfect (as explained in results.ipynb, because of noises in classification, and only focus on semantic similarity) could it create misleading “similar” pairs and affect our analysis ?
 
 ## **Sources**
