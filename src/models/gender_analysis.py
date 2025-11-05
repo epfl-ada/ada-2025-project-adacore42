@@ -2,6 +2,7 @@ import re
 from typing import List, Set, Dict
 import matplotlib.pyplot as plt
 import seaborn as sns
+import pandas as pd
 
 
 class GenderAnalysis:
@@ -76,7 +77,7 @@ class GenderAnalysis:
     # PART 0 – GENDER DETECTION
     # ---------------------------
 
-    def remove_nan(dataC):
+    def remove_nan(self, dataC):
 
         dataC0 = dataC.copy(deep=True)
 
@@ -84,7 +85,7 @@ class GenderAnalysis:
         no_NaN = dataC0[dataC0['image_descriptions'].notna()].index
 
         # Let's remove them
-        dataC.dropna(subset=['image_descriptions'], inplace=True)        
+        dataC0.dropna(subset=['image_descriptions'], inplace=True)        
 
         return no_NaN, dataC0
 
@@ -106,7 +107,7 @@ class GenderAnalysis:
         dataC0['gender_mention'] = dataC0['image_descriptions'].apply(self.detect_gender)
 
         return dataC0
-    
+
     def get_Top10_captions(self, dataA, no_NaN):
         
         dataTop10 = []
@@ -160,6 +161,54 @@ class GenderAnalysis:
             return "female"
         else:
             return "neutral"
+        
+    
+    def distribution_captions(self, count):
+
+        # Overall distribution of gender over all the top captions.
+
+        # Combine all contests
+        combined = []
+        for i, df in enumerate(count):
+            temp = df.copy()
+            temp["contest_index"] = i + 1  # add contest number
+            combined.append(temp)
+
+        all_count = pd.concat(combined, ignore_index=True)
+        pivoted = (
+            all_count.pivot(index="contest_index", columns="gender_mention", values="count")
+            .fillna(0)
+            .sort_index()
+        )
+
+        overall_counts = (
+            all_count.groupby("gender_mention")["count"]
+            .sum()
+            .sort_values(ascending=False)
+        )
+
+        return overall_counts, pivoted
+    
+    def compute_crosstab(self, no_NaN, dataA, dataC):
+
+        list_top1_gender = []
+
+        for idx in no_NaN:
+
+            contest = dataA[idx]
+
+            # Keep only the top 1
+            df_top1 = contest[contest.index == 1].copy(deep = True)
+
+            # for each of them apply the function to detect gender
+            list_top1_gender.append(df_top1['cleaned_caption'].apply(self.detect_gender).values[0])
+            
+        df_gender = pd.DataFrame({"image_gender": dataC['gender_mention'],"caption_gender": list_top1_gender})
+
+        # Cross-tabulation: counts of each combination
+        cross = pd.crosstab(df_gender["image_gender"], df_gender["caption_gender"])
+        
+        return cross
 
     # ---------------------------
     # PART 1 – ANALYSIS HELPERS
@@ -184,7 +233,7 @@ class GenderAnalysis:
             return 'both'
         else:
             return 'none'
-
+        
     @staticmethod
     def is_it_proper(word: str, proper_nouns: Dict[str, Dict[str, int]]) -> None:
         """
