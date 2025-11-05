@@ -104,18 +104,18 @@ This section investigates how men and women are depicted in cartoons and caption
   - conduct analysis :
     - axis 1 : get all attributes wanted + similarity metric
     - axis 2 : 
-    - axis 3 : 
+    - axis 3 : get a wider gender dictionnary + work on language patterns over time
 -19/11 : 
   - conduct analysis : 
     - axis 1 : perform statistical test + start random forest
     - axis 2 : 
-    - axis 3 : 
+    - axis 3 : audience response
 	- present intermediate result to the group
 - 26/11 : 
 	- conduct analysis : 
     - axis 1 : finish random forest
     - axis 2 : 
-    - axis 3 : 
+    - axis 3 : polish plots and structure of the analysis
 - 03/12 : 
 	- start HTML writing and design the web page
 	- discuss results that are the most important and should be uploaded on website 
