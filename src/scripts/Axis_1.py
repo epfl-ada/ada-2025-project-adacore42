@@ -19,30 +19,31 @@ if str(root) not in sys.path: sys.path.insert(0, str(root))
 
 print("Root folder at: ", root)"""
 
-# Detect root starting from this file or from notebook’s cwd
-try:
-    start_path = Path(__file__).resolve()
-except NameError:
-    start_path = Path.cwd()
 
+
+# Start from this file’s location
+start_path = Path(__file__).resolve()
+
+# Walk up until we find the real project root (contains .git or README.md)
 root = start_path
-while root != root.parent:
-    # Check for any known project markers
-    if any((root / marker).exists() for marker in [".git", "README.md", "results.ipynb", "README.txt"]):
+while root.parent != root:
+    if any((root / marker).exists() for marker in [".git", "README.md", "results.ipynb"]):
         break
     root = root.parent
 
-# Sanity check — fallback if nothing found
-if not any((root / marker).exists() for marker in [".git", "README.md", "results.ipynb", "README.txt"]):
-    print("⚠️ Project root not found — defaulting to current working directory")
-    root = Path.cwd()
+# If we didn't find any marker, fallback to 3 levels up (in case we're inside src/scripts)
+if "src" in [p.name for p in root.parents]:
+    while root.name != "src" and root.parent != root:
+        root = root.parent
+    root = root.parent  # Go one level above src
 
-print(f"✅ Root folder detected at: {root}")
+print(f"✅ Corrected root detected at: {root}")
 
-# Add project root to sys.path if not already
+# Add project root to sys.path
 if str(root) not in sys.path:
     sys.path.insert(0, str(root))
 
+print(root)
 from src.utils.paths import *
 from src.utils.general_utils import *
 from src.utils.function_axis_1 import compute_funny_ranking  

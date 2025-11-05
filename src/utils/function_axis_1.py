@@ -1,5 +1,9 @@
+# --- Imports ---
 from scipy.stats import zscore
 import numpy as n
+import matplotlib.pyplot as plt
+
+# --- Fonctions ---
 
 def compute_funny_ranking(data, by_image=False):
     """
@@ -46,3 +50,27 @@ def compute_funny_ranking(data, by_image=False):
     else:
         level = 'overall'
         return _compute(data)
+
+
+def plot_global_vote_distribution(dataA_merged):
+    """
+    Plots the global distribution of votes across all captions.
+
+    Parameters
+    ----------
+    dataA_merged : pd.DataFrame
+        DataFrame containing columns 'not_funny', 'somewhat_funny', 'funny'.
+    """
+    vote_cols = ['not_funny', 'somewhat_funny', 'funny']
+
+    # Sum all votes
+    total_votes = dataA_merged[vote_cols].sum()
+    print("Total votes:", total_votes)
+
+    # Plot bar chart
+    plt.figure(figsize=(6,4))
+    total_votes.plot(kind='bar', color=['red','orange','green'])
+    plt.ylabel("Total number of votes")
+    plt.xticks(rotation=0)
+    plt.title("Global distribution of votes across all captions")
+    plt.show()
