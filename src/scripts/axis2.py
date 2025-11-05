@@ -153,7 +153,7 @@ def barchart(x,y, xlabel, ylabel, title, color):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
-    plt.xticks(np.arange(0,len(x), step = 10), rotation=45)
+    plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
 
@@ -167,7 +167,6 @@ def scatterplot(x,y, xlabel, ylabel, title, color):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.grid(which='both', linestyle='--', linewidth=0.5)
-    plt.legend()
     plt.show()
 
 
