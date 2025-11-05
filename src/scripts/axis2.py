@@ -21,6 +21,7 @@ import os
 import pandas as pd
 import pickle
 import ast
+import numpy as np
 
 
 # Language processing
@@ -56,8 +57,8 @@ def load_occupations(filepath='../../data/final_combined_occupations.csv'):
         raise FileNotFoundError(f"File not found: {filepath}")
     
     occupations_df = pd.read_csv(filepath)
-
-    return occupations_df['Synonyms'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+    occupations_df['Synonyms'] = occupations_df['Synonyms'].apply(lambda x: ast.literal_eval(x) if isinstance(x, str) else x)
+    return occupations_df
 
 # =========================
 # Occupation Processing Functions
@@ -78,7 +79,7 @@ def count_occupations(text, syn_to_occ):
     return Counter(occ_list)
 
 # Extract occupations from captions
-def extract_occupations_captions(dataA, colname = 'occupation_counts', col_origin = 'cleaned_caption'):
+def extract_occupations_captions(dataA, syn_to_occ, colname='occupation_counts', col_origin='cleaned_caption'):
     '''
     dataA: list of dataframe objects containing captions or a single dataframe
     colname: name of the new column to store occupation counts
@@ -86,16 +87,13 @@ def extract_occupations_captions(dataA, colname = 'occupation_counts', col_origi
     Adds a new column to each dataframe with counts of occupations in the captions
     '''
     if isinstance(dataA, list): 
-        size = len(dataA)
-        for i in range(size):
-            df = dataA[i]
-            df[colname] = df[col_origin].apply(count_occupations)
+        for i, df in enumerate(dataA):
+            df[colname] = df[col_origin].apply(lambda text: count_occupations(text, syn_to_occ))
             dataA[i] = df
 
     elif isinstance(dataA, pd.DataFrame):
-        df = dataA
-        df[colname] = df[col_origin].apply(count_occupations)
-        dataA = df
+        dataA[colname] = dataA[col_origin].apply(lambda text: count_occupations(text, syn_to_occ))
+
     else:
         raise TypeError("dataA must be a list of DataFrames or a single DataFrame")
 
@@ -155,7 +153,7 @@ def barchart(x,y, xlabel, ylabel, title, color):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
-    plt.xticks(rotation=45)
+    plt.xticks(np.arange(0,len(x), step = 10), rotation=45)
     plt.tight_layout()
     plt.show()
 
