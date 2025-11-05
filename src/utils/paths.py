@@ -8,6 +8,9 @@ DATAPREP_PKL_FILENAME = "data_prepared.pkl"
 PLOTSGUI_PKL_FILENAME = "plots_gui.pkl"
 CONSTESTS_JSON_FILENAME = "contests.json"
 DATA_PREPARATION_PY_FILENAME = "DataPreparation.py"
+DATAPREPNOUNS_PKL_FILENAME = "cleaned_data_nouns.pkl"
+DATAPREPTOKENS_PKL_FILENAME = "cleaned_data_prepared.pkl"
+OCCUPATIONS_CSV_FILENAME = "final_combined_occupations.csv"
 
 # ------------------------------------------------------------------------------
 # Paths to initial data folders and files
@@ -24,10 +27,11 @@ VNCC_CONTESTS_JSON_PATH = VNCC_MAIN_DIR_PATH / CONSTESTS_JSON_FILENAME
 # Paths to stored data
 # ------------------------------------------------------------------------------
 
-
 STORED_DATAPREP_PKL_PATH = STORED_MAIN_DIR_PATH / DATAPREP_PKL_FILENAME
 STORED_PLOTSGUI_PKL_PATH = STORED_MAIN_DIR_PATH / PLOTSGUI_PKL_FILENAME
-
+STORED_DATAPREPNOUNS_PKL_PATH = STORED_MAIN_DIR_PATH / DATAPREPNOUNS_PKL_FILENAME
+STORED_DATAPREPTOKENS_PKL_PATH = STORED_MAIN_DIR_PATH / DATAPREPTOKENS_PKL_FILENAME
+OCCUPATIONS_CSV_PATH = STORED_MAIN_DIR_PATH / OCCUPATIONS_CSV_FILENAME
 
 # ----------------------------------------------------------------
 # Paths to Python scripts
