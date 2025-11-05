@@ -76,6 +76,73 @@ class GenderAnalysis:
     # PART 0 – GENDER DETECTION
     # ---------------------------
 
+    def remove_nan(dataC):
+
+        dataC0 = dataC.copy(deep=True)
+
+        # find the where the NaN's are in the metadata
+        no_NaN = dataC0[dataC0['image_descriptions'].notna()].index
+
+        # Let's remove them
+        dataC.dropna(subset=['image_descriptions'], inplace=True)        
+
+        return no_NaN, dataC0
+
+    def get_metadata(self, dataC):
+        """
+        Preps the metadata to be utilized in the analysis
+        """
+
+        dataC0 = dataC.copy(deep = True)
+
+        # put it in lower case
+        dataC0["image_descriptions"] = dataC0["image_descriptions"].apply(
+            lambda x: [s.lower() for s in x] if isinstance(x, list) else str(x).lower()
+        )
+        # remove the []
+        dataC0["image_descriptions"] = dataC0["image_descriptions"].apply(
+            lambda x: " ".join(x) if isinstance(x, list) else str(x)
+        )
+        dataC0['gender_mention'] = dataC0['image_descriptions'].apply(self.detect_gender)
+
+        return dataC0
+    
+    def get_Top10_captions(self, dataA, no_NaN):
+        
+        dataTop10 = []
+        count = []
+
+        # !! Since we don't have the metadata for some contest we need to use specfic .csv
+
+        for idx in no_NaN:
+
+            contest = dataA[idx]
+
+            # Keep only the top 10
+            df_top10 = contest[contest.index < 10].copy(deep = True)
+
+            # put it in lower case
+            df_top10["caption"] = df_top10["caption"].apply(
+                lambda x: [s.lower() for s in x] if isinstance(x, list) else str(x).lower()
+            )
+
+            # for each of them apply the function to detect gender
+            df_top10['gender_mention'] = df_top10['caption'].apply(self.detect_gender)
+
+            dataTop10.append(df_top10)
+
+            # Count mentions per contest
+            gender_counts = (
+                df_top10["gender_mention"]
+                .value_counts()
+                #.unstack(fill_value=0)
+                .reset_index()
+            )
+
+            count.append(gender_counts)
+
+        return count, dataTop10
+
     def detect_gender(self, text: str) -> str:
         """
         Detects whether a text mentions male, female, both, or neutral terms.
