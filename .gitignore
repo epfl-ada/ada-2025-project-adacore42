@@ -4,7 +4,7 @@
 *.pkl
 
 
-/data
+/data/newyorker_caption_contest_virgin
 /_Other/andras_analysis/venv
 _Other/andras_analysis/all_data_M_2024.xlsx
 _Other/andras_analysis/All_Occupations.csv

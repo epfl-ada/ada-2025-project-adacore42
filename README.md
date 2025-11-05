@@ -28,12 +28,7 @@ The project is divided into **3 axes of research directions**:
 
 *FILL*
 
-
-
-
 ## **Proposed Additional Datasets**  
-
-*List the additional dataset(s) you want to use (if any), and some ideas on how you expect to get, manage, process, and enrich it/them. Show that you’ve read the docs and some examples, and that you have a clear idea on what to expect. Discuss data size and format if relevant. It is your responsibility to check that what you propose is feasible.*
 
 1. **Five datasets are used to construct an exhaustive list of occupations**:  
    - [**O*NET**](https://www.onetonline.org/find/all)  
@@ -62,7 +57,7 @@ Finally, to capture multivariate and non-linear relationships, we will train a R
 
 ### **Axis 2: Professions, Politics, and Power** 
 
-The first step is to construct a **comprehensive, clean list of occupations**, which can be **specific** (e.g., *electromagnetic engineer*) or **general** (e.g., *physicist, nurse, doctor*). This has already been partially done by cleaning and merging the aforementioned occupation datasets.  
+The first step is to construct a **comprehensive list of occupations**, which can be **specific** (e.g., *electromagnetic engineer*) or **general** (e.g., *physicist, nurse, doctor*). This was done by cleaning and merging the aforementioned occupation datasets.  
 
 After this, the **jobs in each caption must be extracted and saved**, allowing us to:  
 - Track the **count of occupations**  
@@ -75,8 +70,8 @@ A similar approach is taken for the **political research** of this axis:
 - Once political words are located, analyse the **funniness score** of the caption  
 
 **Visualisations produced by this axis include:**  
-- **Bar charts** and **word clouds** for frequency of occupations  
-- **Histograms** for frequency of professions over time  
+- **Bar charts** and **word clouds** for frequency of occupations/political topics  
+- **Histograms** for frequency of professions/politics over time  
 - **Bar charts** for average funniness scores per category  
 - Possibly **heatmaps** cross-tabulating professions and sentiments  
 
