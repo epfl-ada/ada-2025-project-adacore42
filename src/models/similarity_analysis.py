@@ -10,6 +10,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer, SimilarityFunction
 import plotly.express as px
+from mpl_toolkits.mplot3d import Axes3D
+
 
 
 # ==================================================================================
@@ -145,63 +147,104 @@ class CaptionClustering:
 
     def evaluate_intra_cluster_similarity(self, df, text_col='caption', semantic_weight=0.8, structural_weight=0.2, plot=True):
         """
-        Évalue la similarité moyenne (intra-cluster) et affiche une heatmap pour inspection.
-        Retourne un DataFrame récapitulatif.
-        Une distribution des similarités moyennes intra-cluster
-        
-        Corrélation négative ⇒ plus deux captions sont similaires, plus leur score d’humour est proche → cohérence humoristique.
-        Corrélation proche de 0 ⇒ pas de lien entre similarité textuelle et perception humoristique.
-        Corrélation positive (rare) ⇒ clusters mal formés ou humour hétérogène malgré similarité sémantique.
+        Evaluates intra-cluster similarity and displays heatmaps only for the requested clusters.
+
+        If 'plot' is:
+        - True : displays all clusters
+        - False : displays no clusters
+        - list : displays only the specified clusters (e.g., [0, 14, 40])
         """
         sim_model = SimilarityModel(self.model_name)
         df = df.copy()
         df['cluster'] = self.cluster_labels
 
         cluster_stats = []
+
         for c in sorted(df['cluster'].unique()):
             subset = df[df['cluster'] == c]
             if len(subset) < 3:
-                continue  # éviter les clusters trop petits
+                continue  # avoids clusters that are too small
 
             semantic_sim_cluster = sim_model.compute_semantic_similarity(subset, text_col)
             structural_sim_cluster = sim_model.compute_structure_similarity(subset, text_col)
-            combined_sim_cluster = sim_model.compute_combined_similarity(semantic_sim_cluster, structural_sim_cluster, semantic_weight=semantic_weight, structural_weight=structural_weight)
-            
-            # Moyenne intra-cluster (hors diagonale)
+            combined_sim_cluster = sim_model.compute_combined_similarity(
+                semantic_sim_cluster,
+                structural_sim_cluster,
+                semantic_weight=semantic_weight,
+                structural_weight=structural_weight
+            )
+
+            # Intra-cluster mean (excluding diagonal)
             n = len(subset)
             mean_sim = (combined_sim_cluster.sum().sum() - n) / (n**2 - n)
             mean_sim = float(mean_sim)
             cluster_stats.append({'cluster': c, 'n': n, 'mean_comb_sim': mean_sim})
 
-            if plot:
+            should_plot = (
+                (plot is True) or
+                (isinstance(plot, (list, tuple)) and c in plot)
+            )
+            if should_plot:
                 print(f"Cluster {c}: {n} captions — mean combined similarity = {mean_sim:.3f}")
                 sim_model.plot_similarity_matrix(combined_sim_cluster, subset[text_col].tolist())
 
+        # global stats
         cluster_df = pd.DataFrame(cluster_stats)
         sns.histplot(cluster_df['mean_comb_sim'], bins=20)
         plt.title("Distribution of intra-cluster similarities")
         plt.show()
-        return cluster_df
 
-
-
-    # ajouter couleur par score d’humour ?
-    def UMAP_reduction(self, df, umap_n_components=3, umap_n_neighbors=15, umap_min_dist=0.1, umap_metric='cosine'):
-        print("UMAP dimensional reduction")
-        reducer = umap.UMAP(n_components=umap_n_components, n_neighbors=umap_n_neighbors, min_dist=umap_min_dist, metric=umap_metric, random_state=42)
+        return cluster_df   
         
+
+
+
+
+    def UMAP_reduction(self, df, umap_n_components=3, umap_n_neighbors=15, umap_min_dist=0.1, umap_metric='cosine'):
+        reducer = umap.UMAP(
+            n_components=umap_n_components,
+            n_neighbors=umap_n_neighbors,
+            min_dist=umap_min_dist,
+            metric=umap_metric,
+            random_state=42
+        )
+
         umap_embeddings = reducer.fit_transform(self.embeddings)
 
+        # Create a DataFrame of the clusters + UMAP coordinates
         df_clusters = df.copy()
-        df_clusters['cluster'] = self.cluster_labels.astype(str)
+        df_clusters['cluster'] = self.cluster_labels
         df_clusters['umap_x'] = umap_embeddings[:, 0]
         df_clusters['umap_y'] = umap_embeddings[:, 1]
-        df_clusters['umap_z'] = umap_embeddings[:, 2]
+        if umap_n_components == 3:
+            df_clusters['umap_z'] = umap_embeddings[:, 2]
+        
 
-        fig = px.scatter_3d(df_clusters, x='umap_x', y='umap_y', z='umap_z', color='cluster', color_discrete_sequence=px.colors.qualitative.Set1, title=f"Clusters SBERT (KMeans, k={self.n_clusters})", width=800, height=600)
-        fig.show()
+        fig = plt.figure(figsize=(10, 8))
+        ax = fig.add_subplot(projection='3d')
+        n_clusters = len(np.unique(self.cluster_labels))
+        cmap = plt.cm.get_cmap('tab20', n_clusters)
+
+        for i, cluster_id in enumerate(sorted(np.unique(self.cluster_labels))):
+            subset = df_clusters[df_clusters['cluster'] == cluster_id]
+            ax.scatter(
+                subset['umap_x'], subset['umap_y'], subset['umap_z'],
+                label=f'Cluster {cluster_id}',
+                color=cmap(i),
+                s=40, alpha=0.7
+            )
+
+        ax.set_title(f'UMAP projection of KMeans clusters (k={self.n_clusters})')
+        ax.set_xlabel('UMAP-1')
+        ax.set_ylabel('UMAP-2')
+        ax.set_zlabel('UMAP-3')
+        #ax.legend(title='Clusters', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+        plt.tight_layout()
+        plt.show()
 
         return df_clusters
+
 
 
 
@@ -252,9 +295,9 @@ class SimilarHumorAnalysis:
     def plot_scores_correlation(self):
         plt.figure(figsize=(8, 6))
         sns.scatterplot(x=self.sims, y=-self.humor_diffs, alpha=0.5)
-        plt.xlabel("Similarité combinée")
-        plt.ylabel("Proximité du score d’humour (inverse de l’écart)")
-        plt.title(f"Corrélation humour/similarité\nSpearman = {self.corr_spearman:.2f}, Pearson = {self.corr_pearson:.2f}")
+        plt.xlabel("Combined similarities")
+        plt.ylabel("Proximity of the humor score (inverse of the gap)")
+        plt.title(f"Correlation between humor and similarity\nSpearman = {self.corr_spearman:.2f}, Pearson = {self.corr_pearson:.2f}")
         plt.show()
 
         return None
@@ -263,8 +306,8 @@ class SimilarHumorAnalysis:
     def scores_correlation_by_cluster(self, df, cluster_col='cluster', text_col='caption', humor_col='funny',
                                   semantic_weight=0.7, structural_weight=0.3, min_size=3):
         """
-        Calcule la corrélation humour/similarité dans chaque cluster séparément (corrélations négatives = cohérence humoristique).
-        Retourne un DataFrame avec les corrélations par cluster.
+        Calculates the humor/similarity correlation in each cluster separately (negative correlations = humor consistency).
+        Returns a DataFrame with the correlations per cluster.
         """
         results = []
         for c in sorted(df[cluster_col].unique()):
