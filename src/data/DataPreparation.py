@@ -41,10 +41,10 @@ while root.parent != root:
 
 # Fallback in case nothing found
 if not any((root / marker).exists() for marker in [".git", "README.md", "results.ipynb", "README.txt"]):
-    print("⚠️ Could not locate project root — defaulting to current working directory")
+    print("Could not locate project root — defaulting to current working directory")
     root = Path.cwd()
 
-print(f"✅ Root folder detected at: {root}")
+print(f"Root folder detected at: {root}")
 
 # Ensure importability of the project
 if str(root) not in sys.path:
