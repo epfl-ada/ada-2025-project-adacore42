@@ -1,8 +1,21 @@
+import os
 import streamlit as st
 from app_definitions import *
 import app_sidebar
 import app_home, app_axis1, app_axis2, app_aboutus
 
+# Base folder of app.py
+BASE = os.path.dirname(__file__)
+
+# Correct full path to CSS file
+css_path = os.path.join(BASE, "assets/app_design.css")
+
+def load_css(file_path):
+    with open(file_path) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# Load CSS BEFORE rendering UI
+load_css(css_path)
 
 
 st.sidebar.title("ADAcore42")
