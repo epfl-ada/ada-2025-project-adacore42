@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Streamlit App",
+            "type": "python",
+            "request": "launch",
+            "preLaunchTask": "kill-streamlit",
+            "module": "streamlit",
+            "args": [
+                "run",
+                "${file}"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PATH": "/Users/43rt1k/Documents/EPFL/_MASTER/ADA/ADA_venv/bin:${env:PATH}"
+            }
+        }
+    ]
+}
