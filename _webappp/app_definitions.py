@@ -12,3 +12,8 @@ class MainTabs(Enum):
     ABOUTUS = TabData("About Us", 3)
 
 
+class Tovarisch:
+    def __init__(self, title: str, image: str, description: str):
+        self.title = title
+        self.image = image
+        self.description = description

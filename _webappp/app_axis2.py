@@ -20,3 +20,5 @@ def render():
     st.subheader("Toggle Options")
     st.checkbox("Enable notifications")
     st.checkbox("Enable autosave")
+
+    
