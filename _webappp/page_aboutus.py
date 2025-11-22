@@ -21,13 +21,13 @@ tovarischs = [
               "Short description of t 5. Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description "),
 ]
 
-def render():
- 
-    st.title("J'ai mis mon chat comme placeholder, enjoy 🐱")
 
-    for t in tovarischs:
-        st.subheader(t.title)
-        col1, col2 = st.columns([1, 4], vertical_alignment="top")
-        col1.image(t.image, width=100)        
-        col2.write(t.description)
-        st.divider()
+
+st.title("J'ai mis mon chat comme placeholder, enjoy 🐱")
+
+for t in tovarischs:
+    st.subheader(t.title)
+    col1, col2 = st.columns([1, 4], vertical_alignment="top")
+    col1.image(t.image, width=100)        
+    col2.write(t.description)
+    st.divider()
