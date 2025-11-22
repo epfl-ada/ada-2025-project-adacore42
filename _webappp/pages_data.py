@@ -2,6 +2,7 @@ from enum import Enum
 import streamlit as st
 from app_definitions import PageDataFormat
 
+
 class PagesData(Enum):
     HOME       = PageDataFormat("page_home.py",      "Home")
     AXIS_1     = PageDataFormat("page_axis_1.py",     "Axis 1: What Is Considered Funny?", "515.jpg")
@@ -55,3 +56,27 @@ PagesData.ABOUTUS.value.description = """
 Information about the ADAcore42 team, project goals, methodology, 
 and contributors.
 """.strip()
+
+
+
+
+
+
+
+
+import pandas as pd
+import numpy as n
+import pickle
+import os
+from pathlib import Path
+
+base_dir = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+data_path = (base_dir / "../data/data_prepared.pkl").resolve()
+with open(os.path.normpath(data_path), "rb") as f:
+    data = pickle.load(f)
+
+dataA = data['dataA']
+dataC = data['dataC']
+dataA_startID = data['dataA_startID']
+dataA_endID = data['dataA_endID']
+dataC_lastGoodID = data['dataC_lastGoodID']
