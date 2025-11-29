@@ -1,0 +1,207 @@
+\documentclass[fleqn]{report}
+\usepackage[a4paper, top=1.5cm, bottom=1.5cm, left=1cm, right=1cm]{geometry}
+\usepackage{adjustbox}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{array}
+\usepackage{booktabs} 
+\usepackage{enumitem}
+\usepackage{cancel}
+\usepackage{caption} 
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage{sectsty}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage{hyperref}   % for hyperlinks
+\usetikzlibrary{arrows.meta, positioning, shapes.multipart, backgrounds, fit}
+\hypersetup{
+    colorlinks=true,      % false = boxed links
+    linkcolor=red,       % internal links (e.g., table of contents)
+    citecolor=green,      % bibliography citations
+    filecolor=magenta,    % files
+    urlcolor=red          % external URLs
+}
+
+\definecolor{myred}{RGB}{200,50,50}
+\definecolor{myblue}{RGB}{0,90,160}
+\definecolor{mypurple}{RGB}{140,70,160}
+\definecolor{myorange}{RGB}{230,120,30}
+\definecolor{lightblue}{RGB}{200,230,255}
+\definecolor{lightgreen}{RGB}{200,255,200}
+\definecolor{lightpurple}{RGB}{230,200,255}
+
+\definecolor{myred}{RGB}{200,50,50}
+\definecolor{myblue}{RGB}{0,90,160}
+\definecolor{mypurple}{RGB}{140,70,160}
+\definecolor{mygray}{RGB}{100,100,100}
+\definecolor{myorange}{RGB}{230,120,30}
+% Change section and subsection colors
+\sectionfont{\color{myred}}       % sets colour of sections
+\subsectionfont{\color{mypurple}}     % sets colour of subsections
+\subsubsectionfont{\color{myorange}} % sets colour of subsubsections
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{ADAcore42}
+\fancyhead[C]{EPFL}
+\fancyhead[R]{October 2025}
+\fancyfoot[C]{\thepage}
+
+\titlespacing*{\section}{0pt}{*3}{*1}
+\titlespacing*{\subsection}{0pt}{*3}{*1}
+\titlespacing*{\subsubsection}{0pt}{*2}{*1}
+\renewcommand{\thesection}{\arabic{section}}
+
+\newcommand{\sectionline}{
+    \rule{0.9\textwidth}{0.4pt}
+}
+\setlist[description]{itemsep=0pt}
+
+\tcbset{
+  redbox/.style={
+    enhanced,
+    colframe=myred,
+    colback=red!20,
+    boxrule=0pt,
+    sharp corners,
+    rounded corners,
+    left=4pt, right=4pt, top=2pt, bottom=2pt
+  },
+  greenhl/.style={
+    enhanced,
+    colback=green!20,
+    boxrule=0pt,
+    sharp corners,
+    rounded corners,
+    left=2pt, right=2pt, top=0pt, bottom=0pt
+  }
+}
+
+\begin{document}
+\section{Introduction}
+Every week since 2015, the \emph{New York Times} has published a cartoon on its \href{https://www.newyorker.com/cartoons/contest}{website}. These cartoons are created by professional cartoonists, and the public is invited to submit captions in an effort to amuse readers. The cartoons often feature animals, people in absurd situations, and scenarios with subtle yet frequently hilarious meanings. The captions submitted by the public can be witty, clever, or downright silly, ranging from a few words to several sentences. While a new cartoon is released and captions are being submitted, everyone can rate the captions from the previous week, indicating whether they find each caption funny, somewhat funny, or not funny at all. Finally, the three best captions, determined by public votes and editorial selection, are published, and readers can vote for the funniest among these three finalists. This presents a fascinating opportunity to analyse humour. We have a dataset detailing what people find funny for each cartoon, as well as how they react to and appreciate different types of humour. At \emph{ADAcore42}, we are keen to explore this dataset to uncover patterns that spark laughter, and to identify general principles about what makes a caption amusing, as well as how contemporary culture shapes our sense of humour.
+
+
+\section{Research goal}
+While modelling humour is inherently complex and perhaps beyond the full reach of this project, our aim is to illuminate certain facets of it. To guide this exploration, we have conceived three axes of research, each designed to reveal what makes a caption truly funny. 
+
+The first axis, foundational to all that follows, seeks to build a measure of funniness: a simple ranking cannot capture the subtleties woven into the dataset. Here, we delve into the linguistics of humour—does the length of a caption, its punctuation, lexical richness, or structural complexity affect how it is perceived? Do unexpected words or the polarity of sentiment colour its amusement? Through this lens, we hope to discern patterns that underpin the laughter.
+
+The second axis narrows the focus to a more tangible question: which occupations evoke humour in captions? We shall explore whether certain professions are more likely to be associated with laughter, and why. But this axis stretches further, employing similar methods to examine the influence of politics and current events: do captions invoking political figures or contemporary news tend to be funnier, and how do these tendencies shift over time? Our dataset spans 2015 to 2025, encompassing elections and major global events, offering a window into political humour trends. It is worth noting, however, that this perspective is US-centric, reflecting the source of the data.
+
+The third axis turns to humour within the realm of gender. This is not merely an inquiry into frequency, how often men and women appear, but into the language that surrounds them, and how these associations have evolved across the years. Through this study, we aim to reveal societal perceptions and subtle stereotypes, as refracted through the prism of humour.
+
+This document focuses entirely on the second axis, examining the interplay between occupations, politics, current events, and humour. The other two axes will be addressed in separate reports. It is worth noting that the second axis relies on the so-called funniness metric, defined within the first axis. This metric is briefly described in Section\ \ref{sec:methodology}, along with key details on how the data is processed, what is being measured, and the methods employed. The graphs and exact parameter settings for the analysis are highlighted in Section\ \ref{sec:results}. Finally, Section\ \ref{sec:discussion} reflects on the results and their broader implications, while Section\ \ref{sec:conclusion} summarises the main findings of this report.
+
+\section{Methodology}\label{sec:methodology}
+\subsection{Preliminaries to axis 2}
+\paragraph{Funniness metric} 
+This section is currently omitted, but for all subsequent text, assume that the funniness metric exists and functions as intended. A higher funniness score corresponds to a funnier caption.
+
+\paragraph{Data processing} 
+Captions are preprocessed to facilitate text analysis. Our dataframe contains columns for the full captions as well as versions that are fully lemmatised, tokenised, lowercase, with punctuation and stop words removed. Additionally, we maintain a version without lemmatisation, punctuation removal, or stop word removal. This flexibility allows us to perform different types of text analysis depending on the requirements of each axis. For the second axis, we primarily use the unaltered version, as occupations and political terms may include stop words or may not be correctly lemmatised. We also omit typo correction, which could inadvertently alter occupations or political references.
+
+\paragraph{Available datasets} 
+Two datasets are available for this analysis. The first, referred to as \emph{dataA}, contains captions along with their corresponding funniness scores. There is one dataframe per contest week, including the captions submitted that week and their scores derived from public votes. The second dataset, \emph{dataC}, provides metadata for each cartoon, including a unique identifier, publication date, and a brief description of its content. Unfortunately, metadata is only available for the first 240 cartoons, while our dataset encompasses approximately 400 captions. This limitation should be considered in future analyses.
+
+\paragraph{Occupations and political terms} 
+We currently have access to a list of occupations compiled from various online sources. Although not exhaustive, it spans a wide range of professions. For political terms, we have assembled a list of keywords related to politics and current events, including names of prominent figures, political parties, and significant events from 2015 to 2025.
+
+\subsection{Analysis approach for axis 2} 
+With the available data established, we can outline the approach for analysing axis 2 and the objectives we hope to achieve. The aim of this section is to tell a data story. We begin with broad statistics and figures, gradually narrowing the focus to more specific analyses. Ultimately, we seek to uncover how occupations and political references appear in captions, and how they intertwine with the humour embedded in them.
+
+As a starting point we will base ourselves on Lecture 10 of the course: Applied Data Analysis at EPFL, taught by Maria Brbic. We are given a collection of documents, known as the corpus: each caption within a contest week represents a document, and the corpus encompasses all captions across all contest weeks. We will want to analyse sentiment, but also be able to extract categories of words: occupations and political terms.
+
+Sentimental analysis is a supervised learning problem which can be solved through regression and classification. We need to have a labelled training set with ground truth sentiment scores and represent each document as a feature vector. Then we can apply kNN, linear or logistic regression, SVM, decision trees, random forests, or even neural networks. However, we do not have labelled sentiment scores for our captions, and this will require some additional work. % Missing details
+
+For the occupations and political terms analysis, we will follow a similar approach to the one outlined in Lecture 10. We need to label each document with the class it belongs to and represent the doc as a feature vector. Then we can apply classification algorithms to identify patterns and relationships between the presence of certain occupations or political terms and the funniness scores of the captions.
+
+But, as noted before we have unlabeled document collection. So we want to determine a set of prevalent topics (occupations, political terms) in the corpus and assign each document to one or more topics. This is an unsupervised learning problem which requires some clustering algorithms, but we still need to represent each document as a feature vector. We can use techniques such as TF-IDF or word embeddings to create these feature vectors. Then we can apply clustering algorithms such as k-means, hierarchical clustering, or DBSCAN to group similar documents together based on their content. Once we have identified the clusters, we can analyze the characteristics of each cluster and determine the prevalent topics within them.
+
+\subsubsection{Feature Vector construction}
+We need to transform an arbitrary text document into a fixed-length feature vector. The traditional method is the bag-of-words (BoW) model, which represents each document as a vector of word counts. This will be the basis of our feature vector construction, but then we will extend it to include TF-IDF weighting and word embeddings.
+
+In the BoW model, we have a multiset of words, which counts how many times a word occurs, and the length of the vector is equal to the size of the vocabulary. such vectors are very high dimensional, but also extremely sparse. Let us construct the Bag of words representation of our corpus now: we need triplets of (document ID, word ID, count). We can then convert this into a sparse matrix representation, where each row corresponds to a document and each column corresponds to a word in the vocabulary. The entries in the matrix represent the count of each word in each document. We also want to keep track of $n$-grams, which are contiguous sequences of $n$ words. This will help us capture some context and meaning in the captions. However, this increases dimensionality so we will test with unigrams and bigrams at first, and maybe trigrams later if needed.
+
+We then need to construct the IDF matrix. The formula for IDF is:
+\[
+\text{IDF}(w) = -\log\left(\text{docfreq(w)}/N\right) = \log\left(N\right) - \log\left(\text{docfreq(w)}\right)
+\]
+where $N$ is the total number of documents in the corpus and $\text{docfreq(w)}$ is the number of documents containing the word $w$. We can then compute the TF-IDF matrix by multiplying the term frequency matrix with the IDF matrix:
+\[
+\text{TF}(d,w) * \text{IDF}(w) = \text{TF-IDF}(d,w)
+\]
+which is multiplying column $w$ of the TF matrix with the scalar IDF(w). For the time being, we use the \texttt{TfidfVectorizer} from \texttt{sklearn} to perform this step, which combines the above steps into a single function call. The normalisation is set to L2 by default, and we use unigrams and bigrams only for now.
+
+\subsubsection{Occupations analysis}
+Our analysis of occupations within captions begins with a broad survey of their occurrence across the dataset. Initially, we identify which occupations appear most frequently, noting their distribution over time and across different cartoons. We then group these occupations into broader fields, such as healthcare, education, politics, and technology, allowing us to observe patterns at a higher level of abstraction. Next, we examine the placement of these occupations within captions, linking each instance to the corresponding funniness score. This enables us to explore whether the presence of an occupation contributes to humour, and to conduct statistical tests to determine if certain professions are associated with higher funniness scores. 
+
+In addition to the captions themselves, we cross-reference the occurrence of occupations with the metadata of each cartoon, particularly descriptions that may reference jobs or professional settings. By comparing the presence of occupations in the image metadata with their mention in captions, we can test whether captions that reference jobs in the cartoon are more likely to contain occupational terms and whether this correlates with higher funniness scores. This analysis provides an initial quantitative understanding of how professional roles contribute to humour in the captions.
+
+Finally, we propose further exploratory analyses to deepen our understanding. For example, we aim to investigate the lexical context surrounding occupational mentions, examining which words commonly co-occur with particular jobs, and analysing the sentiment of captions that contain occupations. This may reveal subtle patterns of humour, such as whether positive or negative sentiment is more strongly associated with certain professions, or whether particular descriptors enhance comedic effect. Taken together, these steps establish a comprehensive methodology for analysing the relationship between occupations, their context, and their contribution to perceived humour in the captions.
+
+\subsection{Analysis Strategy}
+
+To investigate the role of occupations in the humour of cartoon captions, we structured our analysis into three levels: essential descriptive analyses, extended linguistic analyses, and advanced modelling approaches. This framework allows us to characterise the presence of occupations, quantify their relationship with funniness scores, and evaluate how occupational references interact with both language and metadata.
+
+\subsubsection{Essential Analyses}
+
+\paragraph{Frequency of Occupations.}
+We first measure how often each occupation appears in the captions. This includes computing overall counts, identifying the most and least common occupations, and determining how many distinct occupations appear per caption and per cartoon. These descriptive statistics provide an initial picture of how occupational references are distributed across the dataset.
+
+\paragraph{Funniness Ranking.}
+For every occupation, we compute the mean and median funniness scores, as well as the share of captions that fall within the top decile of funniness. This enables us to assess whether certain occupations tend to generate particularly humorous captions.
+
+\paragraph{Grouping into Occupational Fields.}
+Occupations are grouped into semantic categories (e.g., medicine, law, finance, education, science, arts, manual labour). For each group, we calculate both occurrence frequency and average funniness. This allows us to explore whether some professional fields are more humour-inducing than others.
+
+\subsubsection{Extended Analyses}
+
+\paragraph{Co-Occurrence and Contextual Patterns.}
+Using sparse term--document representations, we examine which words frequently co-occur with occupations. This makes it possible to identify recurring narrative frames and common humorous contexts, such as medical situations, office settings, or ironic uses of professional jargon.
+
+\paragraph{Sentiment and Humour.}
+We compute sentiment scores for captions with and without occupational references. By comparing sentiment distributions and correlating sentiment with funniness, we evaluate whether negative, ironic, or sarcastic tones tend to amplify the humour associated with occupational mentions.
+
+\paragraph{Temporal Trends.}
+We analyse trends over time, such as changes in the frequency of occupation references, variations in funniness, and the emergence of new occupations (e.g., technology-related or modern service jobs). This reveals how cultural shifts and current events may influence humorous themes involving professions.
+
+\subsubsection{Advanced Analyses}
+
+\paragraph{Alignment with Cartoon Metadata.}
+For each cartoon, we exploit metadata describing the scene (e.g., ``office'', ``doctor and patient'', ``courtroom''). We compare captions that reference occupations with the occupations implicitly suggested by the cartoon's description. We then measure whether captions that align with the depicted occupation tend to be funnier than captions introducing unrelated professions.
+
+\paragraph{TF--IDF Similarity Between Captions and Metadata.}
+We compute a similarity score between each caption and its cartoon's metadata using cosine similarity on sparse TF--IDF vectors. This allows us to test whether humorous captions are more likely to be semantically aligned with the cartoon content.
+
+\paragraph{Occupations and Political References.}
+Since some occupations are inherently political (e.g., ``mayor'', ``senator'', ``president''), we examine whether political occupations differ from non-political occupations in frequency, sentiment, or funniness. This also enables us to detect whether political humour peaks during specific time periods.
+
+\paragraph{Regression Modelling.}
+Finally, we apply regression techniques to estimate the effect of occupational references on funniness. A simple linear model includes a binary indicator of whether an occupation is present, and more detailed models incorporate TF--IDF weights of occupational terms. Logistic regression can also be used to predict whether a caption falls within the top decile of funniness based on the presence or category of occupations.
+
+\subsubsection{Political terms analysis}
+Our analysis of political terms within captions begins by identifying which keywords occur most frequently across the dataset, including names of prominent political figures, parties, and notable events from 2015 to 2025. We then examine their distribution over time and across different cartoons, enabling us to observe patterns and potential peaks around elections or major news events. Following this, we analyse the placement of political terms within captions and link each occurrence to the corresponding funniness score, allowing us to test whether references to politics or current events influence the perceived humour of a caption. Statistical tests are conducted to determine whether captions containing political terms are significantly funnier than those that do not.
+
+In addition to the captions, we cross-reference political terms with the metadata of each cartoon, including descriptions that may reference political themes or figures. This allows us to explore whether cartoons that depict political subjects are more likely to inspire captions containing political references, and whether such captions tend to receive higher funniness scores. This comparison offers insight into how the visual context of the cartoon interacts with humour related to politics.
+
+Finally, we propose further exploratory analyses to gain a deeper understanding of political humour. We examine the lexical context surrounding political mentions, identifying words that frequently co-occur with political terms, and analyse the sentiment of captions containing such references. This may reveal whether positive, negative, or neutral sentiment is more strongly associated with specific political terms, or whether certain descriptors enhance comedic effect. Collectively, these steps provide a systematic methodology for investigating the relationship between political content, contextual cues, and humour in the captions.
+
+\section{Graphs and statistics to include}\label{sec:graphs_and_stats}
+\subsection{Occupations}
+\section{Results}\label{sec:results}
+\section{Discussion}\label{sec:discussion}
+\section{Conclusion}\label{sec:conclusion}
+\end{document}
