@@ -27,3 +27,14 @@ _Other/andras_analysis/todo_milestone2.txt
 _Other/andras_analysis/us_bls_occupations_cleaned.csv
 _Other/andras_analysis/us_census_occupations_cleaned.csv
 _Other/andras_analysis/occupation_categories.csv
+_Other/andras_analysis/vectorizer.joblib
+_Other/andras_analysis/research.synctex.gz
+_Other/andras_analysis/research.pdf
+_Other/andras_analysis/research.out
+_Other/andras_analysis/research.log
+_Other/andras_analysis/research.fls
+_Other/andras_analysis/research.fdb_latexmk
+_Other/andras_analysis/occupation_indices.npy
+_Other/andras_analysis/occupation_counts.npy
+_Other/andras_analysis/tfidf_matrix.npz
+_Other/andras_analysis/research.aux
