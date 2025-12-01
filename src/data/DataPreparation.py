@@ -404,9 +404,9 @@ for data in dataA4:
     # funny = +2 / somewhat_funny = +1 / not_funny = -1
 
     dataFunny['weighted_funny_raw'] = ( 
-        1 * data['funny'] 
-        + 0.5 * data['somewhat_funny'] 
-        - 1 * data['not_funny']
+        2 * data['funny'] 
+        + 1 * data['somewhat_funny'] 
+        - 2 * data['not_funny']
         )
 
     dataFunny['weighted_funny_percent'] = dataFunny['weighted_funny_raw'] / data['votes']
