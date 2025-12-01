@@ -5,7 +5,7 @@
 
 # %%
 def warning1(text): print("WARNING!!! ", text)
-ACTIVATE_PRINTS = True
+ACTIVATE_PRINTS = False
 
 # %% [markdown]
 # # Initialisation 
@@ -395,7 +395,7 @@ if ACTIVATE_PRINTS: display(dataC.head())
 # ## Adding funnyness Score (dataA)
 
 # %%
-dataA4 = dataA3.copy()
+dataA4 = [data.copy() for data in dataA3]
 
 for data in dataA4:
 
@@ -404,8 +404,8 @@ for data in dataA4:
     # funny = +2 / somewhat_funny = +1 / not_funny = -1
 
     dataFunny['weighted_funny_raw'] = ( 
-        2 * data['funny'] 
-        + 1 * data['somewhat_funny'] 
+        1 * data['funny'] 
+        + 0.5 * data['somewhat_funny'] 
         - 1 * data['not_funny']
         )
 
@@ -418,10 +418,11 @@ for data in dataA4:
     data['funny_score'] = np.round(dataFunny['weighted_funny_z'], 2)
 
 
-    data.sort_values(by='funny_score', ascending=False, inplace=True)
-    data.reset_index(drop=False, inplace=True)
+    # data.sort_values(by='funny_score', ascending=False, inplace=True)
+    # data.reset_index(drop=False, inplace=True)
     
 
+dataA = dataA4.copy()
 
 if ACTIVATE_PRINTS: display(dataA4[0].head(30))
 
