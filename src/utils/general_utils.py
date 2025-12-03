@@ -1,5 +1,7 @@
 # General utilities
 import warnings
+import os
+from PIL import Image
     
 def absolute_index2contest_index(absolute_idx):
     """
@@ -45,3 +47,35 @@ def contest_index2absolute_index(contest_idx):
 
     else:
         return contest_idx - 510 - 2
+    
+def drop_NaN(dataA, dataC):
+    """
+    This function finds the contests with no metadata and drop them in dataA
+    and dataC
+    Input: dataA, dataC
+    Return: dataA_removed, dataC_removed
+    """
+    dataC_copy = dataC.copy(deep=True)
+
+    # find the where there are no NaN's are in the metadata
+    NaN_in_rows = dataC_copy[dataC_copy['image_descriptions'].isna()].index
+    # remove them in dataC
+    dataC_copy.dropna(subset=['image_descriptions'], inplace=True)
+    # Remove the corresponding contests in dataA
+    dataA_removed = [x for i, x in enumerate(dataA) if i not in NaN_in_rows]
+
+    return dataA_removed, dataC_copy
+
+def get_contest_id(idx, dataC):
+    """
+    Find the contest id based on the index of one element of dataA
+    Return: contest_id
+    """
+    contest_id = dataC.iloc[idx]['contest_id']
+    return contest_id
+
+def plot_cartoon(contest_id, root):
+    cartoon_path = os.path.join("data", "newyorker_caption_contest_virgin", "images", f"{contest_id}.jpg")
+    path = os.path.join(root, cartoon_path)
+    img = Image.open(path)
+    img.show()
