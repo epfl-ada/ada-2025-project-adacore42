@@ -431,10 +431,6 @@ if ACTIVATE_PRINTS: display(dataC.head())
 # %%
 dataA4 = [data.copy() for data in dataA3]
 
-
-
-
-
 for data in dataA4:
     # Compute z-scores for each voting category separately
 
@@ -454,6 +450,9 @@ for data in dataA4:
         z_funny + 0.5 * z_somewhat_funny - z_not_funny, 
         2
     )
+
+    data.sort_values(by='funny_score', ascending=False, inplace=True)
+    data.reset_index(drop=True, inplace=True)
 
 dataA = dataA4.copy()
 
