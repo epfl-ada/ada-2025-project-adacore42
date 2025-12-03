@@ -11,14 +11,56 @@ class GenderAnalysis:
     """
 
     def __init__(self):
-        # Word lists from Danielle Sucher's "Jailbreak the Patriarchy"
+        # Word lists from Danielle Sucher's "Jailbreak the Patriarchy" augmented
         self.male_terms = [
             'guy', 'spokesman', 'chairman', "men's", 'men', 'him', "he's", 'his', 'boy',
             'boyfriend', 'boyfriends', 'boys', 'brother', 'brothers', 'dad', 'dads',
             'dude', 'father', 'fathers', 'fiance', 'gentleman', 'gentlemen', 'god',
             'grandfather', 'grandpa', 'grandson', 'groom', 'he', 'himself', 'husband',
             'husbands', 'king', 'male', 'man', 'mr', 'nephew', 'nephews', 'priest',
-            'prince', 'son', 'sons', 'uncle', 'uncles', 'waiter', 'widower', 'widowers'
+            'prince', 'son', 'sons', 'uncle', 'uncles', 'waiter', 'widower', 'widowers',
+
+            # --- Added universal & contextual male terms ---
+            'bloke', 'chap', 'fella', 'gent', 'sir', 'lad', 'lads',
+            'manliness', 'masculine', 'boyhood',
+            'father-in-law', 'stepfather', 'stepson',
+            'godfather', 'old man',
+            'bachelor', 'groomsman',
+            'kings',
+            'monk', 'wizard',
+            'policeman', 'fireman', 'salesman', 'businessman', 'workman',
+
+            # --- Public figures ---
+            "bush", "sanders",
+            "einstein", "hitchcock", "bansky", "kanye", "obama","biden","trump","putin","zelenskyy",
+            "macron","schwarzenegger","clooney","hanks","dicaprio",
+            "pitt","depp","cruise","stallone","eastwood","gosling","carey","seinfeld","rock","chappelle",
+            "sandler","springsteen","dylan","cobain","mars","drake","sheeran","mccartney","lennon",
+            "jagger","bale","damon","affleck","reynolds","washington","freeman","jackson","smith","murphy",
+            "reeves","keaton","downey","ruffalo","leno","colbert","stewart","oppenheimer","gates","musk"
+
+
+            # --- 200 Most Popular American male names ---
+            "james","robert","john","michael","david","william","richard","joseph","thomas","charles",
+            "christopher","daniel","matthew","anthony","mark","donald","steven","paul","andrew","joshua",
+            "kenneth","kevin","brian","george","edward","ronald","timothy","jason","jeffrey","ryan",
+            "jacob","gary","nicholas","eric","jonathan","stephen","larry","justin","scott","brandon",
+            "benjamin","samuel","gregory","alexander","frank","patrick","raymond","jack","dennis","jerry",
+            "tyler","aaron","jose","adam","nathan","henry","douglas","zachary","peter","kyle",
+            "walter","ethan","jeremy","harold","keith","christian","roger","noah","gerald","carl",
+            "terry","sean","austin","arthur","lawrence","jesse","dylan","bryan","joe","jordan",
+            "billy","bruce","albert","willie","gabriel","logan","alan","juan","wayne","roy",
+            "ralph","randy","eugene","vincent","bobby","russell","louis","philip","johnny","riley",
+            "victor","mason","dale","brett","caleb","curtis","phillip","nathaniel","rodney","cody",
+            "joel","craig","tony","evan","shawn","wesley","alex","travis","chad","derrick",
+            "stanley","leonard","connor","oscar","xavier","miguel","edwin","martin","emmanuel","jay",
+            "clifford","herman","seth","edgar","mario","frederick","allen","tyrone","max","aiden",
+            "colton","hector","jon","spencer","rick","clarence","malik","leo","dustin","maurice",
+            "dominic","hayden","troy","gordon","marshall","abel","andre","lawson","reed","ramon",
+            "lance","casey","terrence","francis","trevor","jared","marco","darren","eli","ben",
+            "rafael","don","diego","romeo","ruben","clayton","carlos","kirk","brayden","ronnie",
+            "felix","jimmy","asher","camden","harvey","brendan","tristan","dean","parker","francisco",
+            "ivan","milo","ted"
         ]
 
         self.female_terms = [
@@ -28,12 +70,52 @@ class GenderAnalysis:
             'granddaughter', 'grandma', 'grandmother', 'herself', 'ladies', 'lady',
             'mom', 'moms', 'mother', 'mothers', 'mrs', 'ms', 'niece', 'nieces',
             'priestess', 'princess', 'queens', 'she', 'sister', 'sisters', 'waitress',
-            'widow', 'widows', 'wife', 'wives', 'woman'
-        ]
+            'widow', 'widows', 'wife', 'wives', 'woman',
 
+            # --- Added universal & contextual female terms ---
+            'gal', 'lass', 'lassie',
+            'ma’am', 'madam', 'mademoiselle', 'madame',
+            'femininity', 'feminine', 'girlish', 'womanhood',
+            'matriarch', 'stepmother', 'mother-in-law', 'stepdaughter',
+            'goddaughter',
+            'bachelorette', 'bridesmaid',
+            'queen',  # singular queen missing
+            'nun', 'witch',
+            'policewoman', 'firewoman', 'saleswoman', 'businesswoman', 'workwoman',
+            'hen'  # slang, sometimes used in cartoons for women
+        
+            # --- Public figures ---
+            "clinton","pelosi","warren","merkel","ardern","whitman","winfrey","streep","roberts","kidman",
+            "bullock","blunt","portman","johansson","lawrence","stone","barrymore","aniston","kardashian","beyoncé",
+            "adele","rihanna","swift","gaga","madonna","perry","grande","minaj","dion","carey",
+            "kaling","fey","poehler","degeneres","booker","rowling","atwood","angelou","steinem","torres",
+            "lopez","hudson","zeta-jones","theron","cuoco","watson","winslet","deschanel","witherspoon","mcadams"
+
+            # --- 200 Most Popular American female names ---
+            "mary","patricia","jennifer","linda","elizabeth","barbara","susan","jessica","sarah","karen",
+            "nancy","margaret","lisa","betty","dorothy","sandra","ashley","kimberly","donna","emily",
+            "michelle","carol","amanda","melissa","deborah","stephanie","rebecca","laura","helen","sharon",
+            "cynthia","kathleen","amy","shirley","angela","anna","brenda","pamela","nicole","emma",
+            "samantha","katherine","christine","debra","rachel","catherine","carolyn","janet","ruth","maria",
+            "heather","diane","virginia","julie","joyce","victoria","kelly","christina","lauren","joan",
+            "evelyn","olivia","judith","megan","cheryl","martha","andrea","frances","hannah","jacqueline",
+            "ann","jean","alice","kathryn","gloria","teresa","sara","janice","doris","julia",
+            "madison","grace","amber","tiffany","beverly","denise","marilyn","danielle","charlotte","caroline",
+            "lori","kayla","alexis","sophia","kim","rose","hailey","brianna","cindy","kara",
+            "erin","leslie","katie","lillian","sydney","morgan","judy","casey","natalie","brittany",
+            "jordan","isabella","dana","veronica","lydia","valerie","brooke","autumn","irene","kristen",
+            "kendra","kylie","paige","mia","sabrina","holly","faith","naomi","riley","makayla",
+            "jasmine","molly","isabelle","aubrey","harper","addison","peyton","avery","keira","skylar",
+            "bailey","eliza","clara","hadley","nina","willow","sadie","delilah","arianna","stella",
+            "vivian","eleanor","lucy","adeline","elena","violet","zoey","madeline","cora","maryann",
+            "lucia","summer","genevieve","annabelle","mariah","hazel","luna","mackenzie","allison","isla",
+            "rebecca","leah","sophie","eva","ruby","aria","caroline","ruth","daisy","ivy",
+            "margot","norah","june","everly", "hillary"
+        ]
         # Basic list of common English stopwords (can be expanded) [from Andras]
         # These are basic words that are used in a lot of sentences, I don't want to see them on my word clouds
 
+        # use nltk stopwords instead
         self.STOPWORDS = {
         # --- pronouns and determiners ---
         "i","me","my","myself","we","our","ours","ourselves","you","your","yours",
@@ -77,18 +159,6 @@ class GenderAnalysis:
     # PART 0 – GENDER DETECTION
     # ---------------------------
 
-    def remove_nan(self, dataC):
-
-        dataC0 = dataC.copy(deep=True)
-
-        # find the where the NaN's are in the metadata
-        no_NaN = dataC0[dataC0['image_descriptions'].notna()].index
-
-        # Let's remove them
-        dataC0.dropna(subset=['image_descriptions'], inplace=True)        
-
-        return no_NaN, dataC0
-
     def get_metadata(self, dataC):
         """
         Preps the metadata to be utilized in the analysis
@@ -108,14 +178,14 @@ class GenderAnalysis:
 
         return dataC0
 
-    def get_Top10_captions(self, dataA, no_NaN):
+    def get_Top10_captions(self, dataA):
         
         dataTop10 = []
         count = []
 
         # !! Since we don't have the metadata for some contest we need to use specfic .csv
 
-        for idx in no_NaN:
+        for idx in range(len(dataA)):
 
             contest = dataA[idx]
 
