@@ -395,37 +395,70 @@ if ACTIVATE_PRINTS: display(dataC.head())
 # ## Adding funnyness Score (dataA)
 
 # %%
+# dataA4 = [data.copy() for data in dataA3]
+
+# for data in dataA4:
+
+#     dataFunny = pd.DataFrame()
+
+#     # funny = +2 / somewhat_funny = +1 / not_funny = -1
+
+#     dataFunny['weighted_funny_raw'] = ( 
+#         2 * data['funny'] 
+#         + 1 * data['somewhat_funny'] 
+#         - 2 * data['not_funny']
+#         )
+
+#     dataFunny['weighted_funny_percent'] = dataFunny['weighted_funny_raw'] / data['votes']
+
+#     dataFunny['weighted_funny_z'] = zscore( 
+#         dataFunny['weighted_funny_percent'] * np.log1p(data['votes'])
+#     )
+
+#     data['funny_score'] = np.round(dataFunny['weighted_funny_z'], 2)
+
+
+#     # data.sort_values(by='funny_score', ascending=False, inplace=True)
+#     # data.reset_index(drop=False, inplace=True)
+    
+
+# dataA = dataA4.copy()
+
+# if ACTIVATE_PRINTS: display(dataA4[0].head(30))
+
+
+
+# %%
 dataA4 = [data.copy() for data in dataA3]
 
+
+
+
+
 for data in dataA4:
+    # Compute z-scores for each voting category separately
 
-    dataFunny = pd.DataFrame()
-
-    # funny = +2 / somewhat_funny = +1 / not_funny = -1
-
-    dataFunny['weighted_funny_raw'] = ( 
-        2 * data['funny'] 
-        + 1 * data['somewhat_funny'] 
-        - 2 * data['not_funny']
-        )
-
-    dataFunny['weighted_funny_percent'] = dataFunny['weighted_funny_raw'] / data['votes']
-
-    dataFunny['weighted_funny_z'] = zscore( 
-        dataFunny['weighted_funny_percent'] * np.log1p(data['votes'])
-    )
-
-    data['funny_score'] = np.round(dataFunny['weighted_funny_z'], 2)
-
-
-    # data.sort_values(by='funny_score', ascending=False, inplace=True)
-    # data.reset_index(drop=False, inplace=True)
+    z_funny = data['funny'] / data['votes']
+    z_somewhat_funny = data['somewhat_funny'] / data['votes']
+    z_not_funny = data['not_funny'] / data['votes']
     
+    
+    
+    z_funny = zscore(z_funny * np.log1p(data['votes']))
+    z_somewhat_funny = zscore(z_somewhat_funny * np.log1p(data['votes']))
+    z_not_funny = zscore(z_not_funny * np.log1p(data['votes']))
+
+
+    # Combine z-scores with weights
+    data['funny_score'] = np.round(
+        z_funny + 0.5 * z_somewhat_funny - z_not_funny, 
+        2
+    )
 
 dataA = dataA4.copy()
 
-if ACTIVATE_PRINTS: display(dataA4[0].head(30))
 
+display(dataA4[0].head(30))
 
 
 # %% [markdown]
