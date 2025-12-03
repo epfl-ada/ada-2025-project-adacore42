@@ -15,7 +15,17 @@ class GenderAnalysis:
             'dude', 'father', 'fathers', 'fiance', 'gentleman', 'gentlemen', 'god',
             'grandfather', 'grandpa', 'grandson', 'groom', 'he', 'himself', 'husband',
             'husbands', 'king', 'male', 'man', 'mr', 'nephew', 'nephews', 'priest',
-            'prince', 'son', 'sons', 'uncle', 'uncles', 'waiter', 'widower', 'widowers'
+            'prince', 'son', 'sons', 'uncle', 'uncles', 'waiter', 'widower', 'widowers',
+
+            # --- Added universal & contextual male terms ---
+            'bloke', 'chap', 'fella', 'gent', 'sir', 'lad', 'lads',
+            'manliness', 'masculine', 'boyhood',
+            'father-in-law', 'stepfather', 'stepson',
+            'godfather', 'old man',
+            'bachelor', 'groomsman',
+            'kings',
+            'monk', 'wizard',
+            'policeman', 'fireman', 'salesman', 'businessman', 'workman'
         ]
 
         self.female_terms = [
@@ -25,8 +35,21 @@ class GenderAnalysis:
             'granddaughter', 'grandma', 'grandmother', 'herself', 'ladies', 'lady',
             'mom', 'moms', 'mother', 'mothers', 'mrs', 'ms', 'niece', 'nieces',
             'priestess', 'princess', 'queens', 'she', 'sister', 'sisters', 'waitress',
-            'widow', 'widows', 'wife', 'wives', 'woman'
+            'widow', 'widows', 'wife', 'wives', 'woman',
+
+            # --- Added universal & contextual female terms ---
+            'gal', 'lass', 'lassie',
+            'ma’am', 'madam', 'mademoiselle', 'madame',
+            'femininity', 'feminine', 'girlish', 'womanhood',
+            'matriarch', 'stepmother', 'mother-in-law', 'stepdaughter',
+            'goddaughter',
+            'bachelorette', 'bridesmaid',
+            'queen',  # singular queen missing
+            'nun', 'witch',
+            'policewoman', 'firewoman', 'saleswoman', 'businesswoman', 'workwoman',
+            'hen'  # slang, sometimes used in cartoons for women
         ]
+
 
     # ---------------------------
     # PART 0 – GENDER DETECTION
