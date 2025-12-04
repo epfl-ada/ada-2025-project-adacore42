@@ -429,30 +429,51 @@ if ACTIVATE_PRINTS: display(dataC.head())
 
 
 # %%
+# dataA4 = [data.copy() for data in dataA3]
+
+# for data in dataA4:
+#     # Compute z-scores for each voting category separately
+
+#     z_funny = data['funny'] / data['votes']
+#     z_somewhat_funny = data['somewhat_funny'] / data['votes']
+#     z_not_funny = data['not_funny'] / data['votes']
+    
+    
+    
+#     z_funny = zscore(z_funny * np.log1p(data['votes']))
+#     z_somewhat_funny = zscore(z_somewhat_funny * np.log1p(data['votes']))
+#     z_not_funny = zscore(z_not_funny * np.log1p(data['votes']))
+
+
+#     # Combine z-scores with weights
+#     data['funny_score'] = np.round(
+#         z_funny + 0.5 * z_somewhat_funny - z_not_funny, 
+#         2
+#     )
+
+#     data.sort_values(by='funny_score', ascending=False, inplace=True)
+#     data.reset_index(drop=True, inplace=True)
+
+# dataA = dataA4.copy()
+
+
+# display(dataA4[0].head(30))
+
+
+# %%
 dataA4 = [data.copy() for data in dataA3]
+ 
+for df in dataA4:
+# proportions par ligne
+    props = df[['funny','somewhat_funny','not_funny']].div(df['votes'], axis=0) # division line by line
 
-for data in dataA4:
-    # Compute z-scores for each voting category separately
+    # pondération par log1p(votes)
+    props_weighted = props.mul(5*np.log1p(df['votes']), axis=0)
 
-    z_funny = data['funny'] / data['votes']
-    z_somewhat_funny = data['somewhat_funny'] / data['votes']
-    z_not_funny = data['not_funny'] / data['votes']
-    
-    
-    
-    z_funny = zscore(z_funny * np.log1p(data['votes']))
-    z_somewhat_funny = zscore(z_somewhat_funny * np.log1p(data['votes']))
-    z_not_funny = zscore(z_not_funny * np.log1p(data['votes']))
+    # composer un score final (ex : funny z - not_funny z + 0.1*somewhat)
+    df['funny_score'] = (props_weighted['funny'] + 0.5 * props_weighted['somewhat_funny'] - 0.4*props_weighted['not_funny']).round(2)
 
-
-    # Combine z-scores with weights
-    data['funny_score'] = np.round(
-        z_funny + 0.5 * z_somewhat_funny - z_not_funny, 
-        2
-    )
-
-    data.sort_values(by='funny_score', ascending=False, inplace=True)
-    data.reset_index(drop=True, inplace=True)
+    df = df.sort_values(by='funny_score', ascending=False).reset_index(drop=True)
 
 dataA = dataA4.copy()
 
