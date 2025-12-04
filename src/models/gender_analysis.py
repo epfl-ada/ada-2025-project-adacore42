@@ -3,6 +3,7 @@ from typing import List, Set, Dict
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import numpy as np
 
 
 class GenderAnalysis:
@@ -178,19 +179,17 @@ class GenderAnalysis:
 
         return dataC0
 
-    def get_Top10_captions(self, dataA):
+    def get_Top_captions(self, dataA, num = np.inf):
         
         dataTop10 = []
         count = []
-
-        # !! Since we don't have the metadata for some contest we need to use specfic .csv
 
         for idx in range(len(dataA)):
 
             contest = dataA[idx]
 
-            # Keep only the top 10
-            df_top10 = contest[contest.index < 10].copy(deep = True)
+            # Keep only the top num
+            df_top10 = contest[contest.index < num].copy(deep = True)
 
             # put it in lower case
             df_top10["caption"] = df_top10["caption"].apply(
