@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
-
+import pickle
 
 class GenderAnalysis:
     """
@@ -586,3 +586,11 @@ class GenderAnalysis:
         plt.tight_layout()
         plt.show()
 
+    # ---------------------------
+    # LOADING FILES
+    # ---------------------------
+
+    def load_pickle(path):
+        with open(path, 'rb') as f:
+            data = pickle.load(f)
+        return data
