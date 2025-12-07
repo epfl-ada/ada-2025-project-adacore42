@@ -3,8 +3,9 @@ import streamlit as st
 
 
 
-
-
+class AppParams:
+    expanders = True
+    
 
 class Tovarisch:
     def __init__(self, title: str, image: str, description: str):
@@ -66,7 +67,7 @@ class HomePageAxis_C:
             if st.button("Go  →", key=self.axisPath, type="primary", width=200):
                 st.switch_page(self.axisPath)
 
-        with st.expander("*more...*"):
+        with st.expander("*more...*", expanded=AppParams.expanders):
             st.write(
                 self.description
             )

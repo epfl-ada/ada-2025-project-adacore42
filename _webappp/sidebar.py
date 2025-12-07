@@ -1,10 +1,14 @@
 import streamlit as st
-import _webappp.assets.app_content as app_content
-myPages = app_content.myPages
+from _webappp.assets.app_content import myPages 
+from _webappp.assets.app_definitions import AppParams as AP
+
 
 def render():
-     # Title FIRST
+
     with st.sidebar:
+
+
+        AP.expanders = st.toggle("Expand ALL expanders")
 
         return st.navigation(myPages)
 

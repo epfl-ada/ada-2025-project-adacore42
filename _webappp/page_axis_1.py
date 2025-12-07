@@ -16,7 +16,7 @@ pageData = PagesData.AXIS_1.value
 pageData.page_firstBlock()
 
 
-
+# Un exemple de coment plotter un plot a l'aide de plotly
 if plots:
     plot = plots[0]
 
@@ -46,3 +46,4 @@ if plots:
 
 else:
     st.error("No stored plots found.")
+

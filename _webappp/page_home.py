@@ -1,8 +1,8 @@
 import streamlit as st
 from _webappp.assets.app_definitions import HomePageAxis_C
-import _webappp.assets.app_content as app_content
+from _webappp.assets.app_content import PagesData as PD
+from _webappp.assets.app_definitions import AppParams as AP
 
-pagesData = app_content.PagesData
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Intro 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -47,7 +47,7 @@ with dataNpipeline_c:
     col_1, col_2 = st.columns (2)
 
     with col_1:
-        with st.expander("**Data sources**"):
+        with st.expander("**Data sources**", expanded=AP.expanders):
             st.write(
                 """
                 - 380+ caption contests  
@@ -58,7 +58,7 @@ with dataNpipeline_c:
             )
 
     with col_2:
-        with st.expander("**Processing pipeline**"):
+        with st.expander("**Processing pipeline**", expanded=AP.expanders):
             st.write(
                 """
                 1. Centralised path + loading utilities  
@@ -98,17 +98,17 @@ with axisContent_c:
     st.subheader("Content")
 
     HomePageAxis_C(
-        title=pagesData.AXIS_1.value.title,
-        description=pagesData.AXIS_1.value.description,
-        axisPath=pagesData.AXIS_1.value.path)
+        title=PD.AXIS_1.value.title,
+        description=PD.AXIS_1.value.description,
+        axisPath=PD.AXIS_1.value.path)
     HomePageAxis_C(
-        title=pagesData.AXIS_2.value.title,
-        description=pagesData.AXIS_2.value.description,
-        axisPath=pagesData.AXIS_2.value.path)
+        title=PD.AXIS_2.value.title,
+        description=PD.AXIS_2.value.description,
+        axisPath=PD.AXIS_2.value.path)
     HomePageAxis_C(
-        title=pagesData.AXIS_3.value.title,
-        description=pagesData.AXIS_3.value.description,
-        axisPath=pagesData.AXIS_3.value.path)
+        title=PD.AXIS_3.value.title,
+        description=PD.AXIS_3.value.description,
+        axisPath=PD.AXIS_3.value.path)
     
 
 
