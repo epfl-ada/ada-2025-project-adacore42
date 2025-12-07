@@ -4,12 +4,14 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import umap
+import time
+import plotly.express as px
 from scipy.stats import spearmanr, pearsonr
 from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering, SpectralClustering
+from sklearn.metrics import silhouette_score
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer, SimilarityFunction
-import plotly.express as px
 from mpl_toolkits.mplot3d import Axes3D
 from wordcloud import WordCloud
 
@@ -116,32 +118,200 @@ class SimilarityModel:
 
 class CaptionClustering:
     """
-    Perform KMeans clustering on SBERT embeddings, then visualize the clusters with UMAP.
+    Perform clustering on SBERT embeddings (KMeans, DBSCAN, Agglomerative, Spectral, etc.)
     """
 
-    def __init__(self, model_name='all-MiniLM-L6-v2', n_clusters=10, normalize=True):
+    def __init__(self,
+                 model_name='all-MiniLM-L6-v2',
+                 cluster_method="kmeans",
+                 n_clusters=50,
+                 normalize=True,
+                 **cluster_params):
+        
         self.model_name = model_name
         self.model = SentenceTransformer(model_name)
         self.normalize = normalize
         self.scaler = StandardScaler()
-        self.clustering_method = KMeans(n_clusters, random_state=42, n_init=10)
+
+        self.cluster_method = cluster_method.lower()
         self.n_clusters = n_clusters
+        self.cluster_params = cluster_params   # store params passed by user
+        
+        # Embeddings + labels
         self.embeddings = None
         self.cluster_labels = None
+
+        # Build clustering method
+        self.clustering_method = self._init_clustering_method()
+
+
+
+    def _init_clustering_method(self):
+        if self.cluster_method == "kmeans":
+            return KMeans(
+                n_clusters=self.n_clusters,
+                random_state=42,
+                n_init=10,
+                **self.cluster_params
+            )
+
+        elif self.cluster_method == "dbscan":
+            return DBSCAN(
+                eps=self.cluster_params.get("eps", 0.5),
+                min_samples=self.cluster_params.get("min_samples", 5)
+            )
+
+        elif self.cluster_method == "agglomerative":
+            return AgglomerativeClustering(
+                n_clusters=self.n_clusters,
+                **self.cluster_params
+            )
+
+        elif self.cluster_method == "spectral":
+            return SpectralClustering(
+                n_clusters=self.n_clusters,
+                affinity="nearest_neighbors",
+                **self.cluster_params
+            )
+
+        else:
+            raise ValueError(f"Unknown cluster method: {self.cluster_method}")
+
 
 
     # Compute the clusterisation of the captions
     def cluster_captions(self, df, text_col='caption'):
         print(f"SBERT encoding with '{self.model_name}'")
-        self.embeddings = self.model.encode(df[text_col].tolist(), convert_to_numpy=True, show_progress_bar=True)
+        self.embeddings = self.model.encode(df[text_col].tolist(),
+                                            convert_to_numpy=True,
+                                            show_progress_bar=True)
 
         if self.normalize:
             self.embeddings = self.scaler.fit_transform(self.embeddings)
 
-        print(f"KMeans clustering with {self.n_clusters} clusters")
+        print(f"Clustering with {self.cluster_method.upper()}")
+
         self.cluster_labels = self.clustering_method.fit_predict(self.embeddings)
 
         return self.cluster_labels, self.embeddings
+    
+
+
+
+    def compute_silhouette_score(self):
+        """
+        Compute the silhouette score for the current clustering.
+        Works for any clustering method (KMeans, DBSCAN, Agglomerative, Spectral, etc.)
+        Handles noise points (label = -1) by excluding them.
+        """
+
+        if self.embeddings is None or self.cluster_labels is None:
+            raise ValueError("You must run cluster_captions() before computing silhouette score.")
+
+        labels = np.array(self.cluster_labels)
+
+        # Remove noise points (DBSCAN)
+        mask = labels != -1
+        clean_embeddings = self.embeddings[mask]
+        clean_labels = labels[mask]
+
+        # We need at least 2 clusters and 2 samples to compute silhouette
+        if len(np.unique(clean_labels)) < 2:
+            print("Silhouette score cannot be computed (less than 2 clusters).")
+            return None
+
+        score = silhouette_score(clean_embeddings, clean_labels, metric='cosine')
+
+        print(f"Silhouette score: {score:.4f}")
+        return score
+
+
+
+
+    def benchmark_clustering_algorithms(self, 
+                                        algorithms=None,
+                                        text_col='caption'):
+        """
+        Automatically benchmark multiple clustering algorithms on SBERT embeddings.
+        
+        Returns a DataFrame containing:
+            - algorithm name
+            - number of clusters
+            - silhouette score
+            - computation time
+        
+        Parameters:
+        - algorithms: dict of clustering constructor definitions.
+            Example:
+                {
+                    "kmeans": KMeans(n_clusters=10),
+                    "dbscan": DBSCAN(eps=0.4, min_samples=4),
+                }
+        """
+
+        # Encode captions if not done yet
+        if self.embeddings is None:
+            raise ValueError("You must run cluster_captions() or encode embeddings first.")
+        
+        X = self.embeddings
+
+        if algorithms is None:
+            algorithms = {
+                "KMeans": KMeans(n_clusters=self.n_clusters, random_state=42),
+                "Agglomerative": AgglomerativeClustering(n_clusters=self.n_clusters),
+                "DBSCAN": DBSCAN(eps=0.5, min_samples=20),
+                "spectral": SpectralClustering(n_clusters=self.n_clusters, affinity="nearest_neighbors")
+
+            }
+
+        results = []
+
+        print("=== Running clustering benchmark ===")
+
+        for name, algo in algorithms.items():
+            print(f"\n→ Testing {name}...")
+            t0 = time.time()
+
+            try:
+                labels = algo.fit_predict(X)
+            except Exception as e:
+                print(f"❌ {name} failed: {e}")
+                results.append({
+                    "algorithm": name,
+                    "n_clusters": None,
+                    "silhouette": None,
+                    "time_sec": None,
+                    "error": str(e)
+                })
+                continue
+
+            elapsed = time.time() - t0
+
+            # remove noise points from DBSCAN
+            mask = labels != -1
+            X_clean = X[mask]
+            labels_clean = labels[mask]
+
+            if len(np.unique(labels_clean)) < 2:
+                silhouette = None
+            else:
+                silhouette = float(silhouette_score(X_clean, labels_clean, metric='cosine'))
+
+            results.append({
+                "algorithm": name,
+                "n_clusters": int(len(np.unique(labels_clean))),
+                "silhouette": silhouette,
+                "time_sec": elapsed,
+                "error": None
+            })
+
+        # Convert to DataFrame
+        df_res = pd.DataFrame(results)
+        print("\n=== Benchmark completed ===")
+        print(df_res)
+
+        return df_res
+
     
 
 
