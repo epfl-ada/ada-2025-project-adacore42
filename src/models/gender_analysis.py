@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import numpy as np
-
+import pickle
 
 class GenderAnalysis:
     """
@@ -20,6 +20,7 @@ class GenderAnalysis:
             'grandfather', 'grandpa', 'grandson', 'groom', 'he', 'himself', 'husband',
             'husbands', 'king', 'male', 'man', 'mr', 'nephew', 'nephews', 'priest',
             'prince', 'son', 'sons', 'uncle', 'uncles', 'waiter', 'widower', 'widowers',
+            'congressman',
 
             # --- Added universal & contextual male terms ---
             'bloke', 'chap', 'fella', 'gent', 'sir', 'lad', 'lads',
@@ -113,6 +114,15 @@ class GenderAnalysis:
             "rebecca","leah","sophie","eva","ruby","aria","caroline","ruth","daisy","ivy",
             "margot","norah","june","everly", "hillary"
         ]
+        
+            # Precompile regex patterns
+        
+        male_pattern = r"\b(?:{})\b".format("|".join(map(re.escape, self.male_terms)))
+        female_pattern = r"\b(?:{})\b".format("|".join(map(re.escape, self.female_terms)))
+
+        self.male_regex = re.compile(male_pattern, flags=re.IGNORECASE)
+        self.female_regex = re.compile(female_pattern, flags=re.IGNORECASE)
+        
         # Basic list of common English stopwords (can be expanded) [from Andras]
         # These are basic words that are used in a lot of sentences, I don't want to see them on my word clouds
 
@@ -178,40 +188,56 @@ class GenderAnalysis:
         dataC0['gender_mention'] = dataC0['image_descriptions'].apply(self.detect_gender)
 
         return dataC0
+    
+    def detect_gender_vectorized(self, df: pd.DataFrame) -> pd.Series:
+
+        # Vectorized detection using compiled regex (runs in C)
+        male_hits = df["caption"].str.contains(self.male_regex, na=False)
+        female_hits = df["caption"].str.contains(self.female_regex, na=False)
+
+        # Build result column
+        result = pd.Series("neutral", index=df.index)
+        result[male_hits & female_hits] = "both"
+        result[male_hits & ~female_hits] = "male"
+        result[female_hits & ~male_hits] = "female"
+
+        return result
 
     def get_Top_captions(self, dataA, num = np.inf):
         
         dataTop10 = []
-        count = []
+        # count = []
 
         for idx in range(len(dataA)):
 
             contest = dataA[idx]
 
-            # Keep only the top num
-            df_top10 = contest[contest.index < num].copy(deep = True)
+            # Keep only the top num rows
+            df_top = contest[contest.index < num].copy()
 
-            # put it in lower case
-            df_top10["caption"] = df_top10["caption"].apply(
-                lambda x: [s.lower() for s in x] if isinstance(x, list) else str(x).lower()
+            # Convert caption column to clean lowercase strings
+            df_top["caption"] = (
+                df_top["caption"]
+                .astype(str)    # handles lists or other types
+                .str.lower()
             )
 
-            # for each of them apply the function to detect gender
-            df_top10['gender_mention'] = df_top10['caption'].apply(self.detect_gender)
+            # Apply fast vectorized gender classifier
+            df_top["gender_mention"] = self.detect_gender_vectorized(df_top)
 
-            dataTop10.append(df_top10)
+            dataTop10.append(df_top)
 
-            # Count mentions per contest
-            gender_counts = (
-                df_top10["gender_mention"]
-                .value_counts()
-                #.unstack(fill_value=0)
-                .reset_index()
-            )
+            # # Count mentions per contest
+            # gender_counts = (
+            #     df_top10["gender_mention"]
+            #     .value_counts()
+            #     #.unstack(fill_value=0)
+            #     .reset_index()
+            # )
 
-            count.append(gender_counts)
+            # count.append(gender_counts)
 
-        return count, dataTop10
+        return dataTop10 # count,
 
     def detect_gender(self, text: str) -> str:
         """
@@ -560,3 +586,11 @@ class GenderAnalysis:
         plt.tight_layout()
         plt.show()
 
+    # ---------------------------
+    # LOADING FILES
+    # ---------------------------
+    @staticmethod
+    def load_pickle(path):
+        with open(path, 'rb') as f:
+            data = pickle.load(f)
+        return data
