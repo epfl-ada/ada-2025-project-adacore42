@@ -1,3 +1,9 @@
+### _____________________________________________________________________
+
+###  vvvvvvvvvvv   DONE FOR MILESTONE 2, is it still used ?   vvvvvvvvvvvvv
+
+### _____________________________________________________________________
+
 import pandas as pd
 import numpy as n
 import pickle
@@ -80,4 +86,8 @@ plt.ylabel("Total number of votes")
 plt.xticks(rotation=0)
 plt.title("Global distribution of votes across all captions")
 plt.show()
+### _____________________________________________________________________
 
+##  ^^^^^^^^^^^^  DONE FOR MILESTONE 2, is it still used ? ^^^^^^^^^^^^
+
+### _____________________________________________________________________
