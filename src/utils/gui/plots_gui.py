@@ -1,6 +1,7 @@
 import pickle
 import os
 import sys
+import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
@@ -311,3 +312,73 @@ class ScatterPlotGUI(PlotGUI):
     def plot_1(self, ax: plt.Axes) -> plt.Axes:
         ax.scatter(self.dataX, self.dataY, **self.plotParams)                     # Scatter plot with custom attributes
         return ax
+
+
+
+
+
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# WordCloud Plot display
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+class WordCloudPlotGUI(PlotGUI):
+
+    def __init__(self, cluster_id, wordcloud, representative_texts=None):
+        super().__init__(
+            title=f"Cluster {cluster_id} WordCloud",
+            description="WordCloud of clustered captions",
+            xlabel="",
+            ylabel=""
+        )
+
+        self.cluster_id = cluster_id
+        self.wordcloud = wordcloud
+        self.representative_texts = representative_texts or []
+
+
+    def plot_wordcloud_clusters(self, ax: plt.Axes) -> plt.Axes:
+        """Draw the wordcloud directly on the axis."""
+        ax.imshow(self.wordcloud, interpolation="bilinear")
+        ax.axis("off")
+        return ax
+    
+
+
+class ClusterScoresPlotGUI(PlotGUI):
+    """Plot distribution of funniness scores for each cluster."""
+
+    def __init__(self, df_top, score_col="mean"):
+        super().__init__(
+            title="Score distribution by cluster",
+            description="Histogram/KDE of funniness scores per cluster",
+            xlabel="Score",
+            ylabel="Density"
+        )
+        self.df_top = df_top
+        self.score_col = score_col
+
+    def get_fig(self) -> Figure:
+        clusters = sorted(self.df_top["cluster"].unique())
+        n = len(clusters)
+
+        cols = int(np.ceil(np.sqrt(n)))
+        rows = int(np.ceil(n / cols))
+
+        fig, axes = plt.subplots(rows, cols, figsize=(5*cols, 4*rows))
+        axes = np.array(axes).reshape(rows, cols)
+
+        for idx, c in enumerate(clusters):
+            r, col = idx // cols, idx % cols
+            ax = axes[r, col]
+
+            scores = self.df_top[self.df_top.cluster == c][self.score_col]
+
+            ax.hist(scores, bins=20, density=True, alpha=0.6)
+            ax.set_title(f"Cluster {c} (n={len(scores)})")
+
+        for idx in range(len(clusters), rows*cols):
+            axes[idx//cols, idx%cols].axis("off")
+
+        fig.tight_layout()
+        return fig
+
