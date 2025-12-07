@@ -5,7 +5,7 @@ from pathlib import Path
 # ------------------------------------------------------------------------------
 
 DATAPREP_PKL_FILENAME = "data_prepared.pkl"
-PLOTSGUI_PKL_FILENAME = "plots_gui.pkl"
+PLOTSGUI_PKL_FILENAME = "plots_web_app.pkl"
 CONSTESTS_JSON_FILENAME = "contests.json"
 DATA_PREPARATION_PY_FILENAME = "DataPreparation.py"
 DATAPREPNOUNS_PKL_FILENAME = "cleaned_data_nouns.pkl"

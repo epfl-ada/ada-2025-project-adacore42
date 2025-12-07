@@ -46,3 +46,44 @@ class PageDataFormat:
             st.write(self.description)
         st.divider()
     
+
+
+class HomePageAxis_C: 
+
+    def __init__(self, title: str, description: str, axisPath):
+        self.title = title
+        self.description = description
+        self.axisPath = axisPath
+        self.render()
+        
+    def render(self):
+
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.markdown(f"**{self.title}**")
+            
+        with col2:
+            if st.button("Go  →", key=self.axisPath, type="primary", width=200):
+                st.switch_page(self.axisPath)
+
+        with st.expander("*more...*"):
+            st.write(
+                self.description
+            )
+
+
+
+def get_absolute_project_root():
+    import sys
+    from pathlib import Path
+
+
+    root = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+    while root.parent != root:
+        if ((root / ".git").exists() and 
+            (root / "README.txt").exists() and 
+            (root / "results.ipynb").exists()): break
+        root = root.parent
+    if str(root) not in sys.path: sys.path.insert(0, str(root))
+    
+    return root

@@ -1,26 +1,35 @@
 from enum import Enum
 import streamlit as st
-from app_definitions import PageDataFormat
+from _webappp.assets.app_definitions import PageDataFormat
 
 
 class PagesData(Enum):
-    HOME       = PageDataFormat("page_home.py",      "Home")
-    AXIS_1     = PageDataFormat("page_axis_1.py",     "Axis 1: What Is Considered Funny?", "515.jpg")
-    AXIS_2     = PageDataFormat("page_axis_2.py",     "Axis 2: Professions, Politics, and Power", "545.jpg")
-    AXIS_3     = PageDataFormat("page_axis_3.py",     "Axis 3: Gender Roles", "512.jpg")
-    ABOUTUS    = PageDataFormat("page_aboutus.py",   "About Us")
+    HOME       = PageDataFormat("page_home.py",      
+                                "Home")
+
+    AXIS_1     = PageDataFormat("page_axis_1.py",     
+                                "Axis 1: What Is Considered Funny?", 
+                                "515.jpg")
+
+    AXIS_2     = PageDataFormat("page_axis_2.py",     
+                                "Axis 2: Professions, Politics, and Power", 
+                                "545.jpg")
+
+    AXIS_3     = PageDataFormat("page_axis_3.py",     
+                                "Axis 3: Gender Roles", 
+                                "512.jpg")
+    
+    ABOUTUS    = PageDataFormat("page_aboutus.py",   
+                                "About Us")
 
 
 myPages = {
-    "": [
-
+    "ADACore42 navigation bar:": [
         PagesData.HOME.value.get_page(),
-        PagesData.ABOUTUS.value.get_page(),
-    ],
-    "Analysis Axes": [
         PagesData.AXIS_1.value.get_page(),
         PagesData.AXIS_2.value.get_page(),
         PagesData.AXIS_3.value.get_page(),
+        PagesData.ABOUTUS.value.get_page(),
 
     ]
 }
@@ -29,7 +38,7 @@ myPages = {
 
 
 # ---------------------------
-# PAGE DESCRIPTIONS (external)
+# PAGE DESCRIPTIONS 
 # ---------------------------
 
 PagesData.HOME.value.description = """
@@ -62,21 +71,3 @@ and contributors.
 
 
 
-
-
-import pandas as pd
-import numpy as n
-import pickle
-import os
-from pathlib import Path
-
-base_dir = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-data_path = (base_dir / "../data/data_prepared.pkl").resolve()
-with open(os.path.normpath(data_path), "rb") as f:
-    data = pickle.load(f)
-
-dataA = data['dataA']
-dataC = data['dataC']
-dataA_startID = data['dataA_startID']
-dataA_endID = data['dataA_endID']
-dataC_lastGoodID = data['dataC_lastGoodID']

@@ -1,10 +1,10 @@
 import os
 import streamlit as st
-from app_definitions import *
+from _webappp.assets.app_definitions import *
 import sidebar as sidebar
-import page_home, page_axis_1, page_axis_2 , page_axis_3, page_aboutus, pages_data
+import _webappp.assets.app_content as app_content
 
-myPages = pages_data.myPages
+myPages = app_content.myPages
 
 # Base folder of app.py
 BASE = os.path.dirname(__file__)
@@ -19,30 +19,8 @@ def load_css(file_path):
 # Load CSS BEFORE rendering UI
 load_css(css_path)
 
+st.set_page_config(page_title="ADAcore42", layout="wide")
 
 
+sidebar.render().run()
 
-
-
-
-
-
-st.sidebar.title("ADAcore42")
-
-
-st.set_page_config(
-    page_title="ADACore42",
-    layout="wide",
-)
-
-# -------------------------------------------------------
-# -------------------------------------------------------
-
-pg = st.navigation(myPages, position="top")
-
-pg.run()
-# =======================================================
-# SIDEBAR (ADVANCED)
-# =======================================================
-with st.sidebar:
-    sidebar.render()
