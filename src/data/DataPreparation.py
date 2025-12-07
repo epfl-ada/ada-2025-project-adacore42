@@ -473,7 +473,8 @@ for df in dataA4:
     # composer un score final (ex : funny z - not_funny z + 0.1*somewhat)
     df['funny_score'] = (props_weighted['funny'] + 0.5 * props_weighted['somewhat_funny'] - 0.4*props_weighted['not_funny']).round(2)
 
-    df = df.sort_values(by='funny_score', ascending=False).reset_index(drop=True)
+    df.sort_values(by='funny_score', ascending=False, inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
 dataA = dataA4.copy()
 
