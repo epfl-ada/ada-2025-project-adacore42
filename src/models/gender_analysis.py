@@ -585,7 +585,6 @@ class GenderAnalysis:
 
         plt.tight_layout()
         plt.show()
-
     # ---------------------------
     # LOADING FILES
     # ---------------------------
