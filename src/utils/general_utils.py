@@ -2,6 +2,9 @@
 import warnings
 import os
 from PIL import Image
+import streamlit as st
+import pickle
+import matplotlib.pyplot as plt
     
 def absolute_index2contest_index(absolute_idx):
     """
@@ -80,10 +83,20 @@ def plot_cartoon(contest_id, root):
     img = Image.open(path)
     img.show()
 
-def afficher_treemap_html(path):
-    import streamlit as st
+def plot_treemap_html(path):
+    """
+    Function to call on the .py for the website to plot treemap graphs
+    :param path: path to the save graph in html
+    """
     
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
     st.components.v1.html(html_content, height=700, scrolling=True)
+
+def plot_wordcloud(path, graph_name, word_type, gender):
+    with open(path, "rb") as f:
+        data = pickle.load(f)
+    plt.imshow(data[graph_name], interpolation='bilinear')
+    plt.title(f"Top {word_type} in {gender} gendered captions")
+    plt.show()

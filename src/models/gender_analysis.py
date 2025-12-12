@@ -562,7 +562,7 @@ class GenderAnalysis:
 
 
     @staticmethod
-    def plot_wordclouds(male_cloud, female_cloud):
+    def plot_wordclouds(male_cloud, female_cloud, word_type):
         """
         Displays male and female word clouds side by side.
 
@@ -576,11 +576,11 @@ class GenderAnalysis:
         fig, axes = plt.subplots(1, 2, figsize=(14, 7))
 
         axes[0].imshow(male_cloud, interpolation='bilinear')
-        axes[0].set_title('Male-dominant words', fontsize=16)
+        axes[0].set_title(f'Top {word_type} in male gendered captions', fontsize=16)
         axes[0].axis('off')
 
         axes[1].imshow(female_cloud, interpolation='bilinear')
-        axes[1].set_title('Female-dominant words', fontsize=16)
+        axes[1].set_title(f'Top {word_type} in female gendered captions', fontsize=16)
         axes[1].axis('off')
 
         plt.tight_layout()
