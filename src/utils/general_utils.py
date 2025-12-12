@@ -97,6 +97,13 @@ def plot_treemap_html(path):
 def plot_wordcloud(path, graph_name, word_type, gender):
     with open(path, "rb") as f:
         data = pickle.load(f)
-    plt.imshow(data[graph_name], interpolation='bilinear')
-    plt.title(f"Top {word_type} in {gender} gendered captions")
-    plt.show()
+    wc = data[graph_name]  # WordCloud object
+
+    # Créer figure matplotlib
+    fig, ax = plt.subplots(figsize=(8, 6))
+    ax.imshow(wc, interpolation='bilinear')
+    ax.axis('off')
+    ax.set_title(f"Top {word_type} in {gender} gendered captions", fontsize=16)
+
+    # Afficher dans Streamlit
+    st.pyplot(fig)
