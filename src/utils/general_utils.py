@@ -79,3 +79,11 @@ def plot_cartoon(contest_id, root):
     path = os.path.join(root, cartoon_path)
     img = Image.open(path)
     img.show()
+
+def afficher_treemap_html(path):
+    import streamlit as st
+    
+    with open(path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+
+    st.components.v1.html(html_content, height=700, scrolling=True)
