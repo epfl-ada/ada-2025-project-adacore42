@@ -14,7 +14,7 @@ plots = PWA.load_plots()
 pageData = PagesData.AXIS_1.value
 
 pageData.page_firstBlock()
-
+"Gnangana"
 
 # Un exemple de coment plotter un plot a l'aide de plotly
 if plots:
