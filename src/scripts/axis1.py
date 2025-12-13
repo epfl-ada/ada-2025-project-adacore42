@@ -25,19 +25,10 @@ from sklearn.cluster import KMeans
 
 
 
-# ============================
-#   1.1 New score of funiness
-# ============================
-
-
-# katia & dominic work : ici il faut definir les fonctions pour ajouter une colonne a dataA avec le nouveau score
-#def compute_funny_ranking() ?
-
-
 
 
 # ============================
-#   1.2. What is funny ? 
+#   1.1. What is funny ? 
 # ============================
 
 # katia & dominic work
@@ -45,9 +36,10 @@ from sklearn.cluster import KMeans
 
 
 
-# ============================
-#   1.3. Topic detection
-# ============================
+
+# ===========================================================
+#   1.3. Topic detection with TF-IDF (A REVOIIIIR !!!!!!)
+# ===========================================================
 
 # 1)
 def split_top_caption_vs_rest(df, score_col, top_percent=0.1):
