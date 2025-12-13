@@ -1,0 +1,47 @@
+theme_words_female = {
+    "Female archetypes": "women, woman, female, girls",
+    "Politics": "Hillary, voted",
+    "Royalty": "queen, majesty",
+    "Family roles": "mother, mom, sister, grandma, grandmother",
+    "Female names": "Karen, Susan, Martha",
+    "Food": "cake, feed, eat, recipe, mother recipe, mustard, ketchup, fish, lemons, lemonade, latte",
+    "Fashion & apperance": "dress, fashion, wearing, shoes, neck",
+    "Animals": "dog, cat, lady cat",
+    "Nature": "summer, autumn, leaves, rose, garden, stone",
+    "Mariage": "divorce, trophy wide, wife, ex wife, divorce papers",
+    "Climate": "earth, climate change, climate",
+    "Fantasy & mythology": "knight, witch, princess, castle, dragons",
+    "History": "stone age",
+    "Miscellaneous": "china, size, half, bull"
+    
+}
+
+theme_words_male = {
+    "Male Archetypes": "he, him, sir, men, male, man, boys",
+    "Male names": "Harold",
+    "Animals": "whale, cat, lion, mosquito, rabbit, horse, bear, salmon, shark, bird, pigeons, mouse, fish, elephant, dog, duck",
+    "Arts & Music": "art, artist, piano, sing, guitar, Jay Blues, Monet",
+    "Climate": "climate, global waring, change",
+    "COVID & pandemic": "virus, covid, coronavirus, covid 19, social distancing, masks",
+    "Fashion & appearance": "tie, jackets, hair, hat, shoes, boots, pants, wearing, hair, bald, hands, big guy, feet",
+    "Death": "death, death penalty, died, killed",
+    "Family roles": "brother, dad, father",
+    "Fantasy & mythology": "damocles sowrd, peter pan, sword",
+    "Mariage": "honeymoon, groom",
+    "Money": "stocks, tax, insurance, rent",
+    "Food": "dinner, burger, pizza, donut, beer, wine, martini, coffe, eat, gingerbread, menu, lunch dinner",
+    "Health": "doctor, insurance, health, obamacare",
+    "History": "cave man, king Arthur, dinosaurs",
+    "House": "bathroom, housing, house shower",
+    "Nature": "plant, potted, seasonal, leaves, rock",
+    "Public Figures": "Alfred Hitchcock, Martin Luther, Putin, George Martin",
+    "Politics": "Donald Trump, Trump, build wall, voted, president, election",
+    "Pop Culture": "Frankenstein, Edward scissorhands",
+    "Religion": "adam, eve, apple, god, St-George, heaven",
+    "Royalty": "king, majesty, throne",
+    "Social": "tweet, twitter, netflix, phone",
+    "Sport": "ball, bat, kite, baseball, pitch, ",
+    "Transport": "train, fly, plane, uber, subway",
+    "Work": "salesman, chef, boss, fired, lawyers, chairman, cop, officer, waiterm job",
+    "Miscellaneous": "bigger, mat, reinventing, worry, speed, printer, shovel, galaxy, table, camera"
+}
