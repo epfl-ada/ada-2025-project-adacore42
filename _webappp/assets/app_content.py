@@ -16,8 +16,8 @@ class PagesData(Enum):
                                 "545.jpg")
 
     AXIS_3     = PageDataFormat("page_axis_3.py",     
-                                "Axis 3: Gender Roles", 
-                                "512.jpg")
+                                "Behind the Punchline: Gender Roles in the contest", 
+                                "582.jpg")
     
     ABOUTUS    = PageDataFormat("page_aboutus.py",   
                                 "About Us")
