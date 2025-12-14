@@ -9,8 +9,10 @@ from scipy import stats
 from itertools import combinations
 from sentence_transformers import SentenceTransformer
 from bertopic import BERTopic
+from sklearn.metrics import silhouette_score
 
-
+from gensim.corpora import Dictionary
+from gensim.models.coherencemodel import CoherenceModel
 
 
 
@@ -24,6 +26,8 @@ class CaptionTopicClusterer:
         
         self.embedding_model = SentenceTransformer(embedding_model_name)
 
+        self.min_topic_size = min_topic_size
+        
         self.topic_model = BERTopic(
             embedding_model=self.embedding_model,
             min_topic_size=min_topic_size,
@@ -48,14 +52,12 @@ class CaptionTopicClusterer:
         self.contest_idx = contest_idx
 
     # ---------------------------------------------------------
-    # 1) Topic modeling
+    # Topic modeling
     # ---------------------------------------------------------
 
     def fit_transform(self, captions):
         """
-        Entraîne BERTopic et retourne :
-        - df_topics : caption + topic
-        - df_topic_info : infos globales des topics
+        Entraîne BERTopic et retourne uniquement les résultats du clustering.
         """
         embeddings = self.embedding_model.encode(captions, show_progress_bar=True)
 
@@ -63,10 +65,84 @@ class CaptionTopicClusterer:
 
         df_topic_info = self.topic_model.get_topic_info()
 
-        return topics, df_topic_info
+        return {
+            "captions": captions,
+            "embeddings": embeddings,
+            "topics": topics,
+            "probs": probs,
+            "df_topic_info": df_topic_info
+        }
 
     # ---------------------------------------------------------
-    # 2) Mapping topics → topics agrégés
+    # EVALUATION (sans refit)
+    # ---------------------------------------------------------
+    def evaluate_fit_transform(self, fit_results):
+
+        captions = fit_results["captions"]
+        embeddings = fit_results["embeddings"]
+        topics = fit_results["topics"]
+
+        # --- texts compatibles bigrams ---
+        texts = [
+            c.lower().replace(" ", "_").split("_")
+            for c in captions
+        ]
+        dictionary = Dictionary(texts)
+
+        # --- topic words ---
+        topics_dict = self.topic_model.get_topics()
+        topic_words = []
+
+        for t in topics_dict:
+            if t == -1 or topics_dict[t] is None:
+                continue
+
+            words = [
+                w for w, _ in topics_dict[t][:10]
+                if w in dictionary.token2id
+            ]
+
+            if len(words) >= 2:
+                topic_words.append(words)
+
+        # --- Coherence ---
+        coherence_model = CoherenceModel(
+            topics=topic_words,
+            texts=texts,
+            dictionary=dictionary,
+            coherence="c_v"
+        )
+        coherence = coherence_model.get_coherence()
+
+        # --- Diversity ---
+        all_words = [w for topic in topic_words for w in topic]
+        diversity = len(set(all_words)) / len(all_words) if all_words else np.nan
+
+        # --- Silhouette ---
+        valid_idx = [i for i, t in enumerate(topics) if t != -1]
+        if len(set(np.array(topics)[valid_idx])) > 1:
+            silhouette = silhouette_score(
+                embeddings[valid_idx],
+                np.array(topics)[valid_idx]
+            )
+        else:
+            silhouette = np.nan
+
+        outlier_rate = np.mean(np.array(topics) == -1)
+
+        return {
+            "min_topic_size": self.min_topic_size,
+            "coherence": coherence,
+            "diversity": diversity,
+            "silhouette": silhouette,
+            "outlier_rate": outlier_rate,
+            "n_topics": len(topic_words)
+        }
+
+
+
+    # ---------------------------------------------------------
+    # Mapping topics toward topics agregatted
     # ---------------------------------------------------------
 
     @staticmethod
@@ -79,8 +155,7 @@ class CaptionTopicClusterer:
 
     def compute_aggregated_topic_info(self, df_topic_info, agg_topic):
         """
-        Ajoute les topics agrégés et calcule les stats
-        (Count, Name, Representative_Docs).
+        Ajoute les topics agrégés et calcule les stats (Count, Name, Representative_Docs).
         """
         df = df_topic_info.copy()
 
@@ -94,17 +169,16 @@ class CaptionTopicClusterer:
                         })
                         .reset_index()
                         .sort_values("Count", ascending=False))
-
+        
         return agg_topics
 
     # ---------------------------------------------------------
-    # 3) Scores par topic agrégé
+    # Scores par topic agrégé
     # ---------------------------------------------------------
 
     def compute_topic_scores(self, df_data, agg_topic):
         """
-        Merge topics + scores puis calcule les moyennes
-        par topic agrégé.
+        Merge topics + scores puis calcule les moyennes par topic agrégé.
         """
 
         df_data["aggregated_topic"] = df_data["topic_nb"].apply(lambda x: self.map_topic_to_aggregated(x, agg_topic))
@@ -119,7 +193,7 @@ class CaptionTopicClusterer:
     
 
     # -------------------------------
-    # 4) Variance and outlier analysis
+    # Variance and outlier analysis
     # -------------------------------
     def compute_variance_stats(self, df_data):
         """
@@ -149,12 +223,12 @@ class CaptionTopicClusterer:
 
 
     # -------------------------------
-    # 6) Stratification by percentiles and enrichment
+    # Stratification by percentiles and enrichment
     # -------------------------------
     def stratify_percentiles_and_compare(self, df_data, top_pct=10, middle_pct=(40,60)):
         """
-        Returns dataframes for top N% and middle percentile and computes counts per aggregated topic,
-        plus simple enrichment ratios (top proportion / overall proportion).
+        Returns dataframes for top N% and middle percentile and computes
+        counts per aggregated topic + simple enrichment ratios (top proportion / overall proportion).
         """
         df = df_data.copy()
         df = df.dropna(subset=[self.fun_metric])
@@ -181,7 +255,7 @@ class CaptionTopicClusterer:
 
 
     # -------------------------------
-    # 7) Statistical tests
+    # Statistical tests
     # -------------------------------
     def kruskal_test(self, df_data):
         """
@@ -223,35 +297,13 @@ class CaptionTopicClusterer:
 
 
     # ---------------------------------------------------------
-    # 5) Visualisations
+    # Visualisations
     # ---------------------------------------------------------
 
     def plot_topic_scores(self, df_data, df_scores):
         """
-        Scatterplot + boxplot du score par topic agrégé.
+        Boxplot du score par topic agrégé.
         """
-
-        """# SCATTER
-        plt.figure(figsize=(10, 6))
-        sns.scatterplot(
-            data=df_scores,
-            x="aggregated_topic",
-            y=self.fun_metric,
-            size="Count",
-            hue="aggregated_topic",
-            sizes=(100, 1000),
-            alpha=0.8,
-            palette="tab10",
-        )
-        plt.title(f"Distribution {self.fun_metric} par topic agrégé")
-        plt.xticks(rotation=90)
-        plt.xlabel("Topic agrégé")
-        plt.ylabel(self.fun_metric)
-        plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
-        plt.tight_layout()
-        plt.show()"""
-
-        # BOXPLOT
         plt.figure(figsize=(10, 6))
         sns.boxplot(data=df_data.sort_values(by=self.fun_metric, ascending=False), x="aggregated_topic", y=self.fun_metric)
         plt.title(f"Distribution {self.fun_metric} par topic agrégé")
