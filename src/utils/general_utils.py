@@ -83,7 +83,7 @@ def plot_cartoon(contest_id, root):
     img = Image.open(path)
     img.show()
 
-def plot_treemap_html(path):
+def plot_html(path):
     """
     Function to call on the .py for the website to plot treemap graphs
     :param path: path to the save graph in html
