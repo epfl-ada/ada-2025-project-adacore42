@@ -6,6 +6,11 @@ import pandas as pd
 import numpy as np
 import pickle
 import plotly.express as px
+import plotly.graph_objects as go
+import os
+import sys
+sys.path.append(os.path.abspath(".."))
+from src.utils.general_utils import *
 
 class GenderAnalysis:
     """
@@ -1091,6 +1096,20 @@ class GenderAnalysis:
         return fig
 
     # ---------------------------
+    # PART 3 - SENTIMENT ANALYSIS
+    # ---------------------------
+
+    def flatten(self, lst):
+        result = []
+        for item in lst:
+            if isinstance(item, list):
+                result.extend(self.flatten(item))
+            else:
+                result.append(item)
+        return result
+
+
+    # ---------------------------
     # VISUALIZATION
     # ---------------------------
 
@@ -1243,7 +1262,208 @@ class GenderAnalysis:
 
         plt.tight_layout()
         plt.show()
-    
+
+    @staticmethod
+    def plot_cumulative_mentions_plotly(
+        cumulative,
+        title: str = "Cumulative Gender Mentions per Contest",
+        xlabel: str = "Contest Index (chronological)",
+        ylabel: str = "Cumulative Count",
+        legend_title: str = "Gender Mention",
+        neutral: bool = True, 
+        save: str = None
+    ):
+        """
+        Interactive Plotly version of cumulative gender mentions.
+        """
+
+        fig = go.Figure()
+
+        columns = cumulative.columns if neutral else cumulative.columns[:-1]
+
+        for col in columns:
+            fig.add_trace(
+                go.Scatter(
+                    x=cumulative.index,
+                    y=cumulative[col],
+                    mode="lines",
+                    name=col,
+                    line=dict(width=3),
+                    hovertemplate=(
+                        f"<b>{col}</b><br>"
+                        "Contest: %{x}<br>"
+                        "Count: %{y}<extra></extra>"
+                    )
+                )
+            )
+
+        fig.update_layout(
+            title=dict(text=title, x=0.5),
+            xaxis_title=xlabel,
+            yaxis_title=ylabel,
+            legend_title=legend_title,
+            template="plotly_white",
+            hovermode="x unified",
+            width=900,
+            height=500
+        )
+
+        fig.update_xaxes(showgrid=True, gridcolor="rgba(0,0,0,0.05)")
+        fig.update_yaxes(showgrid=True, gridcolor="rgba(0,0,0,0.05)")
+
+        if save: 
+            fig.write_html(save)
+
+        fig.show()
+
+    @staticmethod
+    def plot_overall_counts_plotly(
+        overall_counts,
+        title: str = "Overall Presence of Gender Mentions",
+        xlabel: str = "Gender Mention Category",
+        ylabel: str = "Number of Captions",
+        neutral: bool = True, 
+        save: str = None
+    ):
+        """
+        Interactive Plotly version of overall gender mention counts.
+        """
+
+        categories = ["male", "female", "both", "neutral"] if neutral else ["male", "female", "both"]
+        values = overall_counts[categories]
+
+        fig = go.Figure(
+            data=[
+                go.Bar(
+                    x=categories,
+                    y=values,
+                    text=values,
+                    textposition="auto",
+                    hovertemplate=(
+                        "<b>%{x}</b><br>"
+                        "Count: %{y}<extra></extra>"
+                    )
+                )
+            ]
+        )
+
+        fig.update_layout(
+            title=dict(text=title, x=0.5),
+            xaxis_title=xlabel,
+            yaxis_title=ylabel,
+            template="plotly_white",
+            width=600,
+            height=450
+        )
+
+        fig.update_yaxes(showgrid=True, gridcolor="rgba(0,0,0,0.08)")
+        fig.update_xaxes(tickangle=0)
+
+        if save: 
+            fig.write_html(save)
+
+        fig.show()
+
+    @staticmethod
+    def plot_average_sentiment_by_theme_plotly(
+        df_common,
+        title: str = "Average Sentiment by Theme (Common Themes Only)",
+        xlabel: str = "Theme",
+        ylabel: str = "Average Sentiment",
+        pos_threshold: float = 0.05,
+        neg_threshold: float = -0.05, 
+        save: str = None
+    ):
+        """
+        Plot mean sentiment per theme and gender with 95% CI.
+        """
+
+        # --- Aggregate: mean, std, count ---
+        summary = (
+            df_common
+            .groupby(["aggregated_theme", "gender_label"])
+            .agg(
+                mean_sentiment=("sentiment", "mean"),
+                std_sentiment=("sentiment", "std"),
+                n=("sentiment", "count")
+            )
+            .reset_index()
+        )
+
+        # --- 95% confidence interval ---
+        summary["ci"] = 1.96 * summary["std_sentiment"] / np.sqrt(summary["n"])
+
+        # --- Build figure ---
+        fig = go.Figure()
+
+        for gender in summary["gender_label"].unique():
+            df_g = summary[summary["gender_label"] == gender]
+
+            fig.add_trace(
+                go.Bar(
+                    x=df_g["aggregated_theme"],
+                    y=df_g["mean_sentiment"],
+                    name=gender,
+                    error_y=dict(
+                        type="data",
+                        array=df_g["ci"],
+                        visible=True
+                    ),
+                    hovertemplate=(
+                        "<b>Theme:</b> %{x}<br>"
+                        f"<b>Gender:</b> {gender}<br>"
+                        "<b>Mean sentiment:</b> %{y:.3f}<br>"
+                        "<b>95% CI:</b> ±%{error_y.array:.3f}"
+                        "<extra></extra>"
+                    )
+                )
+            )
+
+        # --- Sentiment threshold lines ---
+        fig.add_hline(
+            y=pos_threshold,
+            line_dash="dot",
+            line_color="green"
+        )
+
+        fig.add_hline(
+            y=neg_threshold,
+            line_dash="dot",
+            line_color="red"
+        )
+
+        # --- Neutral zone shading ---
+        fig.add_hrect(
+            y0=neg_threshold,
+            y1=pos_threshold,
+            fillcolor="gray",
+            opacity=0.12,
+            line_width=0
+        )
+
+        # --- Layout ---
+        fig.update_layout(
+            title=dict(text=title, x=0.5),
+            xaxis_title=xlabel,
+            yaxis_title=ylabel,
+            barmode="group",
+            template="plotly_white",
+            width=1300,
+            height=600,
+            legend_title="Gender",
+            hovermode="closest"
+        )
+
+        fig.update_xaxes(tickangle=90)
+        fig.update_yaxes(
+            zeroline=True,
+            zerolinecolor="black",
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.05)"
+        )
+
+        fig.show()
+
     # ---------------------------
     # LOADING FILES
     # ---------------------------

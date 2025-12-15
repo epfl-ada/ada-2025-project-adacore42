@@ -59,7 +59,7 @@ st.write(
 )
 st.divider()
 
-st.subheader("1. Setting the Scene: Who Appears in the Joke?")
+st.subheader("1. Setting the Scene: Who Appears in the Contest?")
 
 "**Who gets mentionned?**"
 # Insert barplots. Button to choose to see for captions or cartoons
