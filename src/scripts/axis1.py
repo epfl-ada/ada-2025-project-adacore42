@@ -24,15 +24,91 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.cluster import KMeans
 
 
-
+from scipy.stats import ttest_ind
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 
 # ============================
 #   1.1. What is funny ? 
 # ============================
+def plot_boxplot_interactive(df, columns_category, features, save_fig = False, title=None):
+    feature_labels = {
+        'polarity': 'Sentiment Polarity',
+        'subjectivity': 'Subjectivity',
+        'num_words': 'Words number',
+        'num_punct': 'Punctuations number',
+        'num_repeats': 'Repetition'
+    }
+    groups = df[columns_category].unique()
+    base_colors = ['green', 'orange']
 
-# katia & dominic work
-#def fonctiooooons()
+    colors = {
+        grp: base_colors[i] if i < len(base_colors) else 'gray'
+        for i, grp in enumerate(groups)
+    }
+    #colors = {'best':'green',  'worst':'orange'}
+
+    # Calculer les p-values et les stocker dans un dictionnaire
+    p_values = {}
+    for f in features:
+        g1 = df[df[columns_category]==groups[0]][f]
+        g2 = df[df[columns_category]==groups[1]][f]
+        t_stat, p_val = ttest_ind(g1, g2, equal_var=False)
+        p_values[f] = p_val
+
+    # Créer le plot
+    fig = make_subplots(rows=1, cols=len(features),subplot_titles=[feature_labels[f] for f in features])#,horizontal_spacing=0.05 
+
+    
+    for i, f in enumerate(features):
+        for grp in df[columns_category].unique():
+            
+            df_sub = df[df[columns_category] == grp]
+
+            fig.add_trace(
+                go.Box(
+                    y=df_sub[f],
+                    name=grp,
+                    marker_color=colors.get(grp, 'black'),
+                    
+                    customdata=df_sub[['caption_id', 'funny_score_scaled','source_id']],
+                    hovertemplate=
+                        "<b>Value:</b> %{y:.2f}<br>" +
+                        "<b>Funny score:</b> %{customdata[1]:.2f}<br>" +
+                        "<b>Caption ID:</b> %{customdata[0]}<br>" +
+                        "<b>Contest ID:</b> %{customdata[2]}<br>" +
+                        "<extra></extra>"
+                ),
+                row=1, col=i+1
+            )
+
+        
+        # Ajouter l'annotation p-value **une seule fois par feature**
+        y_max = df[f].max()
+        text_annot = f"p = {p_values[f]:.3e}" + ("**" if p_values[f] < 0.05 else "")
+
+        fig.add_annotation(
+            x=0.5, y=y_max*1.05,
+            text=text_annot,
+            showarrow=False,
+            font=dict(size=14, color="black"),
+            xref=f"x{i+1}",
+            yref=f"y{i+1}"
+        )
+    # Change this for other purpose than axe 1 - part 1   
+    if columns_category == "caption_type":
+        title_cat = "Comparison of best and worst captions in each contest"
+    else:
+        title_cat = "Comparison of best and worst captions overall contests"
+
+
+    fig.update_layout(height=600, width=200*len(features), showlegend=False,
+                      title = title_cat)
+    
+    if save_fig:
+        fig.write_html(f"plot{title}.html")
+    fig.show()
 
 
 
