@@ -9,38 +9,11 @@ pageData.page_firstBlock()
 
 st.write(
     """
-    A caption is never just a caption.
+    In this part, we shift our focus to the representatio of gender in the contest. The idea is to investigate
+    wether humor reveals a stereotipical view of gender (roles in society, character, ...) or if it follows the evolution
+    of the norms.
 
-    Behind a few carefully chosen words lies a set of assumptions: who gets to speak, 
-    who is being laughed at, and what the audience is expected to recognize as “normal.” 
-    Cartoons may look lighthearted and timeless, but the ideas they rely on often are not.
-
-    What, then, hides behind captions that appear harmlessly funny?
-    """
-)
-
-### Insert intersting cartoon
-
-st.divider()
-
-st.write(
-    """
-    In a cultural moment where conversations about gender are more visible, more contested, 
-    and more nuanced than ever, humor can be a revealing place to look. Jokes compress social 
-    norms into a single line, sometimes reinforcing them, sometimes quietly updating them, 
-    and sometimes pretending nothing has changed at all. The apparent innocence of a caption 
-    can make these patterns easy to miss.
-
-    In this data story, we look beneath the surface of New Yorker cartoons and captions to 
-    examine how gender is represented and how those representations are received.
-    """
-)
-
-st.divider()
-
-st.write(
-    """
-    We investigate two core questions:
+    To structure this investigation, we defined the following research questions: 
 
     1. How are men and women depicted in cartoons and captions, and do these depictions reflect 
     traditional gender roles or stereotypes?
@@ -50,22 +23,33 @@ st.write(
     """
 )
 
-st.write(
-    """
-    By tracing patterns across themes, sentiment, and audience reactions, we ask whether 
-    gender still functions as a punchline or whether its role in humor has become so familiar 
-    that it no longer stands out at all.
-    """
-)
+st.image("data/newyorker_caption_contest_virgin/images/582.jpg", width=700)
+st.markdown(
+    "<h3 style='text-align: center;'>Yes, I see the train but I think we can beat it.</h3>",
+    unsafe_allow_html=True)
+
 st.divider()
 
 st.subheader("1. Setting the Scene: Who Appears in the Contest?")
 
-"**Who gets mentionned?**"
-# Insert barplots. Button to choose to see for captions or cartoons
+"**A simple method**"
 
-"**Has the cast changed over time?**"
-# Insert plots. Button to choose to see for captions or cartoons
+st.write("""
+    Before diving into our scientific analysis, it's important to define the method to find gender in the
+    cartoon descriptions and captions. It is rather simple actually, we created two big dictionnaries; one for
+    women labeled word and one for men. It contains common english names, occupations, pronouns...
+    With these dictionnaries, we can do some simple gender detection: iterate through the image descriptions 
+    and captions, and annotate it as 'men', 'women', 'both' or 'neutral' depending on the presence of 
+    gendered words.
+    """
+    )
+
+"**The results**"
+
+st.write("""
+    We applied this simple method and got these plots, and guess what? We already found something intersting!
+    Almost 50% of the cartoons are related only 
+    """)
 
 st.subheader("2. Behind the Scene: How Gender Is Depicted")
 "**Words Matter**"

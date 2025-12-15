@@ -1279,15 +1279,24 @@ class GenderAnalysis:
 
         fig = go.Figure()
 
+        # --- Label mapping ---
+        label_map = {
+            "male": "men",
+            "female": "women",
+            "both": "both",
+            "neutral": "neutral"
+        }
+
         columns = cumulative.columns if neutral else cumulative.columns[:-1]
 
         for col in columns:
+            display_name = label_map.get(col, col)
             fig.add_trace(
                 go.Scatter(
                     x=cumulative.index,
                     y=cumulative[col],
                     mode="lines",
-                    name=col,
+                    name=display_name,
                     line=dict(width=3),
                     hovertemplate=(
                         f"<b>{col}</b><br>"
@@ -1347,6 +1356,14 @@ class GenderAnalysis:
             ]
         )
 
+        # --- Label mapping ---
+        label_map = {
+            "male": "men",
+            "female": "women",
+            "both": "both",
+            "neutral": "neutral"
+        }
+
         fig.update_layout(
             title=dict(text=title, x=0.5),
             xaxis_title=xlabel,
@@ -1357,7 +1374,13 @@ class GenderAnalysis:
         )
 
         fig.update_yaxes(showgrid=True, gridcolor="rgba(0,0,0,0.08)")
-        fig.update_xaxes(tickangle=0)
+        # --- Change only displayed tick labels ---
+        fig.update_xaxes(
+            tickvals=categories,
+            ticktext=[label_map[c] for c in categories],
+            tickangle=0
+    )
+
 
         if save: 
             fig.write_html(save)
