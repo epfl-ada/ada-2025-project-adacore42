@@ -98,6 +98,10 @@ st.write("""
 # """)
 
 # ## Insert treemap for both gender.
+# plot_html(r"_Other\amelie_analysis\saved plots\topic_male.html")
+
+# plot_html(r"_Other\amelie_analysis\saved plots\topic_female.html")
+
 
 # st.write(
 #     """
@@ -142,14 +146,10 @@ st.write("""
 #     (Spoiler: not as much as one might expect.)
 # """)
  
-# "**Same themes, different reactions?**"
+"**Same themes, different reactions?**"
 
-# st.subheader("3. Does Gender Win the Crowd?")
-# "**Are gendered captions funnier?**"
+st.subheader("3. Does Gender Win the Crowd?")
+"**Are gendered captions funnier?**"
 
-# st.subheader("4. So What’s the Joke, Really?")
-# "**Conclusion**"
- 
-# plot_html(r"_Other\amelie_analysis\saved plots\topic_male.html")
-
-# plot_html(r"_Other\amelie_analysis\saved plots\topic_female.html")
+st.subheader("4. So What’s the Joke, Really?")
+"**Conclusion**"
