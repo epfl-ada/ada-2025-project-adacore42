@@ -56,7 +56,7 @@ class CaptionTopicClusterer:
         self.contest_idx = contest_idx
 
     # ---------------------------------------------------------
-    # Topic modeling
+    # Topic clustering
     # ---------------------------------------------------------
 
     def fit_transform(self, captions):
@@ -78,7 +78,7 @@ class CaptionTopicClusterer:
         }
 
     # ---------------------------------------------------------
-    # EVALUATION (sans refit)
+    # EVALUATION of the topic clustering
     # ---------------------------------------------------------
     def evaluate_fit_transform(self, fit_results):
 
@@ -238,28 +238,31 @@ class CaptionTopicClusterer:
         df = df.dropna(subset=[self.fun_metric])
         n = len(df)
         top_k = int(math.ceil(n * top_pct / 100.0))
-        # get top by metric
+
+        ### get top by metric
         df_sorted = df.sort_values(self.fun_metric, ascending=False).reset_index(drop=True)
+
+        # df_top : les meilleures lignes (top X %)
         df_top = df_sorted.iloc[:top_k]
-        # middle pct
+
+        # middle pct : la tranche centrale
         lo = int(math.floor(n * (middle_pct[0]/100.0)))
         hi = int(math.ceil(n * (middle_pct[1]/100.0)))
         df_middle = df_sorted.iloc[lo:hi]
+
         # counts per topic
         top_counts = df_top["aggregated_topic"].value_counts().rename("top_count").reset_index().rename(columns={"index":"aggregated_topic"})
         mid_counts = df_middle["aggregated_topic"].value_counts().rename("mid_count").reset_index().rename(columns={"index":"aggregated_topic"})
         overall = df["aggregated_topic"].value_counts().rename("overall_count").reset_index().rename(columns={"index":"aggregated_topic"})
+
+        # merged : tableau comparatif par topic avec enrichissement
         merged = overall.merge(top_counts, on="aggregated_topic", how="left").merge(mid_counts, on="aggregated_topic", how="left").fillna(0)
         merged["top_prop"] = merged["top_count"]/merged["overall_count"]
         merged["mid_prop"] = merged["mid_count"]/merged["overall_count"]
         merged["enrichment_top_vs_overall"] = (merged["top_count"] / top_k) / (merged["overall_count"] / n)
         merged = merged.sort_values("enrichment_top_vs_overall", ascending=False)
         
-        # df_top → les meilleures lignes (top X %)
-        # df_middle → la tranche centrale
-        # merged → tableau comparatif par topic avec enrichissement
         return df_top, df_middle, merged
-
 
 
     # -------------------------------
@@ -267,7 +270,7 @@ class CaptionTopicClusterer:
     # -------------------------------
     def kruskal_test(self, df_data):
         """
-        Kruskal-Wallis test across aggregated topics (non-parametric ANOVA).
+        Kruskal-Wallis test across aggregated topics (non-parametric equivalent of ANOVA).
         Returns H-stat and p-value and group medians.
         """
         groups = [g[self.fun_metric].dropna().values for n,g in df_data.groupby("aggregated_topic")]
@@ -296,7 +299,7 @@ class CaptionTopicClusterer:
             b = groups[names[j]]
             stat, p = stats.mannwhitneyu(a,b, alternative='two-sided')
             pairs.append({"group1": names[i], "group2": names[j], "U": stat, "p_raw": p})
-        # Bonferroni
+        # Bonferroni correction : as we have a lot of comparisons, we correct the False Positive rate
         for row in pairs:
             row["p_adj_bonf"] = min(row["p_raw"] * len(pairs), 1.0)
         df_pairs = pd.DataFrame(pairs).sort_values("p_adj_bonf")
@@ -319,7 +322,7 @@ class CaptionTopicClusterer:
         plt.show()
     
 
-    def plot_topic_scores2(self, df_data, order_by="median"):
+    def plot_topic_scores2(self, df_data, df_scores, order_by="median", show_points="outliers", save=None):
         """
         Boxplot interactif Plotly de la distribution du score par topic agrégé.
 
@@ -327,244 +330,313 @@ class CaptionTopicClusterer:
         ----------
         df_data : pd.DataFrame
             Doit contenir aggregated_topic et self.fun_metric
+        df_scores : pd.DataFrame
+            DataFrame des scores agrégés (non utilisé mais gardé pour compatibilité)
         order_by : str
-            "median" ou "mean" pour trier les topics
-        show : bool
-            Affiche ou retourne la figure
+            "median", "mean", "count" ou "variance" pour trier les topics
+        show_points : str
+            "all", "outliers", "suspectedoutliers" ou False
         """
-
         df = df_data.dropna(subset=[self.fun_metric]).copy()
 
-        # --- calcul stats pour l'ordre ---
+        # --- Calcul stats pour l'ordre et annotations ---
         stats = (
             df.groupby("aggregated_topic")[self.fun_metric]
-            .agg(["median", "mean", "count"])
+            .agg([
+                ("median_val", "median"),
+                ("mean_val", "mean"),
+                ("count", "count"),
+                ("std", "std"),
+                ("var", "var")
+            ])
             .reset_index()
         )
-
-        if order_by not in {"median", "mean"}:
-            raise ValueError("order_by must be 'median' or 'mean'")
-
+        
+        # Renommer pour compatibilité avec le reste du code
+        stats.rename(columns={"median_val": "median", "mean_val": "mean"}, inplace=True)
+        
+        # Validation order_by
+        valid_orders = {"median", "mean", "count", "variance", "var"}
+        if order_by not in valid_orders:
+            raise ValueError(f"order_by must be one of {valid_orders}")
+        
+        sort_col = "var" if order_by == "variance" else order_by
         ordered_topics = (
-            stats.sort_values(order_by, ascending=False)["aggregated_topic"]
-            .tolist()
+            stats.sort_values(sort_col, ascending=False)["aggregated_topic"].tolist()
         )
 
-        # --- boxplot ---
+        # --- Création boxplot avec couleurs dégradées ---
+        # Couleur basée sur la médiane/moyenne
+        metric_values = stats.set_index("aggregated_topic")[order_by if order_by != "variance" else "median"]#
+        norm_values = (metric_values - metric_values.min()) / (metric_values.max() - metric_values.min())#
+        
+        colors = [f'rgba({int(70+v*120)}, {int(130+v*90)}, {int(180-v*80)}, 0.7)' #
+                for topic in ordered_topics #
+                for v in [norm_values.get(topic, 0.5)]]#
+
         fig = px.box(
             df,
             x="aggregated_topic",
             y=self.fun_metric,
             category_orders={"aggregated_topic": ordered_topics},
-            points="outliers",   # montre les outliers
-            hover_data=df.columns,
-            title=f"Distribution de {self.fun_metric} par topic agrégé"
+            points=show_points,
+            hover_data=["caption"] if "caption" in df.columns else None,
+            title=f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})"
         )
+        
+        # Personnaliser les couleurs et le hover
+        for i, trace in enumerate(fig.data):#
+            trace.marker.color = colors[i]#
+            trace.marker.line.color = 'rgba(0,0,0,0.7)'#
+            trace.marker.line.width = 1#
+            trace.boxmean = None  # Affiche moyenne et écart-type #
 
-        # --- annotations N ---
-        annotations = []
-        for _, row in stats.iterrows():
-            annotations.append(
-                dict(
-                    x=row["aggregated_topic"],
-                    y=df[self.fun_metric].max(),
-                    text=f"n={row['count']}",
-                    showarrow=False,
-                    yshift=20,
-                    font=dict(size=10)
-                )
-            )
+        # --- Annotations enrichies ---
+        annotations = []#
+        y_max = df[self.fun_metric].max()#
+        y_range = df[self.fun_metric].max() - df[self.fun_metric].min()#
+        
+        for _, row in stats.iterrows():#
+            topic = row["aggregated_topic"]#
+            annotations.append(#
+                dict(#
+                    x=topic,#
+                    y=y_max + y_range * 0.05,#
+                    text=f"<b>n={int(row['count'])}",#
+                    showarrow=False,#
+                    yshift=10,#
+                    font=dict(size=9, color='#333'),#
+                    bgcolor='rgba(255,255,255,0.8)',#
+                    bordercolor='rgba(0,0,0,0.2)',#
+                    borderwidth=1,#
+                    borderpad=3#
+                )#
+            )#
 
+        # --- Layout final ---
+        n_topics = len(ordered_topics)
+        n_captions = len(df)
+        
         fig.update_layout(
-            xaxis_title="Topic agrégé",
+            xaxis_title="Aggregated topic",
             yaxis_title=self.fun_metric,
             template="plotly_white",
-            height=500,
+            height=600,
             xaxis_tickangle=-45,
-            annotations=annotations
-        )
-        fig.show()
-        return fig
-
-
-
-    def plot_proportion_above_threshold(self, df_data, threshold=1.5, figsize=(10, 5)):
-        """
-        Barplot interactif de la proportion de captions au-dessus d'un seuil par topic.
-        Inclut un subplot avec les counts absolus.
-        """
-        df = df_data.copy()
-        df["above"] = (df[self.fun_metric] >= threshold).astype(int)
-        
-        prop = df.groupby("aggregated_topic")["above"].agg(["mean", "sum", "count"]).reset_index()
-        prop.columns = ["aggregated_topic", "prop_above", "n_above", "total"]
-        prop = prop.sort_values("prop_above", ascending=False)
-        
-        # Créer des subplots
-        fig = make_subplots(
-            rows=1, cols=2,
-            subplot_titles=(
-                f"Proportion >= {threshold}",
-                f"Nombre absolu >= {threshold}"
-            ),
-            horizontal_spacing=0.12
-        )
-        
-        # Couleurs dégradées basées sur la proportion
-        colors = [f'rgba({int(220-p*150)}, {int(100+p*100)}, {int(150-p*50)}, 0.8)' 
-                for p in prop["prop_above"]]
-        
-        # Subplot 1: Proportions
-        fig.add_trace(
-            go.Bar(
-                x=prop["aggregated_topic"],
-                y=prop["prop_above"],
-                marker_color=colors,
-                text=[f'{p:.1%}' for p in prop["prop_above"]],
-                textposition='outside',
-                hovertemplate=(
-                    '<b>%{x}</b><br>' +
-                    'Proportion: %{y:.2%}<br>' +
-                    'Nombre: %{customdata[0]}<br>' +
-                    'Total: %{customdata[1]}<br>' +
-                    '<extra></extra>'
-                ),
-                customdata=prop[["n_above", "total"]].values,
-                name="Proportion"
-            ),
-            row=1, col=1
-        )
-        
-        # Subplot 2: Counts absolus
-        fig.add_trace(
-            go.Bar(
-                x=prop["aggregated_topic"],
-                y=prop["n_above"],
-                marker_color=colors,
-                text=prop["n_above"],
-                textposition='outside',
-                hovertemplate=(
-                    '<b>%{x}</b><br>' +
-                    'Nombre >= threshold: %{y}<br>' +
-                    'Total: %{customdata}<br>' +
-                    'Proportion: %{text:.1%}<br>' +
-                    '<extra></extra>'
-                ),
-                customdata=prop["total"].values,
-                texttemplate=[f'{p:.1%}' for p in prop["prop_above"]],
-                name="Count"
-            ),
-            row=1, col=2
-        )
-        
-        # Mise en forme
-        fig.update_xaxes(tickangle=-45, row=1, col=1)
-        fig.update_xaxes(tickangle=-45, row=1, col=2)
-        fig.update_yaxes(title_text="Proportion", row=1, col=1)
-        fig.update_yaxes(title_text="Nombre de captions", row=1, col=2)
-        
-        fig.update_layout(
+            annotations=annotations,#
             title=dict(
-                text=f"Analyse des captions avec {self.fun_metric} >= {threshold}<br>" +
-                    f"<sub>{len(df)} captions totales • {df['above'].sum()} au-dessus du seuil ({df['above'].mean():.1%})</sub>",
+                text=f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})<br>" +
+                    f"<sub>{n_topics} topics • {n_captions} captions • Global median: {df[self.fun_metric].median():.2f}</sub>",
                 x=0.5,
                 xanchor='center'
             ),
-            height=500,
-            showlegend=False,
-            template='plotly_white'
+            hovermode='closest',
+            showlegend=False
         )
         
+        if save: 
+            fig.write_html(save)
         fig.show()
-        return prop, fig
-    
-
-    def plot_enrichment_bar(self, merged, top_n=20):
-        """
-        Bar chart des topics les plus enrichis dans le top percentile
-        """
-        df_plot = merged.head(top_n)
-
-        fig = px.bar(
-            df_plot,
-            x="enrichment_top_vs_overall",
-            y="aggregated_topic",
-            orientation="h",
-            title=f"Enrichissement des topics dans le top (Top {top_n})",
-            labels={
-                "enrichment_top_vs_overall": "Enrichissement (top vs overall)",
-                "aggregated_topic": "Topic agrégé"
-            }
-        )
-
-        fig.update_layout(
-            yaxis=dict(categoryorder="total ascending"),
-            template="plotly_white",
-            height=500
-        )
-        fig.show()
-        return fig
 
 
-
-    def plot_top_vs_overall_props(self, merged, top_n=15):
+    def plot_bubble_enrichment(self, merged, top_n=30, save=None):
         df_plot = merged.head(top_n).copy()
-
-        total = merged["overall_count"].sum()
-        df_plot["overall_prop"] = df_plot["overall_count"] / total
-
-        fig = go.Figure()
-
-        fig.add_bar(
-            x=df_plot["aggregated_topic"],
-            y=df_plot["top_prop"],
-            name="Proportion dans le top"
-        )
-
-        fig.add_bar(
-            x=df_plot["aggregated_topic"],
-            y=df_plot["overall_prop"],
-            name="Proportion globale"
-        )
-
-        fig.update_layout(
-            barmode="group",
-            title="Proportion des topics : Top vs Global",
-            xaxis_title="Topic agrégé",
-            yaxis_title="Proportion",
-            template="plotly_white",
-            height=450
-        )
-        
-        fig.show()
-        return fig
-
-
-    def plot_bubble_enrichment(self, merged, top_n=30):
-        df_plot = merged.head(top_n)
 
         fig = px.scatter(
             df_plot,
-            x="overall_count",
+            x="aggregated_topic",
             y="enrichment_top_vs_overall",
-            size="top_count",
-            color="aggregated_topic",
-            hover_name="aggregated_topic",
-            title="Enrichissement vs volume global des topics",
-            labels={
-                "overall_count": "Volume global",
-                "enrichment_top_vs_overall": "Enrichissement top vs overall",
-                "top_count": "Occurrences dans le top"
-            }
+            size="overall_count",
+            color="enrichment_top_vs_overall",
+            color_continuous_scale="tropic",
+            size_max=40,
+            hover_data={
+                "overall_count": ":.0f",                 # entier
+                "top_count": ":.0f",
+                "enrichment_top_vs_overall": ":.2f",     # 2 décimales
+                "aggregated_topic": False
+            },
+            title="Topic enrichment : overrepresentation of topic within top vs global captions"
         )
 
         fig.update_layout(
             template="plotly_white",
-            height=500
+            height=550,
+            xaxis_title="Topic",
+            yaxis_title="Enrichment (top / global)",
+            xaxis_tickangle=-45,
+            coloraxis_colorbar=dict(
+                title="Enrichment"
+            ),
+            showlegend=True,
+            legend_title_text="Global number of captions in the topic"
         )
 
+        fig.update_traces(
+            marker=dict(
+                line=dict(
+                    color="rgba(0,0,0,0.7)",
+                    width=1.2
+                )
+            )
+        )
+
+
+        fig.update_yaxes(zeroline=True, zerolinewidth=1, zerolinecolor="gray")
+
+        if save: 
+            fig.write_html(save)
         fig.show()
-        return fig
+
+
+    def plot_proportion_above_threshold(self, df_data, threshold=1.5, save=None):
+        """
+        Barplot interactif de la proportion de captions au-dessus d'un seuil par topic.
+        """
+        df = df_data.copy()
+        df["above"] = (df[self.fun_metric] >= threshold).astype(int)
+
+        prop = (
+            df.groupby("aggregated_topic")["above"]
+            .agg(["mean", "sum", "count"])
+            .reset_index()
+        )
+        prop.columns = ["aggregated_topic", "prop_above", "n_above", "total"]
+        prop = prop.sort_values("prop_above", ascending=False)
+
+        # Création de la figure
+        fig = go.Figure(
+            go.Bar(
+                x=prop["aggregated_topic"],
+                y=prop["prop_above"],
+                text=[f"{p:.1%}" for p in prop["prop_above"]],
+                textposition="outside",
+                hovertemplate=(
+                    "<b>%{x}</b><br>"
+                    "Proportion: %{y:.2%}<br>"
+                    "Number: %{customdata[0]}<br>"
+                    "Total: %{customdata[1]}<br>"
+                    "<extra></extra>"
+                ),
+                customdata=prop[["n_above", "total"]].values,
+                name="Proportion"
+            )
+        )
+
+        # Mise en forme
+        fig.update_xaxes(tickangle=-45)
+        fig.update_yaxes(title_text="Proportion")
+
+        fig.update_layout(
+            title=dict(
+                text=(
+                    f"Analysis of captions with {self.fun_metric} ≥ {threshold}<br>"
+                    f"<sub>{len(df)} total captions • "
+                    f"{df['above'].sum()} above threshold "
+                    f"({df['above'].mean():.1%})</sub>"
+                ),
+                x=0.5
+            ),
+            height=550,
+            showlegend=False,
+            template="plotly_white"
+        )
+        if save: 
+            fig.write_html(save)
+        fig.show()
+
+
+    def plot_proportion_above_threshold_with_winners(self, df_data, win_topic_crowd, win_topic_tny, threshold=1.5, save=None):
+        """
+        Barplot interactif de la proportion de captions au-dessus d'un seuil par topic.
+        """
+        df = df_data.copy()
+        df["above"] = (df[self.fun_metric] >= threshold).astype(int)
+
+        prop = (
+            df.groupby("aggregated_topic")["above"]
+            .agg(["mean", "sum", "count"])
+            .reset_index()
+        )
+        prop.columns = ["aggregated_topic", "prop_above", "n_above", "total"]
+        prop = prop.sort_values("prop_above", ascending=False)
+
+
+        def topic_color(topic):
+            if topic == win_topic_tny:
+                return "#1f77b4"   # bleu: TNY
+            elif topic == win_topic_crowd:
+                return "#ff7f0e"   # orange: crowd
+            else:
+                return "#d3d3d3"   # gris: autres
+            
+        bar_colors = [topic_color(t) for t in prop["aggregated_topic"]]
+
+        # Création de la figure
+        fig = go.Figure(
+            go.Bar(
+                x=prop["aggregated_topic"],
+                y=prop["prop_above"],
+                marker=dict(color=bar_colors),
+                text=[f"{p:.1%}" for p in prop["prop_above"]],
+                textposition="outside",
+                hovertemplate=(
+                    "<b>%{x}</b><br>"
+                    "Proportion: %{y:.2%}<br>"
+                    "Number: %{customdata[0]}<br>"
+                    "Total: %{customdata[1]}<br>"
+                    "<extra></extra>"
+                ),
+                customdata=prop[["n_above", "total"]].values,
+                name="Proportion"
+            )
+        )
+
+        # Winner labeling
+        y_offset = 0.01
+        for topic, label, color in [
+            (win_topic_tny, "Winner (TNY)", "#1f77b4"),
+            (win_topic_crowd, "Winner (Crowd)", "#ff7f0e"),
+        ]:
+            row = prop.loc[prop["aggregated_topic"] == topic]
+            if not row.empty:
+                fig.add_annotation(
+                    x=topic,
+                    y=row["prop_above"].values[0] + y_offset,
+                    text=label,
+                    showarrow=False,
+                    font=dict(
+                        size=10,
+                        color=color,
+                        family="Arial Black"
+                    ),
+                    align="center"
+                )
+
+
+        # Mise en forme
+        fig.update_xaxes(tickangle=-45)
+        fig.update_yaxes(title_text="Proportion")
+
+        fig.update_layout(
+            title=dict(
+                text=(
+                    f"Analysis of captions with {self.fun_metric} ≥ {threshold}<br>"
+                    f"<sub>{len(df)} total captions • "
+                    f"{df['above'].sum()} above threshold "
+                    f"({df['above'].mean():.1%})</sub>"
+                ),
+                x=0.5
+            ),
+            height=550,
+            showlegend=False,
+            template="plotly_white"
+        )
+
+        if save: 
+            fig.write_html(save)
+        fig.show()
+
 
 
 
