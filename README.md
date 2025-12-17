@@ -50,7 +50,7 @@ This part aims to understand which characteristics of a caption explain its perc
 
 Data preparation : Each caption is associated with:
 - Its funniness score (target variable).
-- A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using tools such as VADER or TextBlob), Semantic alignment with the image.
+- A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using TextBlob), Semantic alignment with the image.
 
 To address the first research questions, we will use correlation and non-parametric tests such as Spearman’s ρ, Kruskal–Wallis test and Mann–Whitney U to assess how each feature individually relates to funniness. To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
 
@@ -93,45 +93,19 @@ This section investigates how men and women are depicted in cartoons and caption
 - Word clouds and co-occurrence heatmaps.
 - Temporal plots for shifts in depictions and language.
 
-## **Proposed Timeline**
 
-### 12/11 : 
-- Conduct analysis :
-  - Axis 1 : get all attributes wanted + similarity metric
-  - Axis 2 : Polish occupational datase + do political terms dataset
-  - Axis 3 : widen gender dictionnary + work on language patterns over time
-### 19/11 : 
-- Conduct analysis : 
-  - Axis 1 : statistical test + start random forest
-  - Axis 2 : analysis of occupations + politics and their influence on funniness
-  - Axis 3 : audience response
-- Present intermediate result to the group
-### 26/11 : 
-- Conduct analysis : 
-    - Axis 1 : finish random forest
-    - Axis 2 : analysis of sentiment and stereotypes
-    - Axis 3 : polish plots and structure of the analysis
-### 03/12 : 
-- Start HTML writing and design the web page
-	- Discuss results that are the most important and should be uploaded on website 
-### 10/12 : 
-  - Update all result on website
+### Website **
+URL : MISSING LINK 
 
-### 17/12 : HANDOUT P3 (last reading and modification. Cheers with vin chaud :) )
-
-### Organization within the Team**
+### Members contribution**
 
  - General Statistical necessities: Cyrielle
  - Axis 1: Katia & Cyrielle
  - Axis 2: Andras
  - Axis 3: Amelie
  - Data preprocessing & website: Dominic
+ - Datastory : All members wrote the part of the website that corresponds to their analysis. 
 
-
-### **Questions for TAs**  
-1)  For axis 3, we are using the metadata of the images. The metadata is missing about half the data (compared to the captions data) so we will throw out missing data from this analysis. Is it scientifically okay that for axis 1 & 2 we use all the data, but for axis 3 we only use half the data? 
-2) Concerning the part 'Building a similarity metric'. We have done : _[**1.** SBERT embeddings for the captions. **2.** K-Means clusters based on those embeddings - intended to group semantically similar captions. **3.** A custom similarity metric (e.g., cosine similarity on semantic and structural similarities) to quantify how close two captions are.]_ The idea behing those implementations was we suspected that unbalanced text content could bias your further comparisons (wherever it would be).
-So we want to use this clustering to balance the dataset - e.g., by pairing or grouping captions that are “semantically equivalent” but differ in another variable (like treatment/control, date of publication, elements presents in the cartoon, etc.), so that comparisons (hypothesis tests) are meaningful. But the questions are : when this approach is appropriate (for which type of problems) and how to implement it in practice ? Secondly, this metric is not perfect (as explained in results.ipynb, because of noises in classification, and only focus on semantic similarity) could it create misleading “similar” pairs and affect our analysis ?
 
 ## **Sources**
 
