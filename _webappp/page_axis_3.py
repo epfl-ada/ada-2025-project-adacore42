@@ -205,10 +205,10 @@ st.write("""
 
 st.divider()
 
-"**Same themes, different reactions?**"
-
 st.subheader("3. Does Gender Win the Crowd?")
 "**Are gendered captions funnier?**"
+
+# Despite strong differences in how men and women are depicted, the audience reacts similarly to both.
 
 st.subheader("4. So What’s the Joke, Really?")
 "**Conclusion**"
