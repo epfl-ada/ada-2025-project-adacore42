@@ -479,7 +479,7 @@ for df in dataA4:
 dataA = dataA4.copy()
 
 
-display(dataA4[0].head(30))
+#display(dataA4[0].head(30))
 
 
 # %% [markdown]
