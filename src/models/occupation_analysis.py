@@ -1,3 +1,6 @@
+#It must be disclosed that this code was generated with the assistance of AI tools.
+#The AI used was: ChatGPT-5 by OpenAI and GitHub Copilot.
+
 import numpy as np
 from scipy.stats import ttest_ind
 import pandas as pd
@@ -167,19 +170,23 @@ class OccupationAnalysis:
     #--------------------------------------------------------#
     def _load_or_build_occupation_dataframe(self):
         if (self.occupation_df_path is not None and not self.force_recompute and os.path.exists(self.occupation_df_path)):
+            print("Loading cached occupation dataframe...")
             return pd.read_pickle(self.occupation_df_path)
-
+        print("Building occupation dataframe...")
         df = self.build_occupation_dataframe()
-
+        
         if self.occupation_df_path is not None:
             df.to_pickle(self.occupation_df_path)
 
         return df
 
     def _load_or_build_category_caption_dataframe(self):
+        
         if (self.category_caption_df_path is not None and not self.force_recompute and os.path.exists(self.category_caption_df_path)):
+            print("Loading cached category-caption dataframe...")
             return pd.read_pickle(self.category_caption_df_path)
-
+        
+        print("Building category-caption dataframe...")
         df = self.build_category_dataframe()
 
         if self.category_caption_df_path is not None:
@@ -273,13 +280,7 @@ class OccupationAnalysis:
         
         return self.occupation_categories[category_name]
     
-    #---------------------------------------------------------#
-    # Save dataframes to csv
-    # --------------------------------------------------------# 
 
-    
-
-    
     #---------------------------------------------------------#
     # Exploratory analysis functions
     # --------------------------------------------------------#   
@@ -433,11 +434,11 @@ class OccupationAnalysis:
     #--------------------------------------------------------#
 
     #plotting top occupations by count
-    def plot_top_occupations_by_count(occupation_df, start = 0, end = 20, save_path=None):
+    def plot_top_occupations_by_count(self, start = 0, end = 20, save_path=None):
         """
         Plots the top N occupation terms by frequency count.
         """
-        df_plot = occupation_df.sort_values(by='term_count', ascending=False).iloc[start:end].copy()
+        df_plot = self._occupation_df.sort_values(by='term_count', ascending=False).iloc[start:end].copy()
         hover_data = {
             'num_contests': True,
             'std_funniness': ':.2f',
@@ -508,17 +509,17 @@ class OccupationAnalysis:
             fig.write_html(save_path)
         fig.show()
 
-    #plotting top occupations by average funniness
-    def plot_top_occupations_by_funniness(self, term_analysis_df, top_n=20, save_path=None):
+    #plotting top occupations by average or median funniness
+    def plot_top_occupations_by_funniness(self, top_n=20, save_path=None, measure='avg', ascending=False):
         """
         Plots the top N occupation terms by average funniness score.
         """
-        df_plot = term_analysis_df.sort_values(by='avg_funniness', ascending=False).head(top_n).copy()
-
+        df_plot = self._occupation_df.sort_values(by=f'{measure}_funniness', ascending=ascending).head(top_n).copy()
         hover_data = {
             'count': True,
             'std_funniness': ':.2f',
             'avg_funniness': ':.2f',
+            'median_funniness': ':.2f',
             'term': False
         }
 
@@ -536,9 +537,6 @@ class OccupationAnalysis:
         """
         Plots the distribution of funniness scores for a given occupation term.
         """
-        if self.syn_to_occ is None:
-            raise ValueError("Occupation mapping not provided.")
-        
         canonical_term = self.syn_to_occ.get(occupation_term.lower())
 
         rows = []
@@ -565,6 +563,181 @@ class OccupationAnalysis:
             fig.write_html(save_path)
         fig.show()
 
+    def plot_occupation_box_plot(self, occupation_terms, save_path = None):
+        """
+        Plotting the box plot of the funniness score of multiple occupations on the same plot close to each other. 
+        """
+        rows = []
+
+        occupation_terms = [occ.lower() for occ in occupation_terms]
+
+        for idx, doc in enumerate(self.documents):
+            doc_lower = doc.lower()
+            score = self.scores[idx]
+            matched_occupations = set()
+
+            for syn, occ in self.syn_to_occ.items():
+                if syn in doc_lower and occ in occupation_terms:
+                    matched_occupations.add(occ)
+            
+            for occ in matched_occupations:
+                rows.append({
+                    'occupation': occ,
+                    'funniness_score': score
+                })
+        if not rows:
+            print(f"No occurrences found for occupation terms: {occupation_terms}")
+            return
+        
+        df_plot = pd.DataFrame(rows)
+        fig = px.box(df_plot,x="occupation",y="funniness_score",points="outliers", title="Funniness score distribution by occupation")
+
+        fig.update_layout(xaxis_title="Occupation", yaxis_title="Funniness score", template="plotly_white", height=600, xaxis_tickangle=-45, hovermode="closest", title=dict(x=0.5, xanchor="center"))
+
+        if save_path:
+            fig.write_html(save_path)
+
+        fig.show()
+
+
+
+
+    #--------------------------------------------------------#
+    # Tests to compare specific occupations
+    #--------------------------------------------------------#
+    def compare_set_of_occupations(self, occupation_list, interpret = False, alpha = 0.05):
+        '''
+        Compares funniness score distributions among a set of occupation terms using Kruskal-Wallis H-test.
+        '''
+        if self.syn_to_occ is None:
+            raise ValueError("Occupation mapping not provided.")
+        
+        occupation_groups = {occ: [] for occ in occupation_list}
+
+        for idx, doc in enumerate(self.documents):
+            doc_lower = doc.lower()
+            score = self.scores[idx]
+
+            for syn, occ in self.syn_to_occ.items():
+                if occ in occupation_groups and syn in doc_lower:
+                    occupation_groups[occ].append(score)
+        
+        # Remove empty groups
+        occupation_groups = {occ: scores for occ, scores in occupation_groups.items() if scores}
+
+        if len(occupation_groups) < 2:
+            raise ValueError("At least two occupation terms must have associated funniness scores for comparison.")
+        
+        stat, p_value = stats.kruskal(*occupation_groups.values())
+
+        if interpret:
+            if p_value < alpha:
+                print(f"Kruskal-Wallis test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The differences in funniness scores among the occupations are statistically significant (alpha = {alpha}).")
+            else:
+                print(f"Kruskal-Wallis test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The differences in funniness scores among the occupations are not statistically significant (alpha = {alpha}).")
+        return stat, p_value
+
+
+    def compare_occupations(self, occupation1, occupation2, interpret = False, alpha = 0.05, alternative = 'two-sided'):
+        '''
+        Compares funniness score distributions between two occupation terms using Mann-Whitney U test.
+        '''
+        if self.syn_to_occ is None:
+            raise ValueError("Occupation mapping not provided.")
+        
+        rows_occ1 = []
+        rows_occ2 = []
+
+        for idx, doc in enumerate(self.documents):
+            doc_lower = doc.lower()
+            score = self.scores[idx]
+
+            has_occ1 = False
+            has_occ2 = False
+
+            for syn, occ in self.syn_to_occ.items():
+                if syn in doc_lower:
+                    if occ == occupation1:
+                        has_occ1 = True
+                    elif occ == occupation2:
+                        has_occ2 = True
+
+            # keep only captions that mention exactly one occupation
+            if has_occ1 and not has_occ2:
+                rows_occ1.append(score)
+            elif has_occ2 and not has_occ1:
+                rows_occ2.append(score)
+
+        
+        if len(rows_occ1) == 0 or len(rows_occ2) == 0:
+            raise ValueError("One or both occupation terms have no associated funniness scores.")
+        
+        stat, p_value = stats.mannwhitneyu(rows_occ1, rows_occ2, alternative= alternative)
+
+        if interpret:
+            if p_value < alpha:
+                print(f"Mann-Whitney U test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The difference in funniness scores between '{occupation1}' and '{occupation2}' is statistically significant (alpha = {alpha}).")
+            else:
+                print(f"Mann-Whitney U test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The difference in funniness scores between '{occupation1}' and '{occupation2}' is not statistically significant (alpha = {alpha}).")
+        return stat, p_value
+    
+    def cliffs_delta_occupations(self, occupation1, occupation2, interpret = False, alpha = 0.05):
+        '''
+        Computes Cliff's Delta effect size between two occupation terms.
+        '''
+        if self.syn_to_occ is None:
+            raise ValueError("Occupation mapping not provided.")
+        
+        rows_occ1 = []
+        rows_occ2 = []
+
+        for idx, doc in enumerate(self.documents):
+            doc_lower = doc.lower()
+            score = self.scores[idx]
+
+            has_occ1 = False
+            has_occ2 = False
+
+            for syn, occ in self.syn_to_occ.items():
+                if syn in doc_lower:
+                    if occ == occupation1:
+                        has_occ1 = True
+                    elif occ == occupation2:
+                        has_occ2 = True
+
+            # keep only captions that mention exactly one occupation
+            if has_occ1 and not has_occ2:
+                rows_occ1.append(score)
+            elif has_occ2 and not has_occ1:
+                rows_occ2.append(score)
+        
+        if len(rows_occ1) == 0 or len(rows_occ2) == 0:
+            raise ValueError("One or both occupation terms have no associated funniness scores.")
+        
+        n1 = len(rows_occ1)
+        n2 = len(rows_occ2)
+        greater = sum(1 for x in rows_occ1 for y in rows_occ2 if x > y)
+        lesser = sum(1 for x in rows_occ1 for y in rows_occ2 if x < y)
+
+        delta = (greater - lesser) / (n1 * n2)
+
+        if interpret:
+            abs_delta = abs(delta)
+            if abs_delta < 0.147:
+                size = "negligible"
+            elif abs_delta < 0.33:
+                size = "small"
+            elif abs_delta < 0.474:
+                size = "medium"
+            else:
+                size = "large"
+            print(f"Cliff's Delta: {delta:.4f} ({size} effect size)")
+        
+        return delta
 
     #--------------------------------------------------------#
     # Categorical analysis functions
@@ -937,8 +1110,80 @@ class OccupationAnalysis:
             'polarity_imbalance': float((series >= level).mean()) - float((series <= -level).mean())
         }
         return summary
-
     
+    # this could have been made easier if sentiments was part of the class, but was done rushed
+    def sentiment_kruskal_wallis_test_external(self, sentiment_dfs, interpret = False, alpha = 0.05):
+        '''
+        Performs Kruskal-Wallis H-test to determine if there are statistically significant differences
+        in sentiment scores across occupation categories.
+        sentiment_dfs : list of sentiment dataframes for different categories
+        '''
+
+        category_groups = [df['compound'].values for df in sentiment_dfs]
+
+        stat, p_value = stats.kruskal(*category_groups)
+        if interpret:
+            if p_value < alpha:
+                print(f"Kruskal-Wallis test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The differences in sentiment scores across categories are statistically significant (alpha = {alpha}).")
+            else:
+                print(f"Kruskal-Wallis test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The differences in sentiment scores across categories are not statistically significant (alpha = {alpha}).")
+        return stat, p_value
+    
+    # this could have been made easier if sentimentdf1 and sentimentdf2 were part of the class, but for flexibility we keep them as arguments
+    def sentiment_cliffs_delta_external(self, sentiment_df1, sentiment_df2, interpret = False):
+        '''
+        Computes Cliff's Delta effect size between two occupation categories based on sentiment scores.
+        sentiment_df1, sentiment_df2 : sentiment dataframes for the two categories
+        '''
+        scores_cat1 = sentiment_df1['compound'].values
+        scores_cat2 = sentiment_df2['compound'].values
+
+        if len(scores_cat1) == 0 or len(scores_cat2) == 0:
+            raise ValueError("One or both categories have no associated sentiment scores.")
+        
+        x = np.asarray(scores_cat1)
+        y = np.asarray(scores_cat2)
+
+        nx = len(x)
+        ny = len(y)
+        greater = np.sum(x[:, None] > y)
+        lesser = np.sum(x[:, None] < y)
+        delta = (greater - lesser) / (nx * ny)
+        if interpret:
+            
+            abs_delta = abs(delta)
+            if abs_delta < 0.147:
+                size = "negligible"
+            elif abs_delta < 0.33:
+                size = "small"
+            elif abs_delta < 0.474:
+                size = "medium"
+            else:
+                size = "large"
+            print(f"Cliff's Delta: {delta:.4f} (effect size: {size})")
+
+        return delta
+    
+    #again, external keyword means the dataframes are passed as arguments, not part of the class
+    def sentiment_mann_whitney_external(self, sentiment_df1, sentiment_df2, interpret = False, alpha = 0.05, alternative = 'two-sided'):
+        scores_cat1 = sentiment_df1['compound'].values
+        scores_cat2 = sentiment_df2['compound'].values
+
+        if len(scores_cat1) == 0 or len(scores_cat2) == 0:
+            raise ValueError("One or both categories have no associated sentiment scores.")
+        
+        stat, p_value = stats.mannwhitneyu(scores_cat1, scores_cat2, alternative= alternative)
+
+        if interpret:
+            if p_value < alpha:
+                print(f"Mann-Whitney U test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The difference in sentiment scores between the two categories is statistically significant (alpha = {alpha}).")
+            else:
+                print(f"Mann-Whitney U test statistic: {stat:.4f}, p-value: {p_value:.4f}")
+                print(f"The difference in sentiment scores between the two categories is not statistically significant (alpha = {alpha}).")
+        return stat, p_value
 
             
         
