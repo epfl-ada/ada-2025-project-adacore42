@@ -29,14 +29,14 @@ def plot_votes_vs_score(dataA, cartoon_ids=(108, 150, 260, 370)):
 # ====================================
 # 2. HISTOGRAM + KS test : normal distribution ?
 # ====================================
-def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370)):
+def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370), boxplot=True):
     """
     Histograms of average scores for several cartoons
-    Results of the normality test (KS)
+    Results of the normality test (KS)s
     Comparative box plot + descriptive statistics
     """
     # histogram
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(6, 4))
     means_data = {}
 
     for cartoon_id in cartoon_ids:
@@ -44,11 +44,11 @@ def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370)):
         means = df["mean"].dropna().values
         means_data[cartoon_id] = means
 
-        plt.hist(means, bins=20, alpha=0.5, label=f"Cartoon {cartoon_id}")
+        plt.hist(means, bins=20, alpha=0.5, label=f"Cartoon {absolute_index2contest_index(cartoon_id)}")
 
         # KS test (normal distribution)
         ks_stat, p_value = stats.kstest(means, 'norm', args=(np.mean(means), np.std(means, ddof=1)))
-        print(f"[Cartoon {cartoon_id}] KS-stat={ks_stat:.4f}, p-value={p_value:.6f}")
+        print(f"[Cartoon {absolute_index2contest_index(cartoon_id)}] KS-stat={ks_stat:.4f}, p-value={p_value:.6f}")
 
     plt.title("Distribution of average scores (per cartoon)")
     plt.xlabel("Mean score")
@@ -74,15 +74,16 @@ def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370)):
 
     df_stats = pd.DataFrame(stats_summary)
 
-    # Box plot
-    plt.figure(figsize=(10, 6))
-    plt.boxplot(means_data.values(), labels=[f"{cid}" for cid in means_data.keys()],
-                patch_artist=True, medianprops=dict(color="black"))
-    plt.title("Comparison of average score distributions")
-    plt.xlabel("Cartoon ID")
-    plt.ylabel("Mean score")
-    plt.grid(True, linestyle="--", alpha=0.5)
-    plt.show()
+    if boxplot:
+        # Box plot
+        plt.figure(figsize=(10, 6))
+        plt.boxplot(means_data.values(), labels=[f"{cid}" for cid in means_data.keys()],
+                    patch_artist=True, medianprops=dict(color="black"))
+        plt.title("Comparison of average score distributions")
+        plt.xlabel("Cartoon ID")
+        plt.ylabel("Mean score")
+        plt.grid(True, linestyle="--", alpha=0.5)
+        plt.show()
 
     return df_stats
 
@@ -99,7 +100,7 @@ def plot_funny_ratios(dataA, cartoon_ids=(108, 150, 260, 370)):
     cols = ['not_funny', 'somewhat_funny', 'funny']
     n = len(cartoon_ids)
     
-    fig, axes = plt.subplots(1, n, figsize=(4 * n, 5), sharey=True)
+    fig, axes = plt.subplots(1, n, figsize=(3 * n, 4), sharey=True)
     
     if n == 1:
         axes = [axes]
@@ -250,7 +251,7 @@ def plot_question_types(all_questions, top_n=10):
     df_types = pd.DataFrame(type_counts.most_common(), columns=["Question type", "Frequency"])
 
     # Visualization
-    plt.figure(figsize=(8, 4))
+    plt.figure(figsize=(6, 3))
     plt.bar(*zip(*type_counts.most_common(top_n)))
     plt.title("Most aked question type among all contests")
     plt.xlabel("W-word")
