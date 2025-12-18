@@ -1,0 +1,60 @@
+import streamlit as st
+import plotly.graph_objects as go
+import numpy as np
+from _webappp.assets.app_content import PagesData
+from src.utils.general_utils import plot_html
+from src.utils.general_utils import plot_cartoon
+from _webappp.assets.app_definitions import get_absolute_project_root
+get_absolute_project_root()
+from src.utils.web_app_plots.app_plots import PWA
+
+st.write(
+    """
+    Welcome to this section, where we present the methods in more details.
+    """
+)
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Home main structure in containers
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+
+
+dataNpipeline_c = st.container ()
+
+
+
+
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Containers definition 
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+
+with dataNpipeline_c:
+    st.subheader("Dataset and Pipeline Overview")
+
+    col_1, col_2 = st.columns (2)
+
+    with col_1:
+        with st.expander("**Data sources**", expanded=AP.expanders):
+            st.write(
+                """
+                - 380+ caption contests  
+                - CSV caption tables, metadata JSON  
+                - Occupation list (≈33k curated roles)  
+                - Gendered lexicon from *Jailbreak the Patriarchy*  
+                """
+            )
+
+    with col_2:
+        with st.expander("**Processing pipeline**", expanded=AP.expanders):
+            st.write(
+                """
+                1. Centralised path + loading utilities  
+                2. Data cleaning and consistency checks  
+                3. Construction of a robust *funny score*  
+                4. Tokenisation and lemmatisation (optional)  
+                5. Models for similarity, clustering and gender analysis  
+                """
+            )
+
+    st.divider()
