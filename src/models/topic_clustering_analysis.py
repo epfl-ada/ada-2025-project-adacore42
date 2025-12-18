@@ -2,6 +2,7 @@ import os
 import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib import cm
 import seaborn as sns
 import math
 import numpy as np
@@ -19,7 +20,7 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 
 
-
+#SEED(42)
 class CaptionTopicClusterer:
     """
     Topic modeling sur des captions avec BERTopic,
@@ -38,21 +39,22 @@ class CaptionTopicClusterer:
             n_gram_range=n_gram_range,
             verbose=verbose)
         
-        self.agg_topic_289 = {"checkmate_win_lose": [-1,0,1,5,7,10,11,16,18,19,20,24,32,37,41,45,49,53,60],
-                              "chess_mechanics_pieces": [2,3,4,7,18,20,27,30,31,35,41,46,59,66,79],
-                              "death_grim_reaper_afterlife": [10,11,14,19,24,31,36,39,40,47,51,57,63,69],
-                              "time_endgame_clock": [8,14,17,20,60,64],
-                              "pop_culture": [21,23,25,33,38,43,55,56,61,70,71,75,78,77],
-                              "bureaucracy_taxes_insurance": [6,52,80],
-                              "deals_bets_rematches": [15,22,48,50,62,74],
-                              "body_parts": [12,42,72],
-                              "emotional_reactions": [7,29,37,65,58],
-                              "family_domestic": [68,9,34],
+       
+        self.agg_topic_289 = {"checkmate_win_lose": [0, 1, 3, 4, 18],
+                              "chess_mechanics_pieces": [2, 12, 14, 29],
+                              "death_grim_reaper_afterlife": [9, 10, 21, 22, 32, 33, 34, 36],
+                              "time_endgame_clock": [15, 17, 23],
+                              "pop_culture": [11, 13, 20, 24, 25, 30],
+                              "bureaucracy_taxes_insurance": [7],
+                              "deals_bets_rematches": [8, 26],
+                              "body_parts": [16, 19, 35],
+                              "emotional_reactions": [27],
                               "color_choice_white_black": [28],
-                              "misc": [26,54,73,76,77]}
+                              "misc": [-1],
+                              "chess_life_game" : [5, 6, 31]}
+
         
         self.fun_metric = fun_metric
-
         self.contest_idx = contest_idx
 
     # ---------------------------------------------------------
@@ -68,6 +70,8 @@ class CaptionTopicClusterer:
         topics, probs = self.topic_model.fit_transform(captions, embeddings)
 
         df_topic_info = self.topic_model.get_topic_info()
+
+
 
         return {
             "captions": captions,
@@ -142,7 +146,6 @@ class CaptionTopicClusterer:
             "outlier_rate": outlier_rate,
             "n_topics": len(topic_words)
         }
-
 
 
     # ---------------------------------------------------------
@@ -311,7 +314,8 @@ class CaptionTopicClusterer:
     # Visualisations
     # ---------------------------------------------------------
 
-    def plot_topic_scores(self, df_data, df_scores):
+    #plot topic scor
+    def plot_topic_scores_plt(self, df_data, df_scores):
         plt.figure(figsize=(10, 6))
         sns.boxplot(data=df_data.sort_values(by=self.fun_metric, ascending=False), x="aggregated_topic", y=self.fun_metric)
         plt.title(f"Distribution {self.fun_metric} par topic agrégé")
@@ -390,6 +394,7 @@ class CaptionTopicClusterer:
             trace.marker.line.color = 'rgba(0,0,0,0.7)'#
             trace.marker.line.width = 1#
             trace.boxmean = None  # Affiche moyenne et écart-type #
+            trace.marker.size = 7 
 
         # --- Annotations enrichies ---
         annotations = []#
@@ -439,6 +444,266 @@ class CaptionTopicClusterer:
         fig.show()
 
 
+    def plot_topic_scores2_with_winners(self, df_data, df_scores, caption_crowd, caption_tny, order_by="median", show_points="outliers", save=None):
+        df = df_data.dropna(subset=[self.fun_metric]).copy()
+
+        # --- Stats pour l'ordre ---
+        stats = (
+            df.groupby("aggregated_topic")[self.fun_metric]
+            .agg(
+                median_val="median",
+                mean_val="mean",
+                count="count",
+                std="std",
+                var="var"
+            )
+            .reset_index()
+        )
+
+        stats.rename(columns={"median_val": "median", "mean_val": "mean"}, inplace=True)
+
+        valid_orders = {"median", "mean", "count", "variance", "var"}
+        if order_by not in valid_orders:
+            raise ValueError(f"order_by must be one of {valid_orders}")
+
+        sort_col = "var" if order_by == "variance" else order_by
+        ordered_topics = stats.sort_values(sort_col, ascending=False)["aggregated_topic"].tolist()
+
+        # --- Couleurs des boxplots ---
+        metric_values = stats.set_index("aggregated_topic")[
+            order_by if order_by != "variance" else "median"
+        ]
+        norm_values = (metric_values - metric_values.min()) / (
+            metric_values.max() - metric_values.min()
+        )
+
+        colors = [
+            f'rgba({int(70+v*120)}, {int(130+v*90)}, {int(180-v*80)}, 0.8)'
+            for topic in ordered_topics
+            for v in [norm_values.get(topic, 0.5)]
+        ]
+
+        # --- Boxplot ---
+        fig = px.box(
+            df,
+            x="aggregated_topic",
+            y=self.fun_metric,
+            category_orders={"aggregated_topic": ordered_topics},
+            points=show_points,
+            hover_data=["caption"] if "caption" in df.columns else None,
+            title=f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})"
+        )
+
+        # --- Styliser UNIQUEMENT les boxplots ---
+        for i, trace in enumerate(fig.data):
+            if trace.type == "box":
+                trace.marker.color = colors[i]
+                trace.marker.line.color = "rgba(0,0,0,0.7)"
+                trace.marker.line.width = 1
+                trace.marker.size = 7   # outliers plus visibles
+                trace.boxmean = None
+
+        # --- Layout final ---
+        fig.update_layout(
+            xaxis_title="Aggregated topic",
+            yaxis_title=self.fun_metric,
+            template="plotly_white",
+            height=600,
+            xaxis_tickangle=-45,
+            title=dict(
+                text=(
+                    f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})<br>"
+                    f"<sub>{len(ordered_topics)} topics • {len(df)} captions • "
+                    f"Global median: {df[self.fun_metric].median():.2f}</sub>"
+                ),
+                x=0.5
+            ),
+            hovermode="closest",
+            showlegend=False
+        )
+        winner_specs = [
+            (caption_tny, "Winner (TNY)", "#1f77b4"),
+            (caption_crowd, "Winner (Crowd)", "#ff7f0e"),
+        ]
+
+        for caption, label, color in winner_specs:
+            df_winner = df[df["caption"] == caption]
+            if not df_winner.empty:
+                row = df_winner.iloc[0]
+
+                # POINT (au-dessus du boxplot)
+                fig.add_scatter(
+                    x=[row["aggregated_topic"]],
+                    y=[row[self.fun_metric]],
+                    mode="markers",
+                    marker=dict(
+                        size=16,
+                        color=color,
+                        line=dict(color="black", width=1.5),
+                        symbol="circle"
+                    ),
+                    showlegend=False,
+                    hovertemplate=(
+                        f"<b>'{caption}'</b><br>"
+                        "%{x}<br>"
+                    )
+                )
+
+                # ANNOTATION À CÔTÉ
+                fig.add_annotation(
+                    x=row["aggregated_topic"],
+                    y=row[self.fun_metric],
+                    text=label,
+                    showarrow=True,
+                    arrowhead=2,
+                    ax=50,
+                    ay=0,
+                    font=dict(size=11, color=color),
+                    arrowcolor=color,
+                    bgcolor="rgba(255,255,255,0.9)",
+                    bordercolor=color,
+                    borderwidth=1
+                )
+        print(f"Caption TNY trouvée : {caption_tny in df['caption'].values}")
+        print(f"Caption Crowd trouvée : {caption_crowd in df['caption'].values}")
+
+
+        if save:
+            fig.write_html(save)
+
+        fig.show()
+
+
+    def plot_topic_scores2_with_winners_plt(self, df_data, df_scores, caption_crowd, caption_tny, order_by="median", show_points="outliers"):
+        df = df_data.dropna(subset=[self.fun_metric]).copy()
+
+        # --- Stats pour l'ordre ---
+        stats = (
+            df.groupby("aggregated_topic")[self.fun_metric]
+            .agg(
+                median="median",
+                mean="mean",
+                count="count",
+                var="var"
+            )
+            .reset_index()
+        )
+
+        valid_orders = {"median", "mean", "count", "variance", "var"}
+        if order_by not in valid_orders:
+            raise ValueError(f"order_by must be one of {valid_orders}")
+
+        sort_col = "var" if order_by == "variance" else order_by
+        stats = stats.sort_values(sort_col, ascending=False)
+
+        ordered_topics = stats["aggregated_topic"].tolist()
+
+        # --- Préparer données boxplot ---
+        data = [
+            df.loc[df["aggregated_topic"] == topic, self.fun_metric].values
+            for topic in ordered_topics
+        ]
+
+        # --- Couleurs (gradient) ---
+        values_for_color = stats[
+            sort_col if sort_col != "var" else "median"
+        ]
+        norm = (values_for_color - values_for_color.min()) / (
+            values_for_color.max() - values_for_color.min()
+        )
+        cmap = cm.get_cmap("Blues")
+
+        colors = [cmap(0.3 + 0.6 * v) for v in norm]
+
+        # --- Figure ---
+        plt.figure(figsize=(14, 6))
+
+        box = plt.boxplot(
+            data,
+            patch_artist=True,
+            widths=0.6,
+            showfliers=(show_points == "outliers"),
+            medianprops=dict(color="black", linewidth=1.5),
+            boxprops=dict(linewidth=1),
+            whiskerprops=dict(linewidth=1),
+            capprops=dict(linewidth=1),
+            flierprops=dict(
+                marker="o",
+                markersize=5,
+                markerfacecolor="white",
+                markeredgecolor="black",
+                alpha=0.7
+            )
+        )
+
+        for patch, color in zip(box["boxes"], colors):
+            patch.set_facecolor(color)
+            patch.set_edgecolor("black")
+            patch.set_alpha(0.9)
+
+        # --- Winners ---
+        winner_specs = [
+            (caption_tny, "Winner (TNY)", "#1f77b4"),
+            (caption_crowd, "Winner (Crowd)", "#ff7f0e"),
+        ]
+
+        for caption, label, color in winner_specs:
+            df_winner = df[df["caption"] == caption]
+            if not df_winner.empty:
+                row = df_winner.iloc[0]
+                topic_idx = ordered_topics.index(row["aggregated_topic"]) + 1
+
+                # Point
+                plt.scatter(
+                    topic_idx,
+                    row[self.fun_metric],
+                    s=120,
+                    color=color,
+                    edgecolor="black",
+                                    zorder=5
+                )
+
+                # Annotation
+                plt.annotate(
+                    label,
+                    xy=(topic_idx, row[self.fun_metric]),
+                    xytext=(topic_idx + 0.4, row[self.fun_metric]),
+                    arrowprops=dict(arrowstyle="->", color=color),
+                    fontsize=10,
+                    fontweight="bold",
+                    color=color,
+                    va="center"
+                )
+
+        # --- Axes ---
+        plt.xticks(
+            range(1, len(ordered_topics) + 1),
+            ordered_topics,
+            rotation=45,
+            ha="right"
+        )
+        plt.ylabel(self.fun_metric)
+        plt.xlabel("Aggregated topic")
+
+        title = (
+            f"{self.fun_metric} score distribution by aggregated topic "
+            f"(ordered by {order_by})\n"
+            f"{len(ordered_topics)} topics • {len(df)} captions • "
+            f"Global median: {df[self.fun_metric].median():.2f}"
+        )
+        plt.title(title)
+
+        plt.grid(axis="y", linestyle="--", alpha=0.3)
+        plt.tight_layout()
+
+        plt.show()
+
+        print(f"Caption TNY trouvée : {caption_tny in df['caption'].values}")
+        print(f"Caption Crowd trouvée : {caption_crowd in df['caption'].values}")
+
+
+
+    # bubble enrichment
     def plot_bubble_enrichment(self, merged, top_n=30, save=None):
         df_plot = merged.head(top_n).copy()
 
@@ -489,6 +754,55 @@ class CaptionTopicClusterer:
         fig.show()
 
 
+    def plot_bubble_enrichment_plt(self, merged, top_n=30):
+        df_plot = merged.head(top_n).copy()
+
+        x = np.arange(len(df_plot))
+        y = df_plot["enrichment_top_vs_overall"]
+        sizes = df_plot["overall_count"]
+        colors = df_plot["enrichment_top_vs_overall"]
+
+        # Normalisation des tailles pour matplotlib
+        size_scaled = 300 * (sizes / sizes.max())
+
+        plt.figure(figsize=(12, 6))
+
+        scatter = plt.scatter(
+            x,
+            y,
+            s=size_scaled,
+            c=colors,
+            cmap="turbo",  # proche de "tropic"
+            alpha=0.8,
+            edgecolors="black",
+            linewidths=1
+        )
+
+        # Axes et labels
+        plt.xticks(
+            x,
+            df_plot["aggregated_topic"],
+            rotation=45,
+            ha="right"
+        )
+        plt.xlabel("Topic")
+        plt.ylabel("Enrichment (top / global)")
+        plt.title(
+            "Topic enrichment : overrepresentation of topic within top vs global captions"
+        )
+
+        # Ligne y=0
+        plt.axhline(0, color="gray", linewidth=1)
+
+        # Colorbar
+        cbar = plt.colorbar(scatter)
+        cbar.set_label("Enrichment")
+
+        plt.tight_layout()
+        plt.show()
+
+
+    #proportion above threshold
     def plot_proportion_above_threshold(self, df_data, threshold=1.5, save=None):
         """
         Barplot interactif de la proportion de captions au-dessus d'un seuil par topic.
@@ -509,6 +823,7 @@ class CaptionTopicClusterer:
             go.Bar(
                 x=prop["aggregated_topic"],
                 y=prop["prop_above"],
+                marker=dict(color="#d3e497"),
                 text=[f"{p:.1%}" for p in prop["prop_above"]],
                 textposition="outside",
                 hovertemplate=(
@@ -636,6 +951,97 @@ class CaptionTopicClusterer:
         if save: 
             fig.write_html(save)
         fig.show()
+
+
+    def plot_proportion_above_threshold_with_winners_plt(self, df_data, win_topic_crowd, win_topic_tny, threshold=1.5):
+        df = df_data.copy()
+        df["above"] = (df[self.fun_metric] >= threshold).astype(int)
+
+        prop = (
+            df.groupby("aggregated_topic")["above"]
+            .agg(["mean", "sum", "count"])
+            .reset_index()
+        )
+        prop.columns = ["aggregated_topic", "prop_above", "n_above", "total"]
+        prop = prop.sort_values("prop_above", ascending=False)
+
+        def topic_color(topic):
+            if topic == win_topic_tny:
+                return "#1f77b4"   # bleu TNY
+            elif topic == win_topic_crowd:
+                return "#ff7f0e"   # orange Crowd
+            else:
+                return "#d3e497"
+
+        colors = [topic_color(t) for t in prop["aggregated_topic"]]
+
+        x = np.arange(len(prop))
+        y = prop["prop_above"]
+
+        plt.figure(figsize=(12, 6))
+
+        bars = plt.bar(
+            x,
+            y,
+            color=colors,
+            edgecolor="black",
+            linewidth=0.8
+        )
+
+        # Labels en pourcentage au-dessus des barres
+        for bar, val in zip(bars, y):
+            plt.text(
+                bar.get_x() + bar.get_width() / 2,
+                val + 0.005,
+                f"{val:.1%}",
+                ha="center",
+                va="bottom",
+                fontsize=9
+            )
+
+        # Annotations des winners
+        y_offset = 0.02
+        for topic, label, color in [
+            (win_topic_tny, "Winner (TNY)", "#1f77b4"),
+            (win_topic_crowd, "Winner (Crowd)", "#ff7f0e"),
+        ]:
+            row = prop[prop["aggregated_topic"] == topic]
+            if not row.empty:
+                idx = row.index[0]
+                xpos = list(prop.index).index(idx)
+                plt.text(
+                    xpos,
+                    row["prop_above"].values[0] + y_offset,
+                    label,
+                    ha="center",
+                    va="bottom",
+                    fontsize=9,
+                    fontweight="bold",
+                    color=color
+                )
+
+        # Axes
+        plt.xticks(
+            x,
+            prop["aggregated_topic"],
+            rotation=45,
+            ha="right"
+        )
+        plt.ylabel("Proportion")
+
+        title = (
+            f"Analysis of captions with {self.fun_metric} ≥ {threshold}\n"
+            f"{len(df)} total captions • "
+            f"{df['above'].sum()} above threshold "
+            f"({df['above'].mean():.1%})"
+        )
+        plt.title(title)
+
+        plt.ylim(0, max(y) * 1.15)
+        plt.tight_layout()
+
+        plt.show()
+
 
 
 

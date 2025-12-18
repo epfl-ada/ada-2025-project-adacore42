@@ -82,6 +82,7 @@ st.subheader("Are there any topics to best create funniness and win the contest 
 st.write(
     """
     Now that we have tried to analyse what elements makes a joke funnier, we will dive into caption-topics clustering, to try to see if there is some topics better than other, some that creates more fun.
+    An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
     We will firstly build the pipeline analysing captions among one contest, and then generalize and perform statistical analysis to finally conclude about this question.
     """
 )
@@ -90,10 +91,10 @@ st.image("data/newyorker_caption_contest_virgin/images/801.jpg", width=700)
 st.markdown(
     """
     <div style="text-align: center;">
-    **Contest number 801, published May 23, 2022**  
-    *Top Rated caption*: "What do you mean I don’t have time for another game?"  
-    *The New Yorker's winner*: "I thought you’d be better at the endgame."  
-    *Number of votes*: 562,261
+    <\br>**Contest number 801, published May 23, 2022**  <\br>
+    <\br>*Top Rated caption*: "What do you mean I don’t have time for another game?"  <\br>
+    <\br>*The New Yorker's winner*: "I thought you’d be better at the endgame."  <\br>
+    <\br>*Number of votes*: 562,261<\br>
     </div>
     """,
     unsafe_allow_html=True
@@ -104,7 +105,8 @@ st.write(
     LALALA
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics.html")
+plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_289.html")
+plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_with_winners_289.html")
 
 st.write(
     """
@@ -118,13 +120,13 @@ st.write(
     LALALA
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh.html")
+plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_289.html")
 st.write(
     """
     LALALA
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_winners.html")
+plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_with_winners_289.html")
 
 
 
