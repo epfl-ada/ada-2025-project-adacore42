@@ -47,18 +47,15 @@ This page introduces the project, navigation structure, and quick links.
 """.strip()
 
 PagesData.AXIS_1.value.description = """
-Axis 1 explores gender representation, linguistic patterns, and semantic
-structures across captions in the New Yorker dataset.
+Axis 1 explores what is considered funny through caption analysis, ..
 """.strip()
 
 PagesData.AXIS_2.value.description = """
-Axis 2 focuses on statistical properties of the dataset, distributions,
-correlations, and hypothesis testing workflows.
+Axis 2 focuses on political themes, professions, and power dynamics in humor.
 """.strip()
 
 PagesData.AXIS_3.value.description = """
-Axis 3 provides interactive visual analytics, similarity graphs,
-caption embeddings, and clustering.
+Axis 3 study the representation of gender in captions and ... 
 """.strip()
 
 PagesData.ABOUTUS.value.description = """

@@ -4,7 +4,7 @@ from _webappp.assets.app_content import PagesData as PD
 from _webappp.assets.app_definitions import AppParams as AP
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# Intro 
+# Title and Header 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
@@ -26,13 +26,18 @@ st.markdown(
     unsafe_allow_html=True)
 st.divider()
 
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Intro 
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+st.subheader("Introduction")
 st.write(
     """
-    Humor is a universal yet complex form of expression. The more we think about it and the more complexes it appear! There are numerous genres of humor, and it can be used in almost every life context, often depending on who is involved and the social setting. Humor can serve serious purposes, such as addressing sensitive or difficult topics and easing social tensions.
+    Humor is a universal yet complex form of expression. The more we think about it and the more complexes it appear! There are numerous genres of humor, and it can be used in almost every life context. Humor can even serve serious purposes, such as addressing sensitive or difficult topics and easing social tensions.
 
     With this in mind, this project aim to investigate how jokes reflect societal traits and values. We will begin by examining what is generally perceived as “funny” and “unfunny,” and then explore how humor operates on two main topic : politics and gender. 
 
-    In order to answer this questions, we will analyze thousands of captions from the *New Yorker* Caption Contest. In this contest, a cartoon is published weekly or biweekly without a caption, and readers are invited to submit their own humorous responses. Other participants then vote on whether each caption is funny, somewhat funny, or unfunny. This process provides a rich dataset that captures public humor preferences and social attitudes. Perfect opportunity to explore how humor reflects societal norms!
+    In order to answer this questions, we will analyze thousands of captions from the *New Yorker* Caption Contest. In this contest, a cartoon is published weekly or biweekly without a caption, and readers are invited to submit their own humorous responses. Other participants then vote on whether each caption is funny, somewhat funny, or unfunny. This process provides a rich dataset that captures public humor preferences and social attitudes, a perfect opportunity to explore how humor reflects societal norms!
     """
 )
 
@@ -69,10 +74,8 @@ with methodsNglance_c:
     If you are interested by learning more about the dataset, the processing pipeline and methods used, please check the sections below.
     """
     )
-    
-    #st.page_link("page_methods.py", label="Go to Methods Page", icon="➡️") # do not work yet
-
-
+    ### PLEASE FIX :
+    #st.page_link("page_methods.py", label="Go to Methods Page", icon="➡️") # do not work yet PLEASE FIX
 
     st.divider()
 
@@ -81,7 +84,7 @@ with methodsNglance_c:
 
 with axisContent_c:
 
-    st.subheader("Content")
+    st.subheader("Axes of analysis")
 
     HomePageAxis_C(
         title=PD.AXIS_1.value.title,
@@ -112,10 +115,18 @@ st.divider()
 st.subheader("Conclusion")
 st.write(
     """
-    ......
-    "This app shows not just which captions win — "
-    "but what our jokes reveal about culture, bias, and how society laughs."
+    Conclusion : ...
+        - This app shows not just which captions win — "
+        - but what our jokes reveal about culture, bias, and how society laughs."
+
+    We hope you enjoyed exploring societal reflections through humour with us! Now it's time to travel back home for hollidays. Merry christmas and don't forget your towel !
     """
 )
+st.image("data/newyorker_caption_contest_virgin/images/606.jpg", width=600)
+#"They don't hate us because we're wolves; they hate us because we're lawyers."
+st.markdown(
+    "<h5 style='text-align: center;'>Is this Part 2 of Hitchhikers Guide to The Galaxy?</h5>",
+    unsafe_allow_html=True)
+
 
 
