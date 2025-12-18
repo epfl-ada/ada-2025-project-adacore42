@@ -12,10 +12,10 @@ import os
 import pickle
 
 
-nltk.download('punkt')       # Tokeniser
+'''nltk.download('punkt')       # Tokeniser
 nltk.download('stopwords')   # Stopwords list
 nltk.download('wordnet')     # Lemmatiser
-nlp = spacy.load('en_core_web_sm')
+nlp = spacy.load('en_core_web_sm')'''
 
 stop_words = set(stopwords.words('english')) # Initialise stopwords
 lemmatizer = WordNetLemmatizer() # Initialise lemmatiser
@@ -29,7 +29,7 @@ def load_data(filepath = '../../data/data_prepared.pkl'):
     return data["dataA"], data["dataC"], data["dataA_startID"], data["dataA_endID"], data["dataC_lastGoodID"]
 
 
-def preprocess_text_list(entry, min_len=2):
+def preprocess_text_list(entry, min_len=1, simplified = True):
     """
     Preprocess text by:
     - Lowercasing
@@ -53,44 +53,41 @@ def preprocess_text_list(entry, min_len=2):
 
     # Expand contractions
     text = contractions.fix(text)
-
-    # Typo correction
-    text = str(TextBlob(text).correct())
+    if  not simplified:
+        # Typo correction
+        text = str(TextBlob(text).correct())
 
     # Remove punctuation
     text = text.translate(str.maketrans('', '', string.punctuation))
 
-    # Tokenise
-    tokens = word_tokenize(text)
-
     # Remove stopwords and short tokens
+    tokens = word_tokenize(text)
     tokens = [word for word in tokens if word not in stop_words and len(word) >= min_len]
 
-    # Lemmatise
-    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    if not simplified:
+        # Lemmatise
+        tokens = [lemmatizer.lemmatize(word) for word in tokens]
 
     return ' '.join(tokens)
 
 
 # apply preprocessing to captions in dataA
-def apply_preprocessing(dataA, dataC):
+def apply_preprocessing(dataA, dataC, min_len=1):
     size = len(dataA)
     
     #create copy of dataA to store cleaned captions
     dataA1, dataC1 = dataA.copy(), dataC.copy()
 
     for i, df in enumerate(dataA1):
-        df['cleaned_caption'] = df['caption'].apply(preprocess_text_list)
-        print(f"done with {(i+1)/size*100:.2f}%")
-    
+        df['cleaned_caption'] = df['caption'].apply(lambda x: preprocess_text_list(x, min_len=min_len))
     # apply preprocessing to image_locations, questions, image_uncanny_descriptions, image_descriptions
-    dataC1['cleaned_image_locations'] = dataC1['image_locations'].apply(preprocess_text_list)
+    dataC1['cleaned_image_locations'] = dataC1['image_locations'].apply(lambda x: preprocess_text_list(x, min_len=min_len))
     print("done with image_locations")
-    dataC1['cleaned_questions'] = dataC1['questions'].apply(preprocess_text_list)
+    dataC1['cleaned_questions'] = dataC1['questions'].apply(lambda x: preprocess_text_list(x, min_len=min_len))
     print("done with questions")
-    dataC1['cleaned_image_uncanny_descriptions'] = dataC1['image_uncanny_descriptions'].apply(preprocess_text_list)
+    dataC1['cleaned_image_uncanny_descriptions'] = dataC1['image_uncanny_descriptions'].apply(lambda x: preprocess_text_list(x, min_len=min_len))
     print("done with image_uncanny_descriptions")
-    dataC1['cleaned_image_descriptions'] = dataC1['image_descriptions'].apply(preprocess_text_list)
+    dataC1['cleaned_image_descriptions'] = dataC1['image_descriptions'].apply(lambda x: preprocess_text_list(x, min_len=min_len))
     print("done with image_descriptions")
     return dataA1, dataC1
 
