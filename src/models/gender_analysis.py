@@ -177,7 +177,7 @@ class GenderAnalysis:
             # "40_then she_then_and then_told her": "Female archetypes",
             # "52_hey lady_cake_hey_lady": "Female archetypes",
             # "60_ma am_ma_am_buy it": "Female archetypes",
-            "3_women_woman_female_girls": "Female archetypes",
+            "3_women_woman_female_girls": "Women archetypes",
 
             # Politic
             "5_hillary_for hillary_voted_voted for": "Politics",
@@ -200,9 +200,9 @@ class GenderAnalysis:
             # "99_to me_my daughter_daughter_my granddaughter": "Family roles",
 
             # 3. Female names
-            "6_karen_karen you_karen it_you karen": "Female names",
-            "17_susan_susan susan_susan you_susan we": "Female names",
-            "24_martha_martha you_martha martha_you martha": "Female names",
+            "6_karen_karen you_karen it_you karen": "Women names",
+            "17_susan_susan susan_susan you_susan we": "Women names",
+            "24_martha_martha you_martha martha_you martha": "Women names",
             # "46_helen_helen you_you helen_helen but": "Female names",
             # "54_linda_linda you_me linda_linda this": "Female names",
             # "55_carol_carol carol_christmas carol_carol they": "Female names",
@@ -323,12 +323,12 @@ class GenderAnalysis:
 
         self.agg_topic_male_1 = {
             # Male archetypes
-            "-1_don_he_to_the": "Male Archetypes", 
-            "0_him_he_tell him_think he": "Male Archetypes", 
-            "17_sir_arrived_brain_amazon": "Male Archetypes", 
-            "35_last man_on earth_earth_man on": "Male Archetypes", 
-            "39_men_man_male_man again": "Male Archetypes",
-            "52_mob_villagers_sir_angry": "Male Archetypes",
+            "-1_don_he_to_the": "Men Archetypes", 
+            "0_him_he_tell him_think he": "Men Archetypes", 
+            "17_sir_arrived_brain_amazon": "Men Archetypes", 
+            "35_last man_on earth_earth_man on": "Men Archetypes", 
+            "39_men_man_male_man again": "Men Archetypes",
+            "52_mob_villagers_sir_angry": "Men Archetypes",
 
             # Male names
 
@@ -429,9 +429,9 @@ class GenderAnalysis:
     
         self.agg_topic_male_2 = {
             # Male archetypes
-            "-1_don_the_he_you": "Male Archetypes", 
-            "0_him_he_follow_us": "Male Archetypes",
-            "53_men_men room_the men_room": "Male Archetypes",
+            "-1_don_the_he_you": "Men Archetypes", 
+            "0_him_he_follow_us": "Men Archetypes",
+            "53_men_men room_the men_room": "Men Archetypes",
 
             # Male names
 
@@ -543,10 +543,10 @@ class GenderAnalysis:
             
         self.agg_topic_male_3 = {
             # Male archetypes
-            "51_boys_good boy_boy_the boys": "Male Archetypes",
+            "51_boys_good boy_boy_the boys": "Men Archetypes",
 
             # Male names
-            "43_harold_harold you_harold harold_harold it": "Male names", 
+            "43_harold_harold you_harold harold_harold it": "Men names", 
 
             # Arts / Music
             "41_singing_song_guitar_he singing": "Arts & Music",
@@ -656,9 +656,9 @@ class GenderAnalysis:
 
         self.agg_topic_male_4 = {
             # Male archetypes
-            "-1_he_don_you_the": "Male Archetypes", 
-            "21_good boy_boy_good_who good": "Male Archetypes", 
-            "25_man_men_man who_like man": "Male Archetypes", 
+            "-1_he_don_you_the": "Men Archetypes", 
+            "21_good boy_boy_good_who good": "Men Archetypes", 
+            "25_man_men_man who_like man": "Men Archetypes", 
 
             # Male names
 
@@ -769,11 +769,11 @@ class GenderAnalysis:
     
         # Female themes
         self.theme_words_female = {
-            "Female archetypes": ["women", "woman", "female", "girls"],
+            "Women archetypes": ["women", "woman", "female", "girls"],
             "Politics": ["Hillary", "voted"],
             "Royalty": ["queen", "majesty"],
             "Family roles": ["mother", "mom", "sister", "grandma", "grandmother"],
-            "Female names": ["Karen", "Susan", "Martha"],
+            "Women names": ["Karen", "Susan", "Martha"],
             "Food": ["cake", "feed", "eat", "recipe", "mother recipe", "mustard", "ketchup", "fish", "lemons", "lemonade", "latte"],
             "Fashion & appearance": ["dress", "fashion", "wearing", "shoes", "neck"],
             "Animals": ["dog", "cat", "lady cat"],
@@ -787,8 +787,8 @@ class GenderAnalysis:
 
         # Male themes
         self.theme_words_male = {
-            "Male Archetypes": ["he", "him", "sir", "men", "male", "man", "boys"],
-            "Male names": ["Harold"],
+            "Men Archetypes": ["he", "him", "sir", "men", "male", "man", "boys"],
+            "Men names": ["Harold"],
             "Animals": ["whale", "cat", "lion", "mosquito", "rabbit", "horse", "bear", "salmon", "shark", "bird", "pigeons", "mouse", "fish", "elephant", "dog", "duck"],
             "Arts & Music": ["art", "artist", "piano", "sing", "guitar", "Jay Blues", "Monet"],
             "Climate": ["climate", "global waring", "change"],
@@ -817,11 +817,11 @@ class GenderAnalysis:
         }
    
         self.theme_colors_female = {
-            "Female archetypes": "#FFB3BA",      # soft pink
+            "Women archetypes": "#FFB3BA",      # soft pink
             "Politics": "#BAE1FF",               # light blue
             "Royalty": "#FFFBAE",                # pale yellow
             "Family roles": "#BAFFC9",           # mint green
-            "Female names": "#FFDFBA",           # peach
+            "Women names": "#FFDFBA",           # peach
             "Food": "#FFB3FF",                   # pastel magenta
             "Fashion & appearance": "#D5BAFF",   # lavender
             "Animals": "#8FB9D8",                # light blue
@@ -849,8 +849,8 @@ class GenderAnalysis:
             "Miscellaneous": self.theme_colors_female["Miscellaneous"],
 
             # Male-specific themes (new pastel colors)
-            "Male Archetypes": "#FFA07A",       # light salmon
-            "Male names": "#FFDAB9",            # peach puff
+            "Men Archetypes": "#FFA07A",       # light salmon
+            "Men names": "#FFDAB9",            # peach puff
             "Arts & Music": "#B0E0E6",          # powder blue
             "COVID & pandemic": "#E6E6FA",      # lavender
             "Death": "#F5DEB3",                 # wheat
@@ -1024,6 +1024,11 @@ class GenderAnalysis:
         return f"#{r:02X}{g:02X}{b:02X}"
 
     def plot_topic(self, df_topics, gender, theme_keywords, theme_colors):
+
+        if gender == 'male':
+            gender_ = 'men'
+        else: 
+            gender_ = 'women'
         
         # Standardize theme names
         df_topics["aggregated_theme"] = df_topics["aggregated_theme"].str.strip()
@@ -1077,7 +1082,7 @@ class GenderAnalysis:
             values="value",
             color="id",  # use id as key
             color_discrete_map=color_map, 
-            title=f"Themes in {gender} labeled captions",
+            title=f"Themes in {gender_} labeled captions",
             custom_data=["percent", "type"]
         )
         # Create a hover_text column
