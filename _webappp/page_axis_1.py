@@ -91,42 +91,134 @@ st.image("data/newyorker_caption_contest_virgin/images/801.jpg", width=700)
 st.markdown(
     """
     <div style="text-align: center;">
-    <\br>**Contest number 801, published May 23, 2022**  <\br>
-    <\br>*Top Rated caption*: "What do you mean I don’t have time for another game?"  <\br>
-    <\br>*The New Yorker's winner*: "I thought you’d be better at the endgame."  <\br>
+    <\br>**Contest number 801, published May 23, 2022**<\br>
+    <\br>*Top Rated caption*: "What do you mean I don’t have time for another game?"<\br>
+    <\br>*The New Yorker's winner*: "I thought you’d be better at the endgame."<\br>
     <\br>*Number of votes*: 562,261<\br>
     </div>
     """,
     unsafe_allow_html=True
 )
 
+st.divider()
+
 st.write(
     """
-    LALALA
+    Some proposed captions of this contest :
+    ICI ON POURRAIT AFFICHER DES CAPTIONS ALEATOIRES, LA PERSONNE PEUT LA FAIRE CHANGER AVEC UN BOUTON 'see an other joke ?'
+    disponibles dans le csv au path : r"ada-2025-project-adacore42/data/newyorker_caption_contest_virgin/data/801.csv" avec le header "caption".
+    """
+)
+
+
+st.divider()
+
+
+
+st.write(
+    """
+    **Identify common topics among all captions**
+
+    Using HDBSCAN clustering algorithm and BERTtopic embeddings [SOURCE], we will try to identify common topics of differents captions within a contest, and here are the results.
+    We manually aggregated the found clusters into a few aggregated ones, to retrieve meaning of those results.
+    It took a lot of time to do it by hand, but isn't it better to analyse a douzain of topics than hundreds, no ? :)
+    Human inspections allows us to control the results, where humoristics captions are really hard to clusterize automatically, because of all things that makes humour so particular, almost indescribable...
+    
+    
+    Let's see what topic have been identified from this cartoon, and the relative appreciation of people for them !
+    
+    
+    **Comparing funny score of all topics**
     """
 )
 plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_289.html")
-plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_with_winners_289.html")
+
 
 st.write(
     """
-    LALALA
+    Don't you see a problem here ? ... Yes perfectly ! All topics seems to have almost the same median, and furthermore this median is low ! Around 25/100... Are the jokes that bad ??
+    NO. This result arises from the fact that we aggregated together ................ This will be addressed in the next section. 
+
+    Now, let's talk about the distribution of caption's scores within each topics. Some have more elements than others, some have more variance than others, some have more outliers than others (you can pass your mouse on the outliers to see the corresponding caption, have fun with it !)................
+    
+    Another unexpected thing arised from this topic detection : Bureaucracy ? Taxes ? Insurrance ? We investigated here and ..............
+    
+    Were does lie our two winning captions in those topics ?
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\enrichment.html")
+
 
 st.write(
     """
-    LALALA
+    LA FAUDRAIT METTRE UN BOUTON QUI QUAND ON CLIQUE DESSUS FASSE APPARAITRE LE DEUXIEME GRPAHIQUE A LA PLACE DU PREMIER
+    """
+)
+plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_with_winners_289.html")
+
+
+st.write(
+    """
+    The *The New Yorker* winning caption *"I thought you’d be better at the endgame."* corresponds to the *Time, Clock, and Engame* topic, [TODO : EXPLAIN HUMOUR].
+    The *crowd-sourced ranking* winning caption *"What do you mean I don’t have time for another game?"* corresponds to the *Chess game or Life game* topic, [TODO : EXPLAIN HUMOUR].
+    """
+)
+
+
+
+st.write(
+    """
+    **Long-tail distribution bias**:
+    Those boxplots per topic allow us to see the distributions of caption scores within each topic, but as we saw, there is an issue of "smoothing all captions scores" with this simple plot. Indeed, if each topic clustered contains many mediocre captions and a few exellent ones, the average will flatten everything, resulting in a very low average score per topic. Therefore, we need to look beyond the average. We can :
+
+    1) Isolates the top X% and the average range (40–60) and compare whether certain topics are over-represented in the top rankings versus the average. To do this, we calculate the 'enrichment per topic' (=top proportion vs. overall proportion). This allows us to answer the question "Which topics produce the most excellent captions?" without using the average. This will be called the 'enrichment score'.
+
+    2) Instead of looking at "which topic is the funniest on average", we look at: "which topics produce the most excellent captions?" by calculating the success rate (defined a score above the average score : 1.5/3 for the mean score, 50/100 for the funny_score_scaled) rather than the average score.
+    
+    Let's see how does that changes our topic analysis...
+    """
+)
+plot_html(r"_Other\cycy_analysis\saved_plots\enrichment_289.html")
+
+st.write(
+    """
+    LALALA, interpréter le graphique. Taxes sont en moyenne 2.5 fios plus rpz dans le top 10% que dans la masse (40-60%)., emotionnal reactions (with haha!, don't you dare, ....) sont 2 fois plus rpz, les autres sont en moyenne autant treprésentées dans le top 10 que dans le reste des propositions.
+
+    **Concerning the proportion of captions with a score higher than 30/100** :
     """
 )
 plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_289.html")
+
+
 st.write(
     """
-    LALALA
+    Blablabla commenter le graph ........... Commenter about taxes, about death_grim_reaper_afterlife, faire une remarque sur le topic pop_culture.
+    
+    Were does lie our two winning captions, do they belong to a topic where there is a high percentage of more funny captions ?
+    """
+)
+
+st.write(
+    """
+    LA AUSSI FAUDRAIT METTRE UN BOUTON POUR FAIRE POP LE GRAPHIQUE CI DESSOUS, A LA PLACE DE L'ANCIEN
     """
 )
 plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_with_winners_289.html")
+
+
+
+st.write(
+    """
+    Is the winning topic also the one that outperforms overall ? In this case not at all ! The topic that generally outperforms is the one refering to Taxes, and to the famous idiom of the american statesman Benjamin Franklin:
+
+    'Our new Constitution is now established, and has an appearance that promises permanency; but in this world nothing can be said to be certain, except death and taxes.'
+
+    Commenter encore sur celaaaa .................
+    """
+)
+
+
+
+
 
 
 

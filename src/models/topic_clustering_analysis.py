@@ -763,7 +763,7 @@ class CaptionTopicClusterer:
         colors = df_plot["enrichment_top_vs_overall"]
 
         # Normalisation des tailles pour matplotlib
-        size_scaled = 300 * (sizes / sizes.max())
+        size_scaled = 500 * (sizes / sizes.max())
 
         plt.figure(figsize=(12, 6))
 
@@ -883,7 +883,7 @@ class CaptionTopicClusterer:
             elif topic == win_topic_crowd:
                 return "#ff7f0e"   # orange: crowd
             else:
-                return "#d3d3d3"   # gris: autres
+                return "#d3e497"   # gris: autres
             
         bar_colors = [topic_color(t) for t in prop["aggregated_topic"]]
 
@@ -971,7 +971,7 @@ class CaptionTopicClusterer:
             elif topic == win_topic_crowd:
                 return "#ff7f0e"   # orange Crowd
             else:
-                return "#d3e497"
+                return "#97cee4"
 
         colors = [topic_color(t) for t in prop["aggregated_topic"]]
 
