@@ -772,7 +772,7 @@ class CaptionTopicClusterer:
             y,
             s=size_scaled,
             c=colors,
-            cmap="turbo",  # proche de "tropic"
+            cmap="summer",
             alpha=0.8,
             edgecolors="black",
             linewidths=1
