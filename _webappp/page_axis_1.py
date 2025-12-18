@@ -12,14 +12,20 @@ PWA.set_root_path()
 plots = PWA.load_plots()
 
 
-pageData = PagesData.AXIS_1.value
+#pageData = PagesData.AXIS_1.value
 
-pageData.page_firstBlock()
-
+#pageData.page_firstBlock()
+st.title("Axis 1: What is considered funny?")
 st.write(
     """
     Welcome to this section, where we explore some of the mechanisms behind humor.
-    Let’s take a first glance at the two cartoons and there captions below. Which one do you find funnier? 
+    """
+)
+st.divider()
+
+st.write(
+    """
+    Let’s take a first glance at the two cartoons and their captions below. Which one do you find funnier?
     Take a moment to trust your first reaction before going any further.
     """
 )
@@ -38,13 +44,12 @@ st.divider()
 st.write(
     """
     The two captions you just read are the very best and very worst of all captions combined in 10 years of contests. 
-    The first one was unanimously voted not funny with 6 467 votes while the second one received 15 232 votes for funny.
+    The first one was unanimously voted not funny with 6 467 votes while the second received 15 232 votes for funny.
     Are you surprised by this large difference?
 
-    If yes, you are already experiencing one key result of this study: humor is hard to predict. What one person finds hilarious, another may find dull or even offensive. 
+    If yes, you are already experiencing one key result of this study : humor is hard to predict. What one person finds hilarious, another may find dull or even offensive. 
     Humor is subjective and influenced by various factors, including personal experiences, cultural background, and social context.
-    Quantify absolute funniness is therefore an elusive goal. We are rather studying the structure of fun in the specific case of written captions with english speaking audiences between 2016 and 2024. 
-
+    Quantifying absolute funniness is therefore an elusive goal. In this work, we focus instead on studying the structure of humor in the specific case of written captions for English-speaking audiences between 2016 and 2024. Let’s keep this in mind to avoid drawing broad conclusions too quickly!
     """
 )
 
@@ -52,9 +57,9 @@ st.subheader("Let's study what makes captions funny")
 
 st.write(
     """
-    Looking at the two captions shown earlier, the first noticeable difference is length: the funnier one is shorter.
-    Is this a general pattern? Let’s find out by comparing the very funniest and very least funny captions, using the 
-    extreme quantiles (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each. We then 
+    Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
+    Could it be a general pattern? Let’s find out by comparing the funniest and least funny captions, using the 
+    extreme quantiles of our funny score distribution(0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each. We then 
     compare several features and the results are shown in the following figures. 
     Both groups use mostly neutral words, although the least funny captions show more variability.
     Subjectivity differs significantly: funny captions tend to be more objective. 
