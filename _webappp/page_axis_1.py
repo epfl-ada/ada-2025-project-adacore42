@@ -66,7 +66,7 @@ st.write(
     No clear differences in word count, punctuation.
     """
 )
-plot_html(r"_Other/katia_analysis/plotfunny_vs_not_funny.html")
+plot_html(r"_webappp/assets/graph/plotfunny_vs_not_funny.html")
 st.write(
     """
     Was our first intuition wrong? well maybe not totally, if we look at our unfunny group we discover that all captions comes from only 4 contest, very close in time, suggesting that image context may strongly influence voting behavior and could affect our analyses.
@@ -75,7 +75,7 @@ st.write(
     """
 )
 
-plot_html(r"_Other/katia_analysis/plotbest_vs_worst_captions.html")
+plot_html(r"_webappp/assets/graph/plotbest_vs_worst_captions.html")
 
 
 
