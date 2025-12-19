@@ -7,10 +7,12 @@ import numpy as np
 import pickle
 import plotly.express as px
 import plotly.graph_objects as go
+from scipy.stats import mannwhitneyu
 import os
 import sys
 sys.path.append(os.path.abspath(".."))
 from src.utils.general_utils import *
+
 
 class GenderAnalysis:
     """
@@ -1105,15 +1107,51 @@ class GenderAnalysis:
     # ---------------------------
 
     def flatten(self, lst):
-        result = []
-        for item in lst:
-            if isinstance(item, list):
-                result.extend(self.flatten(item))
-            else:
-                result.append(item)
-        return result
+        flattened_list = []
+        for i in lst:
+            reshaped = i.reshape(-1).tolist()
+            flattened_list.extend(reshaped)
+        return flattened_list
 
+    def cliffs_delta(self, x, y):
+        """
+        Compute Cliff's delta effect size.
+        Returns value in [-1, 1].
+        """
+        x = np.asarray(x)
+        y = np.asarray(y)
 
+        n_x = len(x)
+        n_y = len(y)
+
+        greater = 0
+        lower = 0
+
+        for xi in x:
+            greater += np.sum(xi > y)
+            lower += np.sum(xi < y)
+
+        return (greater - lower) / (n_x * n_y)
+
+    def split_top_bottom(self, df, score_col="funny_score_scaled", q=0.10):
+        """
+        Splits a dataframe into top and bottom q percent based on a score column.
+        """
+        lower_thresh = df[score_col].quantile(q)
+        upper_thresh = df[score_col].quantile(1 - q)
+
+        bottom = df[df[score_col] <= lower_thresh].copy()
+        top = df[df[score_col] >= upper_thresh].copy()
+
+        return top, bottom
+    
+    def compute_stats(self, x, y):
+        u_stat, p_value = mannwhitneyu(x, y, alternative="two-sided")
+        delta = self.cliffs_delta(x, y)
+        print("Mann-Whitney U:", u_stat)
+        print("p-value:", p_value)
+        print(f"Cliff's delta: {delta:.3f}")
+        return u_stat, p_value, delta
     # ---------------------------
     # VISUALIZATION
     # ---------------------------
