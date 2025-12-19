@@ -71,24 +71,79 @@ st.subheader("Let's study what makes captions funny")
 st.markdown(
     """
     Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
-    Could it be a general pattern? Let’s find out by comparing the funniest and least funny captions, using the 
-    extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each. We compared several features and assessed the statistical significance of the results using a Student’s t-test. The results are shown in the following figures. 
-    Both groups use mostly neutral words, although the least funny captions show more variability.
-    Subjectivity differs significantly: funny captions tend to be more objective. 
-    No clear differences in word count, punctuation.
+    Could it be a general pattern? 
     """
 )
-plot_html(r"_webappp/assets/graph/plotfunny_vs_not_funny.html")
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    st.markdown(
+        """
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            Let’s find out by comparing the funniest and least funny captions, using the 
+            extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each.
+            <br><br>
+            We compared several features such as length and punctuation and assessed the statistical significance of the results using a Student’s t-test.
+            <br><br>
+            The results show that only subjectivity is significantly different, with funny captions being more objective.
+            For the other features, the distributions are quite similar, although more variability is found in polarity for the not-funny group.
+            <br><br>
+            Overall, there are no clear differences in word count or punctuation.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
+
+with col2:
+    plot_html(
+        r"_webappp/assets/graph/plotfunny_vs_not_funny_2.html",
+        height=600
+    )
+
 st.markdown(
     """
-    Was our first intuition wrong? well maybe not totally, if we look at our unfunny group we discover that all captions comes from only 4 contest, very close in time, suggesting that image context may strongly influence voting behavior and could affect our analyses.
-    So let's approach the task with another angle : compare best and worth captions for each contest! 
-    And the result indeed changes as presented in the following figure. Subjectivity is no longer significant, but word count and punctuation become important. The funniest captions are indeed shorter, with a median length of around 10 words. 
+    Was our first intuition wrong? well maybe not totally, when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
+    suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends.
     """
 )
+col1, col2 = st.columns([1, 2])
 
-plot_html(r"_webappp/assets/graph/plotbest_vs_worst_captions.html")
+with col1:
+    st.markdown(
+        """
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            So let's approach the task with another angle. We will now compare the best and worth captions for each contest!
+            This give us a dataset with 384 captions for each group.
+            <br><br>
+            The result ... 
+            <br><br>
+            Subjectivity is no longer significant, but word count and punctuation become important. The funniest captions are indeed shorter, with a median length of around 10 words. 
+            <br><br>
+            ...
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
 
+with col2:
+    plot_html(
+        r"_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
+        height=600
+    )
 
 
 
