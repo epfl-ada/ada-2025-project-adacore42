@@ -329,6 +329,12 @@ st.markdown(""" **TO CHANGE**
     We decided to focus on the top and worst 5% of caption of each gender to see if they were laughed at differently.
     """)
 
+plot_html(r"_webappp\assets\graph\evolution_funny_score.html")
+
+plot_html(r"_webappp\assets\graph\funniness_distrib_by_gender.html")
+
+plot_html(r"_webappp\assets\graph\funny_score_distrib_5.html")
+
 st.divider()
 
 st.markdown("## 4. So What’s the Joke, Really?")
