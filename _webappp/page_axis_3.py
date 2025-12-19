@@ -41,14 +41,15 @@ st.subheader("1. Setting the Scene: Who Appears in the Contest?")
 
 "**A simple method**"
 
-st.write("""
+st.markdown("""
     Before diving into our scientific investigation, it's important to define the method to find gender in the
     cartoon descriptions and captions. It is rather simple actually, we created two big dictionnaries; one for
     women labeled word and one for men. It contains common english names, occupations, pronouns...
     With these dictionnaries, we can do some simple gender detection: iterate through the image descriptions 
     and captions, and annotate it as 'men', 'women', 'both' or 'neutral' depending on the presence of 
     gendered words.
-    """
+    """,
+    text_alignment= 'justify'
     )
 
 st.markdown("**The results**")
