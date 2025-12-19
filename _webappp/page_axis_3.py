@@ -62,7 +62,7 @@ st.write("""
     """)
 # If possible, I would like to have a button were you can select which plot you see: either the one for the 
 # cartoons or the one for the captions. I put the two plot next.
-plot_html(r"assets\graph\counts_cartoons.html")
+plot_html(r"_webappp/assets/graph/counts_cartoons.html")
 # plot_html(r"assets\graph\counts_captions.html")
 st.divider()
 
@@ -89,7 +89,7 @@ st.write("""
 # # Insert wordclouds. Man and Women wordcloud next to each other with a 
 # # button where you can choose if you want to see the verbs or adjectives
 # # The image appears blurry, idk why
-st.image(r"assets\graph\wordclouds_verbs.png", width=700)
+st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=700)
 # st.image("assets\graph\wordclouds_verbs.png", width=700)
 
 st.write("""
@@ -144,7 +144,7 @@ st.write("""
 # ## Insert treemap for both gender. with a button to select which one to show. When you select the men, it also
 # ## shows the analysis for men. Same for women
 
-plot_html(r"assets\graph\topic_male.html")
+plot_html(r"_webappp/assets/graph/topic_male.html")
 # plot_html(r"_Other\amelie_analysis\saved plots\topic_female.html")
 
 # Fun fact for the men
