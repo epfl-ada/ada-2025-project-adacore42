@@ -3,9 +3,11 @@ import pandas as pd
 from _webappp.assets.app_content import PagesData
 from src.utils.general_utils import plot_html
 
-pageData = PagesData.AXIS_3.value 
+st.title("Behind the Punchline: The representation of gender")
 
-pageData.page_firstBlock()
+# pageData = PagesData.AXIS_3.value 
+
+# pageData.page_firstBlock()
 
 st.write(
     """
