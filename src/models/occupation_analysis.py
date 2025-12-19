@@ -1,5 +1,5 @@
-#It must be disclosed that this code was generated with the assistance of AI tools.
-#The AI used was: ChatGPT-5 by OpenAI and GitHub Copilot.
+#It must be disclosed that this code was generated with the assistance of AI tools, either whole blocks or certain functionalities.
+#The AI used: ChatGPT-5 by OpenAI and GitHub Copilot.
 
 import numpy as np
 from scipy.stats import ttest_ind
@@ -449,18 +449,18 @@ class OccupationAnalysis:
         fig = px.bar(df_plot, x = 'term', y='term_count', hover_data = hover_data,
                      title=f'Top Occupation Terms by Frequency Count (Ranks {start+1} to {end})')
         
-        fig.update_traces(marker = dict(color = df_plot['avg_funniness'], colorscale = 'Viridis', line = dict(color = "rgba(0,0,0,0.7)"), width = 1))
+        fig.update_traces(marker = dict(color = df_plot['avg_funniness'], colorscale = 'Viridis', line = dict(color = "rgba(0,0,0,0.7)", width = 1) ))
         fig.update_layout(xaxis_title='Occupation Term', yaxis_title='Frequency Count', template = 'plotly_white', xaxis_tickangle = -45, height = 600, hovermode = 'closest', showlegend = False, title = dict(x = 0.5, xanchor = 'center', text = f"Top Occupations by Frequency Count (Ranks {start+1} to {end})<br><sub>Hover to see number of contests and funniness stats</sub>"))
         if save_path:
             fig.write_html(save_path)
         fig.show()
 
     # plotting with dropdown menu
-    def plot_occupation_dropdown(occupation_df, page_size=10, save_path=None):
+    def plot_occupation_dropdown(self, page_size=10, save_path=None):
         """
         Plots an interactive dropdown to explore occupation statistics.
         """
-        occupation_df_sorted = occupation_df.sort_values(by='term_count', ascending=False).reset_index(drop=True)
+        occupation_df_sorted = self._occupation_df.sort_values(by='term_count', ascending=False).reset_index(drop=True)
         
         n_pages = (len(occupation_df_sorted) + page_size - 1) // page_size
 
