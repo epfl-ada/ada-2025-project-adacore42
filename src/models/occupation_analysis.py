@@ -280,7 +280,29 @@ class OccupationAnalysis:
         
         return self.occupation_categories[category_name]
     
+    #---------------------------------------------------------#
+    # Remove words from occupation analysis
+    # --------------------------------------------------------# 
+    def remove_terms_from_analysis(self, terms_to_remove):
+        """
+        Removes specified terms from occupation analysis.
+        """
+        terms_to_remove = set(term.lower() for term in terms_to_remove)
 
+        #fix occupation dataframe
+        if self._occupation_df is not None:
+            self._occupation_df = self._occupation_df[~self._occupation_df['term'].str.lower().isin(terms_to_remove)].reset_index(drop=True)
+
+        #fix category-caption dataframe
+        if self._category_caption_df is not None:
+            self._category_caption_df = self._category_caption_df[~self._category_caption_df['category'].str.lower().isin(terms_to_remove)].reset_index(drop=True)
+        
+        #fixing the syn_to_occ mapping
+        self.syn_to_occ = {syn: occ for syn, occ in self.syn_to_occ.items() if occ.lower() not in terms_to_remove}
+
+        #fix occupation categories
+        for category, occupations in self.occupation_categories.items():
+            self.occupation_categories[category] = [occ for occ in occupations if occ.lower() not in terms_to_remove]
     #---------------------------------------------------------#
     # Exploratory analysis functions
     # --------------------------------------------------------#   
@@ -367,25 +389,15 @@ class OccupationAnalysis:
                         occupation_temporal[occ].get(contest_id, 0) + 1
                     )
 
+        #this can be greatly simplified by not looping through all occupations so many times
         occupation_analysis_df = pd.DataFrame({
             "term": occupations,
-            "category": [
-                self.occupation_to_category.get(occ, "Miscellaneous")
-                for occ in occupations
-            ],
+            "category": [self.occupation_to_category.get(occ, "Miscellaneous") for occ in occupations],
             "term_count": [occupation_term_counts[occ] for occ in occupations],
-            "avg_funniness": [
-                np.mean(occupation_funniness[occ]) if occupation_funniness[occ] else 0.0
-                for occ in occupations
-            ],
-            "median_funniness": [
-                np.median(occupation_funniness[occ]) if occupation_funniness[occ] else 0.0
-                for occ in occupations
-            ],
-            "std_funniness": [
-                np.std(occupation_funniness[occ]) if occupation_funniness[occ] else 0.0
-                for occ in occupations
-            ],
+            "funniness_scores": [occupation_funniness[occ] for occ in occupations],
+            "avg_funniness": [np.mean(occupation_funniness[occ]) if occupation_funniness[occ] else 0.0 for occ in occupations],
+            "median_funniness": [np.median(occupation_funniness[occ]) if occupation_funniness[occ] else 0.0 for occ in occupations],
+            "std_funniness": [np.std(occupation_funniness[occ]) if occupation_funniness[occ] else 0.0 for occ in occupations],
             "contests": [occupation_contests[occ] for occ in occupations],
             "temporal_distribution": [occupation_temporal[occ] for occ in occupations],
         })
@@ -426,8 +438,34 @@ class OccupationAnalysis:
                 })
 
         return pd.DataFrame(rows)
-
     
+    #--------------------------------------------------------#
+    # adding a scores column to the occupation dataframe, without rebuilding everything
+    # def add_scores_to_occupation_dataframe(self, overwrite=True):
+    #     '''
+    #     Adds a funniness scores column to the occupation dataframe.
+    #     '''
+    #     funniness_by_occ = {occ: [] for occ in self._occupation_df['term']}
+
+    #     #get the scores
+    #     for idx, doc in enumerate(self.documents):
+    #         if (idx+1) % 1000 == 0:
+    #             print(f"Processing document {idx+1}/{len(self.documents)}")
+            
+    #         doc_lower = doc.lower()
+    #         score = self.scores[idx]
+
+    #         for syn, occ in self.syn_to_occ.items():
+    #             if syn in doc_lower and occ in funniness_by_occ:
+    #                 funniness_by_occ[occ].append(score)
+
+    #     self._occupation_df['funniness_scores'] = self._occupation_df['term'].map(funniness_by_occ)
+
+    #     #save
+    #     if overwrite and self.occupation_df_path is not None:
+    #         self._occupation_df.to_pickle(self.occupation_df_path)
+
+    #     return self._occupation_df
     
     #--------------------------------------------------------#
     #Plotting functions in html format for initial exploration
@@ -510,24 +548,24 @@ class OccupationAnalysis:
         fig.show()
 
     #plotting top occupations by average or median funniness
-    def plot_top_occupations_by_funniness(self, top_n=20, save_path=None, measure='avg', ascending=False):
+    def plot_top_occupations_by_funniness(self, top_n=20, threshold = 50, save_path=None, measure='avg', ascending=False):
         """
         Plots the top N occupation terms by average funniness score.
         """
-        df_plot = self._occupation_df.sort_values(by=f'{measure}_funniness', ascending=ascending).head(top_n).copy()
+        df_plot = self._occupation_df[self._occupation_df['term_count'] >= threshold].sort_values(by=f'{measure}_funniness', ascending=ascending).head(top_n).copy()
         hover_data = {
-            'count': True,
+            'term_count': True,
             'std_funniness': ':.2f',
             'avg_funniness': ':.2f',
             'median_funniness': ':.2f',
             'term': False
         }
-
-        fig = px.bar(df_plot, x = 'term', y='avg_funniness', hover_data = hover_data,
-                     title=f'Top {top_n} Occupation Terms by Average Funniness Score')
+        title = 'Average' if measure == 'avg' else 'Median'
+        fig = px.bar(df_plot, x = 'term', y=f'{measure}_funniness', hover_data = hover_data,
+                     title=f'Top {top_n} Occupation Terms by  {title} Funniness Score')
         
-        fig.update_traces(marker = dict(color = df_plot['term_count'], colorscale = 'Blues', line = dict(color = "rgba(0,0,0,0.7)"), width = 1))
-        fig.update_layout(xaxis_title='Occupation Term', yaxis_title='Average Funniness Score', template = 'plotly_white', xaxis_tickangle = -45, height = 600, hovermode = 'closest', showlegend = False, title = dict(x = 0.5, xanchor = 'center', text = f"Top {top_n} Occupations by Average Funniness<br><sub>Hover to see frequency and score variability</sub>"))
+        fig.update_traces(marker = dict(color = df_plot['term_count'], colorscale = 'Blues', line = dict(color = "rgba(0,0,0,0.7)", width = 1)))
+        fig.update_layout(xaxis_title='Occupation Term', yaxis_title=f'{title} Funniness Score', template = 'plotly_white', xaxis_tickangle = -45, height = 600, hovermode = 'closest', showlegend = False, title = dict(x = 0.5, xanchor = 'center', text = f"Top {top_n} Occupations by {title} Funniness<br><sub>Hover to see frequency and score variability</sub>"))
         if save_path:
             fig.write_html(save_path)
         fig.show()
@@ -537,60 +575,44 @@ class OccupationAnalysis:
         """
         Plots the distribution of funniness scores for a given occupation term.
         """
-        canonical_term = self.syn_to_occ.get(occupation_term.lower())
+        df_plot = self.get_occupation_dataframe()
 
-        rows = []
-
-        for idx, doc in enumerate(self.documents):
-            doc_lower = doc.lower()
-            score = self.scores[idx]
-
-            for syn, occ in self.syn_to_occ.items():
-                if syn == occupation_term.lower() and syn in doc_lower:
-                    rows.append(score)
-        if not rows:
-            print(f"No occurrences found for occupation term: {occupation_term}")
-            return
-
-        df_plot = pd.DataFrame({'funniness_score': rows})
+        row = df_plot[df_plot['term'].str.lower() == occupation_term.lower()]
+        if row.empty:
+            raise ValueError(f"Occupation term '{occupation_term}' not found in the occupation dataframe.")
+        
+        scores = row.iloc[0]['funniness_scores']
+        if not scores:
+            raise ValueError(f"No funniness scores found for occupation term '{occupation_term}'.")
+        
+        df_plot = pd.DataFrame({'funniness_score': scores})
 
         fig = px.histogram(df_plot, x='funniness_score', nbins=nbins, marginal = "box",
-                         title=f'Distribution of Funniness Scores for "{canonical_term}"',
+                         title=f'Distribution of Funniness Scores for "{occupation_term}"',
                          hover_data = {'funniness_score': ':.2f'})
         
-        fig.update_layout(xaxis_title='Funniness Score', yaxis_title='Count', template = 'plotly_white', height = 500, hovermode = 'closest', title = dict(x = 0.5, xanchor = 'center', text = f'Distribution of Funniness Scores for "{canonical_term}"'))
+        fig.update_layout(xaxis_title='Funniness Score', yaxis_title='Count', template = 'plotly_white', height = 500, hovermode = 'closest', title = dict(x = 0.5, xanchor = 'center', text = f'Distribution of Funniness Scores for "{occupation_term}"'))
         if save_path:
             fig.write_html(save_path)
         fig.show()
+        return df_plot
 
     def plot_occupation_box_plot(self, occupation_terms, save_path = None):
         """
         Plotting the box plot of the funniness score of multiple occupations on the same plot close to each other. 
         """
-        rows = []
+        df_plot = self.get_occupation_dataframe()
+        occupation_terms_lower = [term.lower() for term in occupation_terms]
 
-        occupation_terms = [occ.lower() for occ in occupation_terms]
+        df_reduced = df_plot[df_plot['term'].str.lower().isin(occupation_terms_lower)]
 
-        for idx, doc in enumerate(self.documents):
-            doc_lower = doc.lower()
-            score = self.scores[idx]
-            matched_occupations = set()
-
-            for syn, occ in self.syn_to_occ.items():
-                if syn in doc_lower and occ in occupation_terms:
-                    matched_occupations.add(occ)
-            
-            for occ in matched_occupations:
-                rows.append({
-                    'occupation': occ,
-                    'funniness_score': score
-                })
-        if not rows:
-            print(f"No occurrences found for occupation terms: {occupation_terms}")
-            return
+        if df_reduced.empty:
+            raise ValueError("None of the specified occupation terms were found in the occupation dataframe.")
         
-        df_plot = pd.DataFrame(rows)
-        fig = px.box(df_plot,x="occupation",y="funniness_score",points="outliers", title="Funniness score distribution by occupation")
+        #explode the funniness scores
+        df_plot = df_reduced[['term', 'funniness_scores']].explode('funniness_scores')
+
+        fig = px.box(df_plot,x="term",y="funniness_scores",points="outliers", title="Funniness score distribution by occupation")
 
         fig.update_layout(xaxis_title="Occupation", yaxis_title="Funniness score", template="plotly_white", height=600, xaxis_tickangle=-45, hovermode="closest", title=dict(x=0.5, xanchor="center"))
 
@@ -600,8 +622,6 @@ class OccupationAnalysis:
         fig.show()
 
 
-
-
     #--------------------------------------------------------#
     # Tests to compare specific occupations
     #--------------------------------------------------------#
@@ -609,26 +629,18 @@ class OccupationAnalysis:
         '''
         Compares funniness score distributions among a set of occupation terms using Kruskal-Wallis H-test.
         '''
-        if self.syn_to_occ is None:
-            raise ValueError("Occupation mapping not provided.")
-        
-        occupation_groups = {occ: [] for occ in occupation_list}
+        df = self.get_occupation_dataframe()
+        occupation_list_lower = [occ.lower() for occ in occupation_list]
 
-        for idx, doc in enumerate(self.documents):
-            doc_lower = doc.lower()
-            score = self.scores[idx]
-
-            for syn, occ in self.syn_to_occ.items():
-                if occ in occupation_groups and syn in doc_lower:
-                    occupation_groups[occ].append(score)
+        sub_df = df[df['term'].isin(occupation_list)]
+        if sub_df.shape[0] < 2:
+            raise ValueError("At least two of the specified occupation terms must be found in the occupation dataframe.")
         
-        # Remove empty groups
-        occupation_groups = {occ: scores for occ, scores in occupation_groups.items() if scores}
-
-        if len(occupation_groups) < 2:
-            raise ValueError("At least two occupation terms must have associated funniness scores for comparison.")
+        score_groups = [scores for scores in sub_df['funniness_scores'] if len(scores) > 0]
+        if len(score_groups) < 2:
+            raise ValueError("At least two occupation terms must have associated funniness scores.")
         
-        stat, p_value = stats.kruskal(*occupation_groups.values())
+        stat, p_value = stats.kruskal(*score_groups)
 
         if interpret:
             if p_value < alpha:
@@ -644,38 +656,21 @@ class OccupationAnalysis:
         '''
         Compares funniness score distributions between two occupation terms using Mann-Whitney U test.
         '''
-        if self.syn_to_occ is None:
-            raise ValueError("Occupation mapping not provided.")
+        df = self.get_occupation_dataframe()
+        occupation_1_lower = occupation1.lower()
+        occupation_2_lower = occupation2.lower()
+
+        sub_df = df[df['term'].str.lower().isin([occupation_1_lower, occupation_2_lower])]
+        if sub_df.shape[0] < 2:
+            raise ValueError("Both specified occupation terms must be found in the occupation dataframe.")
         
-        rows_occ1 = []
-        rows_occ2 = []
-
-        for idx, doc in enumerate(self.documents):
-            doc_lower = doc.lower()
-            score = self.scores[idx]
-
-            has_occ1 = False
-            has_occ2 = False
-
-            for syn, occ in self.syn_to_occ.items():
-                if syn in doc_lower:
-                    if occ == occupation1:
-                        has_occ1 = True
-                    elif occ == occupation2:
-                        has_occ2 = True
-
-            # keep only captions that mention exactly one occupation
-            if has_occ1 and not has_occ2:
-                rows_occ1.append(score)
-            elif has_occ2 and not has_occ1:
-                rows_occ2.append(score)
-
+        Scores_occ1 = sub_df[sub_df['term'].str.lower() == occupation_1_lower]['funniness_scores'].iloc[0]
+        Scores_occ2 = sub_df[sub_df['term'].str.lower() == occupation_2_lower]['funniness_scores'].iloc[0]
         
-        if len(rows_occ1) == 0 or len(rows_occ2) == 0:
+        if len(Scores_occ1) == 0 or len(Scores_occ2) == 0:
             raise ValueError("One or both occupation terms have no associated funniness scores.")
         
-        stat, p_value = stats.mannwhitneyu(rows_occ1, rows_occ2, alternative= alternative)
-
+        stat, p_value = stats.mannwhitneyu(Scores_occ1, Scores_occ2, alternative=alternative)
         if interpret:
             if p_value < alpha:
                 print(f"Mann-Whitney U test statistic: {stat:.4f}, p-value: {p_value:.4f}")
@@ -689,34 +684,20 @@ class OccupationAnalysis:
         '''
         Computes Cliff's Delta effect size between two occupation terms.
         '''
-        if self.syn_to_occ is None:
-            raise ValueError("Occupation mapping not provided.")
+        df = self.get_occupation_dataframe()
+        occupation_1_lower = occupation1.lower()
+        occupation_2_lower = occupation2.lower()
+
+        sub_df = df[df['term'].str.lower().isin([occupation_1_lower, occupation_2_lower])]
+        if sub_df.shape[0] < 2:
+            raise ValueError("Both specified occupation terms must be found in the occupation dataframe.")
         
-        rows_occ1 = []
-        rows_occ2 = []
-
-        for idx, doc in enumerate(self.documents):
-            doc_lower = doc.lower()
-            score = self.scores[idx]
-
-            has_occ1 = False
-            has_occ2 = False
-
-            for syn, occ in self.syn_to_occ.items():
-                if syn in doc_lower:
-                    if occ == occupation1:
-                        has_occ1 = True
-                    elif occ == occupation2:
-                        has_occ2 = True
-
-            # keep only captions that mention exactly one occupation
-            if has_occ1 and not has_occ2:
-                rows_occ1.append(score)
-            elif has_occ2 and not has_occ1:
-                rows_occ2.append(score)
-        
+        rows_occ1 = sub_df[sub_df['term'].str.lower() == occupation_1_lower]['funniness_scores'].iloc[0]
+        rows_occ2 = sub_df[sub_df['term'].str.lower() == occupation_2_lower]['funniness_scores'].iloc[0]
         if len(rows_occ1) == 0 or len(rows_occ2) == 0:
             raise ValueError("One or both occupation terms have no associated funniness scores.")
+        rows_occ1 = np.array(rows_occ1)
+        rows_occ2 = np.array(rows_occ2)
         
         n1 = len(rows_occ1)
         n2 = len(rows_occ2)
@@ -902,7 +883,8 @@ class OccupationAnalysis:
     #--------------------------------------------------------#
     def temporal_counting(self, occupations):
         '''
-        Aggregate temporal counting for a list of occupations/
+        temporal counting for a list of occupations/a single occupation provided as a single-element list
+        returns a dictionary mapping contest_id to counts
         '''
 
         occ_df = self.get_occupation_dataframe()
