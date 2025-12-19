@@ -208,7 +208,25 @@ st.divider()
 st.subheader("3. Does Gender Win the Crowd?")
 "**Are gendered captions funnier?**"
 
-# Despite strong differences in how men and women are depicted, the audience reacts similarly to both.
+"""To compare how the audience responds to gendered captions, we relied on two complementary statistical tools: the Mann–Whitney U test and Cliff’s delta. 
+Together, they answer two different questions: Is there a difference? and Does that difference actually matter?
+If you don't know any of these tests, don't worry we included explanations for both of them."""
+
+# just as for BERTopic, include a sort of markdown that when you click on 
+# the definition for the test appears
+
+"""Mann–Whitney U Test - "Are these scores different at all?"
+
+The Mann–Whitney U test is a non-parametric statistical test used to compare two independent samples.
+It evaluates whether observations from one group tend to have larger or smaller values than observations from another group.
+
+Unlike a t-test, it does not assume normality or equal variances. Instead of comparing means directly, it operates on the rank ordering of all 
+observations across both groups. The test statistic U reflects how often values from one group precede values from the other in this ranking.
+
+Formally, the null hypothesis is: The two groups are drawn from the same distribution.
+
+In practice, a significant result indicates a systematic shift between the distributions (e.g., one group tends to receive higher scores), 
+but it does not specify the magnitude of this shift."""
 
 st.subheader("4. So What’s the Joke, Really?")
 "**Conclusion**"
