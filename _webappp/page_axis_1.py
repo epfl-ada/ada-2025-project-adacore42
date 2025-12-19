@@ -136,7 +136,7 @@ st.write(
     **Comparing funny score of all topics**
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_289.html")
+plot_html(r"_webappp/assets/graph/boxplot_topics_289.html")
 
 
 st.write(
@@ -158,7 +158,7 @@ st.write(
     LA FAUDRAIT METTRE UN BOUTON QUI QUAND ON CLIQUE DESSUS FASSE APPARAITRE LE DEUXIEME GRPAHIQUE A LA PLACE DU PREMIER
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_with_winners_289.html")
+plot_html(r"_webappp/assets/graph/boxplot_topics_with_winners_289.html")
 
 
 st.write(
@@ -182,7 +182,7 @@ st.write(
     Let's see how does that changes our topic analysis...
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\enrichment_289.html")
+plot_html(r"_webappp/assets/graph/enrichment_289.html")
 
 st.write(
     """
@@ -191,7 +191,7 @@ st.write(
     **Concerning the proportion of captions with a score higher than 30/100** :
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_289.html")
+plot_html(r"_webappp/assets/graph/prop_above_thresh_289.html")
 
 
 st.write(
@@ -207,7 +207,7 @@ st.write(
     LA AUSSI FAUDRAIT METTRE UN BOUTON POUR FAIRE POP LE GRAPHIQUE CI DESSOUS, A LA PLACE DE L'ANCIEN
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_with_winners_289.html")
+plot_html(r"_webappp/assets/graph/prop_above_thresh_with_winners_289.html")
 
 
 
