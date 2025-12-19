@@ -85,9 +85,9 @@ plot_choice = st.radio(
 )
 
 if plot_choice == "Cartoons":
-    plot_html(r"_webappp/assets/graph/counts_cartoons.html")
+    plot_html(r"_webappp/assets/graph/counts_cartoons.html", height=450)
 else:
-    plot_html(r"_webappp/assets/graph/counts_captions.html")
+    plot_html(r"_webappp/assets/graph/counts_captions.html", height=450)
 
 st.divider()
 
@@ -135,7 +135,7 @@ st.markdown("""
     much of the same vocabulary. But when we look closer, we see
     a more intersting story.
          
-    NOT FINISHED
+    **TO COMPLETE**
     """,
     text_alignment= 'justify')
 
@@ -193,7 +193,7 @@ gender_choice = st.radio(
 )
 
 if gender_choice == "Men":
-    plot_html(r"_webappp/assets/graph/topic_male.html")
+    plot_html(r"_webappp/assets/graph/topic_male.html", height=450)
     st.markdown("***Men eat… a lot***")
     st.markdown(
         """ 
@@ -293,20 +293,18 @@ with st.expander("Mann–Whitney U Test or *“Are these scores different at all
 with st.expander("Cliff’s delta or *“How big is the difference, really?”*"):
     st.markdown(
         """
-        Because our dataset contains many more male-labeled captions than female-labeled ones, we rely on 
+        Because our dataset contains many more men-labeled captions than women-labeled ones, we rely on 
         non-parametric, rank-based methods that are robust to both skewed distributions and sample-size imbalance.
 
         **Cliff’s delta** is an effect-size measure that tells us how large a difference is, independently of how many data points we have. 
         Unlike p-values, it is not inflated by large datasets and therefore helps distinguish *statistical significance* from 
         *practical relevance*.
 
-        In short:  
-        > *A result can be statistically significant but still meaningless — Cliff’s delta tells us whether it actually matters.*
-
         **How it works**
 
-        Cliff’s delta measures the probability that a randomly chosen caption from one group (e.g., male-labeled) has a higher score 
-        than a randomly chosen caption from the other group (e.g., female-labeled).
+        Cliff’s delta measures the probability that a randomly chosen caption from one group (e.g., men-labeled) has a higher score 
+        than a randomly chosen caption from the other group (e.g., women-labeled). It answers the question: 
+        *If we randomly pick one caption from each gender, how often does one outperform the other?*
 
         It ranges from **–1 to +1**:
         - **0** → complete overlap between groups  
@@ -315,21 +313,21 @@ with st.expander("Cliff’s delta or *“How big is the difference, really?”*"
 
         **Interpretation guide**
 
-        | |δ| value | Interpretation |
-        |---|---|
-        | |δ| < 0.147 | Negligible effect |
-        | 0.147 ≤ |δ| < 0.33 | Small effect |
-        | 0.33 ≤ |δ| < 0.47 | Medium effect |
-        | |δ| ≥ 0.47 | Large effect |
-
-        **In plain English**
-
-        Cliff’s delta answers a simple question:
-
-        *If we randomly pick one caption from each gender, how often does one outperform the other?*
+        - |δ| < 0.147 → Negligible effect
+        - 0.147 ≤ |δ| < 0.33 → Small effect 
+        - 0.33 ≤ |δ| < 0.47 → Medium effect 
+        - |δ| ≥ 0.47 → Large effect 
+        
         """,
         unsafe_allow_html=True
     )
+
+st.markdown("### What about the top and worst captions?")
+
+st.markdown(""" **TO CHANGE**
+    Since we did not see a significant difference when looking at the whole set of captions, we decided to dig deeper.
+    We decided to focus on the top and worst 5% of caption of each gender to see if they were laughed at differently.
+    """)
 
 st.divider()
 

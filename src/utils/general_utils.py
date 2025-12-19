@@ -83,7 +83,7 @@ def plot_cartoon(contest_id, root):
     img = Image.open(path)
     img.show()
 
-def plot_html(path, height=500):
+def plot_html(path, height=450):
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
