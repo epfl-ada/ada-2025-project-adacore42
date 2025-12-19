@@ -51,7 +51,7 @@ st.write("""
     """
     )
 
-"**The results**"
+st.markdown("**The results**")
 
 st.write("""
     We applied this simple method and got these plots, and guess what? We already found something intersting!
@@ -62,8 +62,20 @@ st.write("""
     """)
 # If possible, I would like to have a button were you can select which plot you see: either the one for the 
 # cartoons or the one for the captions. I put the two plot next.
-plot_html(r"_webappp/assets/graph/counts_cartoons.html")
-# plot_html(r"assets\graph\counts_captions.html")
+# plot_html(r"_webappp/assets/graph/counts_cartoons.html")
+# plot_html(r"_webappp/assets/graph/counts_captions.html")
+
+plot_choice = st.radio(
+    "Select which distribution to display:",
+    ["Cartoons", "Captions"],
+    horizontal=True
+)
+
+if plot_choice == "Cartoons":
+    plot_html(r"_webappp/assets/graph/counts_cartoons.html")
+else:
+    plot_html(r"_webappp/assets/graph/counts_captions.html")
+
 st.divider()
 
 # There is a big gap in the website here idk why
@@ -75,7 +87,8 @@ st.write("""
     are men and women are portrayed once they appear.
     """)
 
-"**Words Matter**"
+
+st.write("""**Words Matter**""")
 st.write("""
     One way to examine depiction is to look at language itself.
     Which words tend to surround men? Which describe women?
@@ -86,11 +99,21 @@ st.write("""
 
     Word size reflects frequency; color is purely aesthetic.
     """)
+
 # # Insert wordclouds. Man and Women wordcloud next to each other with a 
 # # button where you can choose if you want to see the verbs or adjectives
 # # The image appears blurry, idk why
-st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=700)
-# st.image("assets\graph\wordclouds_verbs.png", width=700)
+
+wc_type = st.radio(
+    "Choose your word type:",
+    ["Verbs", "Adjectives"],
+    horizontal=True
+)
+
+if wc_type == "Verbs":
+    st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=700)
+else:
+    st.image(r"_webappp/assets/graph/wordclouds_adjs.png", width=700)
 
 st.write("""
     At first glance, the clouds look similar, men and women seem to share
@@ -113,18 +136,18 @@ st.write("""
 
 # If possible have a sort of markdown and when you click on "The magic of BERTopic" it shows the explanation
 
-"**The magic of BERTopic**"   
-st.write("""       
-    BERTopic is a topic modeling method that groups captions based on meaning, not just word frequency. Instead 
-    of counting how often words appear, it first turns each caption into a 
-    numerical representation, called an embedding, using a language model trained to understand context.
-         
-    Captions with similar meanings end up close to each other in this embedding space. BERTopic then clusters 
-    these captions and assigns each cluster a topic label based on the most representative words.
+with st.expander("The magic of BERTopic"):  
+    st.write("""       
+        BERTopic is a topic modeling method that groups captions based on meaning, not just word frequency. Instead 
+        of counting how often words appear, it first turns each caption into a 
+        numerical representation, called an embedding, using a language model trained to understand context.
+            
+        Captions with similar meanings end up close to each other in this embedding space. BERTopic then clusters 
+        these captions and assigns each cluster a topic label based on the most representative words.
 
-    In short: BERTopic doesn’t ask “Which words appear together?” but rather “Which captions are saying roughly 
-    the same thing?”
-    """)
+        In short: BERTopic doesn’t ask “Which words appear together?” but rather “Which captions are saying roughly 
+        the same thing?”
+        """)
 
 st.divider()
 
@@ -142,50 +165,54 @@ st.write("""
     """)
 
 # ## Insert treemap for both gender. with a button to select which one to show. When you select the men, it also
-# ## shows the analysis for men. Same for women
+# ## shows the fun facts about men. Same for women
 
-plot_html(r"_webappp/assets/graph/topic_male.html")
-# plot_html(r"_Other\amelie_analysis\saved plots\topic_female.html")
+gender_choice = st.radio(
+    "Select gender:",
+    ["Men", "Women"],
+    horizontal=True
+)
 
-# Fun fact for the men
-st.write("""
-    
-    Men eat… a lot: 
+if gender_choice == "Men":
+    plot_html(r"_webappp/assets/graph/topic_male.html")
+    st.write("""
+    ***Men eat… a lot:***
          
     Food-related theme take up a surprisingly large share of male-labeled captions, but not the wholesome kind. 
     Think alcohol, junk food, dinner menus, and indulgent eating. The humor paints men as enthusiastic consumers, 
     always one drink or snack away from the punchline.
 
-    Politics, but it is in fact Trump: 
+    ***Politics, but it is in fact Trump:*** 
          
     Political humor does appear in male captions, but with no diversity: it’s Trump, Trump, and… Trump again. 
     Apparently, when men enter politics in New Yorker cartoons, they do so wearing a red tie and making headlines.
 
-    Only men get the full life arc.
+    ***Only men get the full life arc.***
          
     Certain themes appear exclusively in male-labeled captions: transportation, death, arts & music, and pop culture. 
     According to these cartoons, only men take the subway, play guitars, play some baseball, watch Edward Scissorhands, contemplate mortality 
     and... eventually die. A complete journey, really.
-
-""")
-# Fun fact for the women
-st.write("""
-    Karen is… just a name. Or is it?
+    ...
+    """)
+else:
+    plot_html(r"_webappp/assets/graph/topic_female.html")
+    st.write("""
+    ***Karen is… just a name. Or is it?***
          
     If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
     it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
     complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
     full personality without the need of a backstory.
 
-    Women in politics: meet Hillary. That’s it.
+    ***Women in politics: meet Hillary. That’s it.***
          
     Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
     only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
     The absence of other female political figures is striking... and telling...
+    """)
 
-""")
 
-"**So what did we learn?**"
+st.write("""***So what did we learn?***""")
 
 st.write("""
     If the New Yorker Caption Contest were our only source of knowledge about gender, we might start forming some… very specific ideas.
