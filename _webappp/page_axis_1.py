@@ -1,6 +1,8 @@
 import streamlit as st
 import plotly.graph_objects as go
 import numpy as np
+import pandas as pd
+import random
 from _webappp.assets.app_content import PagesData
 from src.utils.general_utils import plot_html
 from src.utils.general_utils import plot_cartoon
@@ -15,7 +17,7 @@ plots = PWA.load_plots()
 #pageData = PagesData.AXIS_1.value
 
 #pageData.page_firstBlock()
-st.title("Axis 1: What is considered funny?")
+st.title("What is considered funny?")
 st.write(
     """
     Welcome to this section, where we explore some of the mechanisms behind humor.
@@ -98,32 +100,99 @@ st.write(
     """
     Now that we have tried to analyse what elements makes a joke funnier, we will dive into caption-topics clustering, to try to see if there is some topics better than other, some that creates more fun.
     An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
-    We will firstly build the pipeline analysing captions among one contest, and then generalize and perform statistical analysis to finally conclude about this question.
     """
 )
 
-st.image("data/newyorker_caption_contest_virgin/images/801.jpg", width=700)
+with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?"): 
+    """
+    a redigeeeeer
+    """
+
+
 st.markdown(
     """
     <div style="text-align: center;">
-    <\br>**Contest number 801, published May 23, 2022**<\br>
-    <\br>*Top Rated caption*: "What do you mean I don’t have time for another game?"<\br>
-    <\br>*The New Yorker's winner*: "I thought you’d be better at the endgame."<\br>
-    <\br>*Number of votes*: 562,261<\br>
+        <br>
+        <strong>Contest number 801 - Published May 23, 2022.</strong>
+        <br>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+col1, col2, col3 = st.columns([1, 3, 1])
+with col1:
+    st.write("")
+
+
+with col2:
+    st.write("")
+    st.image("data/newyorker_caption_contest_virgin/images/801.jpg", width=650)
+
+with col3:
+    st.write("")
+
+
+
+
+st.divider()
+
+@st.cache_data
+def load_captions():
+    df = pd.read_csv("_webappp/assets/csv/dataA_topics_289.csv")
+    # Exclure misc / -1
+    df = df[df["aggregated_topic"] != "misc"]
+    return df
+
+df_captions = load_captions()
+
+if "random_caption_idx" not in st.session_state:
+    st.session_state.random_caption_idx = random.randint(0, len(df_captions) - 1)
+
+row = df_captions.iloc[st.session_state.random_caption_idx]
+
+
+st.markdown(
+    f"""
+    <div style="text-align: center; padding: 20px;">
+        <h9>Some proposed captions of this contest</h9>
+        <p style="font-size: 26px;"><i>"{row['caption']}"</i></p>
+        <p style="font-size: 20px; color: gray;">
+            Topic: <b>{row['aggregated_topic']}</b>
+        </p>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.divider()
 
-st.write(
+if st.button("See another joke ?"):
+    new_idx = st.session_state.random_caption_idx
+    while new_idx == st.session_state.random_caption_idx:
+        new_idx = random.randint(0, len(df_captions) - 1)
+    st.session_state.random_caption_idx = new_idx
+st.markdown(
     """
-    Some proposed captions of this contest :
-    ICI ON POURRAIT AFFICHER DES CAPTIONS ALEATOIRES, LA PERSONNE PEUT LA FAIRE CHANGER AVEC UN BOUTON 'see an other joke ?'
-    disponibles dans le csv au path : r"ada-2025-project-adacore42/data/newyorker_caption_contest_virgin/data/801.csv" avec le header "caption".
-    """
+    <h3 style="text-align:center;">
+        <em style="color: orange;">
+            Crowd Top Rated caption:'What do you mean I don’t have time for another game?'
+        </em>
+    </h3>
+    """,
+    unsafe_allow_html=True
 )
+
+st.markdown(
+    """
+    <h3 style="text-align:center;">
+        <em style="color: steelblue;">
+            The New Yorker's winner: 'I thought you’d be better at the endgame.'
+        </em>
+    </h3>
+    """,
+    unsafe_allow_html=True
+)
+
+
 
 
 st.divider()
@@ -141,12 +210,36 @@ st.write(
     
     
     Let's see what topic have been identified from this cartoon, and the relative appreciation of people for them !
-    
-    
+    """
+    )
+
+
+
+
+st.divider()
+
+
+st.write(
+    """
     **Comparing funny score of all topics**
     """
 )
-plot_html(r"_webappp/assets/graph/boxplot_topics_289.html")
+
+
+if "plot_winners1" not in st.session_state:
+    st.session_state.plot_winners1 = False
+
+if st.button(
+    "Show winning captions in topics",
+    key="btn_plot_winners1"
+):
+    st.session_state.plot_winners1 = not st.session_state.plot_winners1
+
+if st.session_state.plot_winners1:
+    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html")
+else:
+    plot_html("_webappp/assets/graph/boxplot_topics_289.html")
+    
 
 
 st.write(
@@ -162,13 +255,6 @@ st.write(
     """
 )
 
-
-st.write(
-    """
-    LA FAUDRAIT METTRE UN BOUTON QUI QUAND ON CLIQUE DESSUS FASSE APPARAITRE LE DEUXIEME GRPAHIQUE A LA PLACE DU PREMIER
-    """
-)
-plot_html(r"_webappp/assets/graph/boxplot_topics_with_winners_289.html")
 
 
 st.write(
@@ -201,7 +287,25 @@ st.write(
     **Concerning the proportion of captions with a score higher than 30/100** :
     """
 )
-plot_html(r"_webappp/assets/graph/prop_above_thresh_289.html")
+
+
+
+if "plot_winners2" not in st.session_state:
+    st.session_state.plot_winners2 = False
+
+if st.button(
+    "Show winning captions in topics",
+    key="btn_plot_winners2"
+):
+    st.session_state.plot_winners2 = not st.session_state.plot_winners2
+
+if st.session_state.plot_winners2:
+    plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html")
+else:
+    plot_html("_webappp/assets/graph/prop_above_thresh_289.html")
+
+
+
 
 
 st.write(
@@ -217,7 +321,7 @@ st.write(
     LA AUSSI FAUDRAIT METTRE UN BOUTON POUR FAIRE POP LE GRAPHIQUE CI DESSOUS, A LA PLACE DE L'ANCIEN
     """
 )
-plot_html(r"_webappp/assets/graph/prop_above_thresh_with_winners_289.html")
+
 
 
 
