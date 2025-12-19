@@ -111,9 +111,9 @@ wc_type = st.radio(
 )
 
 if wc_type == "Verbs":
-    st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=900)
+    st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=1000)
 else:
-    st.image(r"_webappp/assets/graph/wordclouds_adjs.png", width=900)
+    st.image(r"_webappp/assets/graph/wordclouds_adjs.png", width=1000)
 
 st.markdown("""
     At first glance, the clouds look similar, men and women seem to share
@@ -150,7 +150,6 @@ with st.expander("The magic of BERTopic"):
         """,
     text_alignment= 'justify')
 
-st.divider()
 
 st.markdown("""
     Using this approach, we identified recurring topics and aggregated them into broader,
@@ -177,66 +176,50 @@ gender_choice = st.radio(
 
 if gender_choice == "Men":
     plot_html(r"_webappp/assets/graph/topic_male.html", height=450)
+
+    with st.expander("Men eat… a lot."):
+        st.markdown(
+            """ 
+            Food-related theme take up a surprisingly large share of male-labeled captions, but not the wholesome kind. 
+            Think alcohol, junk food, dinner menus, and indulgent eating. The humor paints men as enthusiastic consumers, 
+            always one drink or snack away from the punchline.""",
+            text_alignment= 'justify')
     
-    st.markdown(
-    "<p style='font-size:20px; font-weight:600; font-style:italic;'>Men eat… a lot.</p>",
-    unsafe_allow_html=True
-    )
-    st.markdown(
-        """ 
-        Food-related theme take up a surprisingly large share of male-labeled captions, but not the wholesome kind. 
-        Think alcohol, junk food, dinner menus, and indulgent eating. The humor paints men as enthusiastic consumers, 
-        always one drink or snack away from the punchline.""",
+    with st.expander("Politics, but it is in fact Trump."):
+        st.markdown("""
+            Political humor does appear in male captions, but with no diversity: it’s Trump, Trump, and… Trump again. 
+            Apparently, when men enter politics in New Yorker cartoons, they do so wearing a red tie and making headlines.
+        """,
+        text_alignment= 'justify'
+        )
+    
+    with st.expander("Only men get the full life arc."):
+        st.markdown("""    
+        Certain themes appear exclusively in male-labeled captions: transportation, death, arts & music, and pop culture. 
+        According to these cartoons, only men take the subway, play guitars, play some baseball, watch Edward Scissorhands, contemplate mortality 
+        and... eventually die. A complete journey, really.
+        ...
+        """,
         text_alignment= 'justify')
-    
-    st.markdown(
-    "<p style='font-size:20px; font-weight:600; font-style:italic;'>Politics, but it is in fact Trump.</p>",
-    unsafe_allow_html=True
-    )
-    
-    st.markdown("""
-        Political humor does appear in male captions, but with no diversity: it’s Trump, Trump, and… Trump again. 
-        Apparently, when men enter politics in New Yorker cartoons, they do so wearing a red tie and making headlines.
-    """,
-    text_alignment= 'justify'
-    )
-    
-    st.markdown(
-    "<p style='font-size:20px; font-weight:600; font-style:italic;'>Only men get the full life arc.</p>",
-    unsafe_allow_html=True
-)
-    st.markdown("""    
-    Certain themes appear exclusively in male-labeled captions: transportation, death, arts & music, and pop culture. 
-    According to these cartoons, only men take the subway, play guitars, play some baseball, watch Edward Scissorhands, contemplate mortality 
-    and... eventually die. A complete journey, really.
-    ...
-    """,
-    text_alignment= 'justify')
 else:
     plot_html(r"_webappp/assets/graph/topic_female.html")
-    st.markdown(
-    "<p style='font-size:20px; font-weight:600; font-style:italic;'>Karen is… just a name. Or is it?</p>",
-    unsafe_allow_html=True
-)
-    st.markdown("""
-    If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
-    it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
-    complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
-    full personality without the need of a backstory.
-    """,
-    text_alignment='justify') 
+    with st.expander("Karen is… just a name. Or is it?"):
+        st.markdown("""
+        If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
+        it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
+        complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
+        full personality without the need of a backstory.
+        """,
+        text_alignment='justify') 
     
-    st.markdown(
-    "<p style='font-size:20px; font-weight:600; font-style:italic;'>Women in politics: meet Hillary. That’s it.</p>",
-    unsafe_allow_html=True
-)
+    with st.expander("Women in politics: meet Hillary. That’s it."):
 
-    st.markdown("""
-    Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
-    only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
-    The absence of other female political figures is striking... and telling...
-    """, 
-    text_alignment='justify') 
+        st.markdown("""
+        Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
+        only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
+        The absence of other female political figures is striking... and telling...
+        """, 
+        text_alignment='justify') 
 
 st.divider()  
 
