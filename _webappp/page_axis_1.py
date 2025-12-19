@@ -29,21 +29,31 @@ st.write(
     Take a moment to trust your first reaction before going any further.
     """
 )
+col1, col2 = st.columns(2)
 
-st.image("data/newyorker_caption_contest_virgin/images/592.jpg", width=700)
-#st.write("'We're not getting Shakespeare, but about every three minutes we get a presidential tweet.'")
-st.markdown(
+with col1:
+    st.write("")
+    st.image("data/newyorker_caption_contest_virgin/images/592.jpg", width=650)
+    #st.write("'We're not getting Shakespeare, but about every three minutes we get a presidential tweet.'")
+    st.markdown(
     "<h3 style='text-align: center;'>We're not getting Shakespeare, but about every three minutes we get a presidential tweet.</h3>",
     unsafe_allow_html=True)
-st.image("data/newyorker_caption_contest_virgin/images/665.jpg", width=700)
-st.markdown(
+
+with col2:
+    st.write("")
+    st.image("data/newyorker_caption_contest_virgin/images/665.jpg", width=650)
+    st.markdown(
     "<h3 style='text-align: center;'>Lunch is on me.</h3>",
     unsafe_allow_html=True)
+
+
+
+
 st.divider()
 
 st.write(
     """
-    The two captions you just read are the very best and very worst of all captions combined in 10 years of contests. 
+    The two captions you just read are the very best and very worst of all captions combined in eight years of contests. 
     The first one was unanimously voted not funny with 6 467 votes while the second received 15 232 votes for funny.
     Are you surprised by this large difference?
 
@@ -53,14 +63,14 @@ st.write(
     """
 )
 
+st.divider()
 st.subheader("Let's study what makes captions funny")
 
 st.write(
     """
     Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
     Could it be a general pattern? Let’s find out by comparing the funniest and least funny captions, using the 
-    extreme quantiles of our funny score distribution(0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each. We then 
-    compare several features and the results are shown in the following figures. 
+    extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each. We compared several features and assessed the statistical significance of the results using a Student’s t-test. The results are shown in the following figures. 
     Both groups use mostly neutral words, although the least funny captions show more variability.
     Subjectivity differs significantly: funny captions tend to be more objective. 
     No clear differences in word count, punctuation.

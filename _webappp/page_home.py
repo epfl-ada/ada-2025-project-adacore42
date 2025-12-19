@@ -19,7 +19,11 @@ st.markdown(
     "<h3 style='text-align: center;'>A reflection of Society, Politics, and Stereotypes</h3>",
     unsafe_allow_html=True
 )
-st.image("data/newyorker_caption_contest_virgin/images/733.jpg", width=700)
+
+col1, col2, col3 = st.columns([1, 3, 1]) # pour centrer 
+with col2:
+    st.image("data/newyorker_caption_contest_virgin/images/733.jpg", width=700)
+
 #"They don't hate us because we're wolves; they hate us because we're lawyers."
 st.markdown(
     "<h5 style='text-align: center;'>They don't hate us because we're wolves; they hate us because we're lawyers.</h5>",
@@ -76,6 +80,10 @@ with methodsNglance_c:
     )
     ### PLEASE FIX :
     #st.page_link("page_methods.py", label="Go to Methods Page", icon="➡️") # do not work yet PLEASE FIX
+    HomePageAxis_C(
+        title=PD.METHODS.value.title,
+        description=PD.METHODS.value.description,
+        axisPath=PD.METHODS.value.path)
 
     st.divider()
 
@@ -122,9 +130,11 @@ st.write(
     We hope you enjoyed exploring societal reflections through humour with us! Now it's time to travel back home for hollidays. Merry christmas and don't forget your towel !
     """
 )
-st.image("data/newyorker_caption_contest_virgin/images/606.jpg", width=600)
+col1, col2, col3 = st.columns([1, 3, 1]) # pour centrer 
+with col2:
+    st.image("data/newyorker_caption_contest_virgin/images/606.jpg", width=600)
 #"They don't hate us because we're wolves; they hate us because we're lawyers."
-st.markdown(
+    st.markdown(
     "<h5 style='text-align: center;'>Is this Part 2 of Hitchhikers Guide to The Galaxy?</h5>",
     unsafe_allow_html=True)
 
