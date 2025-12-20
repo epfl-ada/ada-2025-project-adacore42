@@ -299,11 +299,9 @@ if st.button(
     st.session_state.plot_winners1 = not st.session_state.plot_winners1
 
 if st.session_state.plot_winners1:
-    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html",
-        height=600)
+    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html", height=600)
 else:
-    plot_html("_webappp/assets/graph/boxplot_topics_289.html",
-        height=600)
+    plot_html("_webappp/assets/graph/boxplot_topics_289.html", height=600)
     
 
 
@@ -322,14 +320,6 @@ st.markdown(
 
 
 
-st.markdown(
-    """
-    The *The New Yorker* winning caption *"I thought you’d be better at the endgame."* corresponds to the *Time, Clock, and Engame* topic, [TODO : EXPLAIN HUMOUR].
-    The *crowd-sourced ranking* winning caption *"What do you mean I don’t have time for another game?"* corresponds to the *Chess game or Life game* topic, [TODO : EXPLAIN HUMOUR].
-    """
-)
-
-
 
 st.markdown(
     """
@@ -343,68 +333,71 @@ st.markdown(
     Let's see how does that changes our topic analysis...
     """
 )
-plot_html(r"_webappp/assets/graph/enrichment_289.html",
-        height=600)
 
-st.markdown(
-    """
-    LALALA, interpréter le graphique. Taxes sont en moyenne 2.5 fios plus rpz dans le top 10% que dans la masse (40-60%)., emotionnal reactions (with haha!, don't you dare, ....) sont 2 fois plus rpz, les autres sont en moyenne autant treprésentées dans le top 10 que dans le reste des propositions.
 
-    **Concerning the proportion of captions with a score higher than 30/100** :
-    """
+
+
+choice = st.radio(
+    "Select your method:",
+    ["Enrichment score", "Proportion of caption above 30/100"],
+    horizontal=True
 )
 
+if choice == "Enrichment score":
+
+    plot_html(r"_webappp/assets/graph/enrichment_289.html", height=600)
+
+    st.markdown(
+        """
+        LALALA, interpréter le graphique. Taxes sont en moyenne 2.5 fios plus rpz dans le top 10% que dans la masse (40-60%)., emotionnal reactions (with haha!, don't you dare, ....) sont 2 fois plus rpz, les autres sont en moyenne autant treprésentées dans le top 10 que dans le reste des propositions.
+
+        **Concerning the proportion of captions with a score higher than 30/100** :
+        """
+    )
 
 
-if "plot_winners2" not in st.session_state:
-    st.session_state.plot_winners2 = False
+if choice == "Proportion of caption above 30/100":
+    if "plot_winners2" not in st.session_state:
+        st.session_state.plot_winners2 = False
 
-if st.button(
-    "Show winning captions in topics",
-    key="btn_plot_winners2"
-):
-    st.session_state.plot_winners2 = not st.session_state.plot_winners2
+    if st.button(
+        "Show winning captions in topics",
+        key="btn_plot_winners2"
+    ):
+        st.session_state.plot_winners2 = not st.session_state.plot_winners2
 
-if st.session_state.plot_winners2:
-    plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html",
-        height=600)
-else:
-    plot_html("_webappp/assets/graph/prop_above_thresh_289.html",
-        height=600)
-
-
-
-
-
-st.markdown(
-    """
-    Blablabla commenter le graph ........... Commenter about taxes, about death_grim_reaper_afterlife, faire une remarque sur le topic pop_culture.
-    
-    Were does lie our two winning captions, do they belong to a topic where there is a high percentage of more funny captions ?
-    """
-)
-
-st.markdown(
-    """
-    LA AUSSI FAUDRAIT METTRE UN BOUTON POUR FAIRE POP LE GRAPHIQUE CI DESSOUS, A LA PLACE DE L'ANCIEN
-    """
-)
+    if st.session_state.plot_winners2:
+        plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html", height=600)
+    else:
+        plot_html("_webappp/assets/graph/prop_above_thresh_289.html", height=600)
 
 
 
-
-st.markdown(
-    """
-    Is the winning topic also the one that outperforms overall ? In this case not at all ! The topic that generally outperforms is the one refering to Taxes, and to the famous idiom of the american statesman Benjamin Franklin:
-
-    'Our new Constitution is now established, and has an appearance that promises permanency; but in this world nothing can be said to be certain, except death and taxes.'
-
-    Commenter encore sur celaaaa .................
-    """
-)
+    st.markdown(
+        """
+        Blablabla commenter le graph ........... Commenter about taxes, about death_grim_reaper_afterlife, faire une remarque sur le topic pop_culture.
+        
+        Were does lie our two winning captions, do they belong to a topic where there is a high percentage of more funny captions ?
+        """
+    )
 
 
+    st.markdown(
+        """
+        Is the winning topic also the one that outperforms overall ? In this case not at all ! The topic that generally outperforms is the one refering to Taxes, and to the famous idiom of the american statesman Benjamin Franklin:
 
+        'Our new Constitution is now established, and has an appearance that promises permanency; but in this world nothing can be said to be certain, except death and taxes.'
+
+        Commenter encore sur celaaaa .................
+        """
+    )
+
+
+
+st.divider()
+
+
+st.subheader("Conclusion de l'axe 1")
 
 
 
