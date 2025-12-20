@@ -350,7 +350,7 @@ with behind_the_scene_2:
     path_1="_webappp/assets/graph/topic_male.html",
     label_2="Women",
     path_2="_webappp/assets/graph/topic_female.html",
-    center_ratio=3,
+    center_ratio=CENTER_RATIO,
     isImage=False,
     height=450,
     additionalComponent_1=additionalComponent_1,
