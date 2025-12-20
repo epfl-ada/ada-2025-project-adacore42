@@ -3,6 +3,7 @@ import pandas as pd
 from _webappp.assets.app_content import PagesData
 from _webappp.assets.app_definitions import *
 from src.utils.general_utils import plot_html
+from _webappp.assets.app_design import *
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Containered structure 
@@ -45,7 +46,7 @@ what_we_learned_4 = st.container()
 
 with behind_the_punchline_0:
 
-    st.header("Behind the Punchline: The representation of gender")
+    st.title("Behind the Punchline: The representation of gender")
     st.write(
         """
         What if your understanding of gender came from a single source: 
@@ -344,6 +345,23 @@ with behind_the_scene_2:
             """
             )
 
+    TwoTabGraph_C(  
+    label_1="Men",  
+    path_1="_webappp/assets/graph/topic_male.html",
+    label_2="Women",
+    path_2="_webappp/assets/graph/topic_female.html",
+    center_ratio=3,
+    isImage=False,
+    height=450,
+    additionalComponent_1=additionalComponent_1,
+    additionalComponent_2=additionalComponent_2
+    )
+
+
+
+
+
+
     st.divider()  
 
     st.subheader("So what did we learn?")
@@ -377,22 +395,7 @@ with behind_the_scene_2:
 
 
 
-    TwoTabGraph_C(  
-        label_1="Men",  
-        path_1="_webappp/assets/graph/topic_male.html",
-        label_2="Women",
-        path_2="_webappp/assets/graph/topic_female.html",
-        center_ratio=3,
-        isImage=False,
-        height=450,
-        additionalComponent_1=additionalComponent_1,
-        additionalComponent_2=additionalComponent_2
-
-    )
-
-
-
-
+ 
 
 
 
@@ -463,7 +466,7 @@ with gender_crowd_3:
         height=450
     )
 
-    
+
     st.write(
         """
         At first glance, the result is surprising: the curves are almost identical.

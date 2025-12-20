@@ -20,7 +20,7 @@ class Tovarisch:
 
 class PageDataFormat:
     TITLE_IMG_DIR = "_webappp/assets/title_img/"
-    TitleImageWidth = 400
+    TitleImageWidth = 200
 
     def __init__(self, path: str, title: str, pathTitleImg: str = "", description: str = ""):
         self.path = path
@@ -30,8 +30,8 @@ class PageDataFormat:
 
     def get_page(self):
         return st.Page(self.path, title=self.title)
-    
-    def get_titleImage(self, width: int = 400):
+
+    def get_titleImage(self, width: int = 200):
         return st.image(self.titleImagePath, width=width)
     
     def get_title(self):
@@ -41,7 +41,7 @@ class PageDataFormat:
 
     def page_firstBlock(self):
         st.title(self.title)
-        col1, col2 = st.columns([1, 3], vertical_alignment="center")
+        col1, col2 = st.columns([2, 5], vertical_alignment="center")
         with col1:
             st.image(self.titleImagePath, self.TitleImageWidth)
         with col2:
@@ -104,13 +104,20 @@ def get_absolute_project_root():
 class ImageCaptionCenter_C:
     def __init__(self, image_path, caption, center_ratio=2):
         """
+        image_path : str
+        caption   : str | list[str]
         center_ratio: relative width of the middle column
         """
-        self.center_ratio = center_ratio
         self.image_path = image_path
-        self.caption = caption
-        self.render()
+        self.center_ratio = center_ratio
 
+        # Normalize caption to list
+        if isinstance(caption, str):
+            self.caption = [caption]
+        else:
+            self.caption = caption
+
+        self.render()
 
     def render(self):
         col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
@@ -121,10 +128,15 @@ class ImageCaptionCenter_C:
                 use_container_width=True
             )
 
+            captions_html = "".join(
+                f"<p style='text-align:center; margin: 0.6rem 0; font-style: italic;'>{c}</p>"
+                for c in self.caption
+            )
+
             st.markdown(
                 f"""
-                <div style="text-align:center; margin-top: 0.75rem;">
-                    <h5>{self.caption}</h5>
+                <div style="margin-top: 1rem;">
+                    {captions_html}
                 </div>
                 """,
                 unsafe_allow_html=True

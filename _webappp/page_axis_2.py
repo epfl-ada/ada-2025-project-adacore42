@@ -1,24 +1,23 @@
 import streamlit as st
 from _webappp.assets.app_content import PagesData
 from src.utils.general_utils import plot_html
+from _webappp.assets.app_design import *
+from _webappp.assets.app_definitions import *
 
-pageData = PagesData.AXIS_2.value
-
-pageData.page_firstBlock()
-
-st.write(
-    """
+PagesData.AXIS_2.value.description = """
     Humour is something so hard to model, that it is often simpler to look for patterns surrounding certain topics rather than trying to directly model exactly what makes something funny. In this section of our story on humour in  the New Yorker Caption Contest, we focus on occupational references in captions. Why? Our whole lives are oriented around our works and professions, thus it is no suprise that occupations have tunneled their way into our humour. Look at the figure below and decide which caption you find the funniest! 
     """
+
+PagesData.AXIS_2.value.page_firstBlock()
+
+ImageCaptionCenter_C(
+    image_path="data/newyorker_caption_contest_virgin/images/595.jpg",
+    caption=[
+        "They didn't say who... they just said one of us won't be here in the spring...",
+        "Surprise, surprise. The new manager is a fat white guy with no pants.",
+        "I hear he had a meltdown after the holidays last year.",
+    ],
 )
-
-st.divider()
-st.image("data/newyorker_caption_contest_virgin/images/595.jpg", width=700)
-st.markdown('<p style="text-align:center;"><em> I hear he had a meltdown after the holidays last year.</em></p>', unsafe_allow_html=True)
-st.markdown('<p style="text-align:center;"><em> Surprise, surprise. The new manager is a fat white guy with no pants.</em></p>', unsafe_allow_html=True)
-
-st.markdown('<p style="text-align:center;"><em> They didn\'t say who...they just said one of us won\'t be here in the spring... </em></p>', unsafe_allow_html=True)
-
 st.write( 
     """
     The captions listed above are some of the funniest captions submitted for the given cartoon in caption contest. The winner was the second caption, which makes a reference to managers and plays on the stereotype of managers and corporate culture. You might say, okay, this is just one cartoon, but occupational references are actually quite common in our everyday humour. If the reader is interested in exploring how occupational humour is present, performs, and is distributed across the New Yorker Caption Contest dataset, then we encourage them to read on!
@@ -41,11 +40,14 @@ st.write("""
         After all this text, I am sure you will enjoy a cartoon break! Here is a cartoon from contest #661 that features some occupational humour!   
          """
 )
-st.image("data/newyorker_caption_contest_virgin/images/661.jpg", width=700)
-st.markdown("<p style='text-align: center;'> I am pleased to announce that Dopey will be leaving us to pursue a career as White House Chief of Staff. </em></p>", unsafe_allow_html = True)
-st.markdown("<p style='text-align: center;'><em> Grouchy, you'll be Press Secretary, Dopey you'll be Attorney General... </em></p>", unsafe_allow_html = True)
-st.markdown("<p style='text-align: center;'> Really? All of you are running for the Democratic presidential nomination? </em></p>", unsafe_allow_html = True)
-
+ImageCaptionCenter_C(
+    image_path="data/newyorker_caption_contest_virgin/images/661.jpg",
+    caption=[
+        "I am pleased to announce that Dopey will be leaving us to pursue a career as White House Chief of Staff.",
+        "Really? All of you are running for the Democratic presidential nomination?",
+        "Grouchy, you'll be Press Secretary, Dopey you'll be Attorney General...",
+    ],
+)
 st.divider()
 
 st.write("""

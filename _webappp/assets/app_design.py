@@ -12,6 +12,17 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.markdown(
+    """
+    <style>
+    li {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 
