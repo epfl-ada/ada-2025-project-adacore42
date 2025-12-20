@@ -35,7 +35,10 @@ st.markdown(
     text_alignment= 'justify'
 )
 
-st.image("data/newyorker_caption_contest_virgin/images/582.jpg", width=600)
+col1, col2, col3 = st.columns([1, 3, 1]) # pour centrer 
+with col2:
+    st.image("data/newyorker_caption_contest_virgin/images/582.jpg", width=600)
+    
 st.markdown(
     "<h3 style='text-align: center;'>Yes, I see the train but I think we can beat it.</h3>",
     unsafe_allow_html=True

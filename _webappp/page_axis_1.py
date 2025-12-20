@@ -20,7 +20,7 @@ plots = PWA.load_plots()
 st.title("What is considered funny?")
 st.markdown(
     """
-    Welcome to this section, where we explore some of the mechanisms behind humor.
+    Welcome to this section where we explore some of the mechanisms behind humor !
     """
 )
 st.divider()
@@ -109,8 +109,8 @@ with col2:
 
 st.markdown(
     """
-    Was our first intuition wrong? well maybe not totally, when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
-    suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends.
+    Was our first intuition wrong? Well maybe not totally, because when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
+    suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends. So let's approach the task with another angle.
     """
 )
 col1, col2 = st.columns([1, 2])
@@ -124,14 +124,12 @@ with col1:
             height: 600px;
         ">
             <p style="font-size:16px; line-height:1.6;">
-            So let's approach the task with another angle. We will now compare the best and worth captions for each contest!
+            We will now compare the best and worth captions for each contest!
             This give us a dataset with 384 captions for each group.
             <br><br>
-            The result ... 
+            The results now show a significant difference between the two groups in terms of word count and punctuation usage. The least funny captions tend to be longer and contain more punctuation.
             <br><br>
-            Subjectivity is no longer significant, but word count and punctuation become important. The funniest captions are indeed shorter, with a median length of around 10 words. 
-            <br><br>
-            ...
+            Subjectivity, on the other hand, is no longer significantly different between the groups, and sentiment polarity follows very similar distributions. This suggests that using more positive or negative words does not, by itself, influence the perception of funniness.
             </p>
         </div>
         """,
@@ -145,21 +143,32 @@ with col2:
         height=600
     )
 
+st.markdown(
+    """
+    A first conclusion we can draw here is that it appear there is a difference in the surface features of funnier cpations and not funny captions. Especially in the number of words and number of punctiations.
+    We can now turn to another question : what are these captions actually talking about?
+    """)
 
 
 st.divider()
 
 
-st.subheader("Are there any topics to best create funniness and win the contest ?")
+st.subheader("Are there best topics to be funny and win the contest ?")
 st.markdown(
     """
-    Now that we have tried to analyse what elements makes a joke funnier, we will dive into caption-topics clustering, to try to see if there is some topics better than other, some that creates more fun.
-    An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
+    We will now dive into an analysis of caption topics. To do so, we will first cluster captions according to their topics, and then examine where the winning captions stand.
+
+    There are two winning captions: one chosen by the public vote, and the other selected by the New Yorker editorial team. 
+    
+    To illustrate this, we will focus on a single contest, the one from May 2022, featuring the cartoon below. Let’s see what we can discover!
     """)
+#Now that we have tried to analyse what elements makes a joke funnier, we will dive into caption-topics clustering, to try to see if there is some topics better than other, some that creates more fun.
+#An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
+
 
 with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?"): 
     """
-    a redigeeeeer
+    a redigeeeeer --> toujours besoin avec modif text ?K.
     """
 
 
@@ -395,6 +404,17 @@ st.markdown(
 
 
 
+st.divider()
+
+
+st.subheader("Can we predict fun?")
+st.markdown(
+    """
+    As we learned about features of captions and their relativity to funny metric we tried to create a model that would captures the fun. This part of the work was actually very unconcluant
+    with variance explained ... There is a lot of variability in the data and simple feature that have been shown to be differnet in different groups are not actually enough to predict fun and more 
+    advance feature could be taken into account such as .. as they have done it ....
+    """
+)
 
 st.divider()
 st.markdown(
@@ -402,37 +422,4 @@ st.markdown(
 
     """
 )
-
-
-
-# Un exemple de coment plotter un plot a l'aide de plotly
-if plots:
-    plot = plots[0]
-
-    # Plotly line figure
-    fig = go.Figure()
-
-    fig.add_trace(
-        go.Scatter(
-            x=plot.Y_data,
-            y=plot.X_data,
-            mode="lines",
-            line=dict(width=1),
-            name=plot.title,
-        )
-    )
-
-    fig.update_layout(
-        title=plot.title,
-        xaxis_title=plot.X_label,
-        yaxis_title=plot.Y_label,
-        template="plotly_white",
-        height=400,
-        margin=dict(l=40, r=40, t=50, b=40),
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-else:
-    st.error("No stored plots found.")
 

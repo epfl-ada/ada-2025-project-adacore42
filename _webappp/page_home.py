@@ -3,6 +3,11 @@ from _webappp.assets.app_definitions import HomePageAxis_C
 from _webappp.assets.app_content import PagesData as PD
 from _webappp.assets.app_definitions import AppParams as AP
 
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Definition style button page 
+# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+
 st.markdown(
     """
     <style>
@@ -22,6 +27,20 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+st.markdown("""
+<style>
+div[data-testid="stAlert"] {
+    background-color: rgba(76, 175, 80, 0.12);  /* vert clair transparent */
+    border-left: 6px solid #4CAF50;            /* bande verte */
+    color: #333333;                            /* texte gris foncé */
+}
+
+div[data-testid="stAlert"] svg {
+    color: #333333;                            /* icône verte */
+}
+</style>
+""", unsafe_allow_html=True)
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Title and Header 
@@ -84,7 +103,7 @@ with methodsNglance_c:
     st.subheader("Methods at a Glance")
 
     "**Funny Score**"  
-    st.info("We created a metric that woul take better into account the perception of funny for higher number of people.")
+    st.info("We built a metric that captures what most people find funny and not funny.")
 
     "**Semantic Similarity & Clustering** "
     st.info("SBERT embeddings (all-MiniLM-L6-v2), K-means clusters, UMAP projections, and cluster quality evaluation via intra- vs inter-cluster similarity.")
