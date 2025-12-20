@@ -89,6 +89,11 @@ def plot_html(path, height=450):
 
     st.components.v1.html(html_content, height=height, scrolling=False)
 
+
+def plot_jpg(path, width=600):
+    st.image(path, width=width)
+
+
 def plot_wordcloud(path, graph_name, word_type, gender):
     with open(path, "rb") as f:
         data = pickle.load(f)

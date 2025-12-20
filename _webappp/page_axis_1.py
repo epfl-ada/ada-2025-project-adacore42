@@ -4,9 +4,7 @@ import numpy as np
 import pandas as pd
 import random
 
-from src.utils.general_utils import plot_html
-from src.utils.general_utils import plot_cartoon
-from src.utils.general_utils import plot_html
+from src.utils.general_utils import plot_html, plot_jpg, plot_cartoon
 
 from _webappp.assets.app_content import PagesData
 from _webappp.assets.app_definitions import *
@@ -221,22 +219,34 @@ st.header("Are there best topics to be funny and win the contest ?")
 
 
 """
-We will now dive into an analysis of caption topics. To do so, we will first cluster captions according to their topics, and then examine where the winning captions stand.
+We will now dive into an analysis of caption topics. To do so, we will first cluster captions according to their topics, using a BERTtopic model, analyse if some topics create more fun than others, and then examine where the winning captions stand.
 
-There are two winning captions: one chosen by the public vote, and the other selected by the New Yorker editorial team. 
-
-To illustrate this, we will focus on a single contest, the one from May 2022, featuring the cartoon below. Let’s see what we can discover!
+To illustrate this, we will focus on a single contest, the one from May 23, 2022, featuring the cartoon below. Let’s see what we can discover!
 """
 
 
-#Now that we have tried to analyse what elements makes a joke funnier, we will dive into caption-topics clustering, to try to see if there is some topics better than other, some that creates more fun.
-#An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
+with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?"): 
+    st.markdown(
+        """
+        There are two winning captions: one chosen by the public vote (referenced in <span style="color: orange;">orange</span>), and the other selected by the The New Yorker editorial team (referenced in <span style="color: blue;">blue</span>).
+        """,
+        unsafe_allow_html=True
+    )
 
 
-with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?", expanded=AP.expanders): 
-    """
-    a redigeeeeer --> toujours besoin avec modif text ?K.
-    """
+with st.expander("The magic of BERTopic"): 
+    st.markdown("""       
+        BERTopic is a topic modeling method that groups captions based on meaning, not just word frequency. Instead of counting how often words appear, it first turns each caption into a numerical representation, called an embedding, using a language model trained to understand context.
+            
+        Captions with similar meanings end up close to each other in this embedding space. BERTopic then clusters these captions and assigns each cluster a topic label based on the most representative words.
+
+        In short: BERTopic doesn’t ask “Which words appear together?” but rather “Which captions are saying roughly the same thing?”
+        
+        For more technical details about this model, see the Methods.
+        """,
+    text_alignment= 'justify')
+
+
 
 ImageCaptionCenter_C(
     image_path="data/newyorker_caption_contest_virgin/images/801.jpg",
@@ -267,8 +277,6 @@ row = df_captions.iloc[st.session_state.random_caption_idx]
 
 
 
-
-
 st.subheader("Caption example:")
 
 col_11, col_22 = st.columns([1, 1])
@@ -277,7 +285,7 @@ with col_11:
     st.write(f"*Topic: {row['aggregated_topic']}*")
 
 with col_22:
-    if st.button("Show random caption", type="primary"):
+    if st.button("Want to see another caption ?", type="primary"):
         new_idx = st.session_state.random_caption_idx
         while new_idx == st.session_state.random_caption_idx:
             new_idx = random.randint(0, len(df_captions) - 1)
@@ -352,10 +360,10 @@ st.divider()
 
 
 st.subheader("Identify common topics among all captions")
+
 """
-Using HDBSCAN clustering algorithm and BERTtopic embeddings [SOURCE], we will try to identify common topics of differents captions within a contest, and here are the results.
-We manually aggregated the found clusters into a few aggregated ones, to retrieve meaning of those results.
-It took a lot of time to do it by hand, but isn't it better to analyse a douzain of topics than hundreds, no ? :)
+Using the BERTtopic embeddings and HDBSCAN clustering algorithm, we identify common topics of differents captions within a contest.
+This gives a dozen of different clusters, we manually analyse them and aggregated into a few meaningful ones.
 Human inspections allows us to control the results, where humoristics captions are really hard to clusterize automatically, because of all things that makes humour so particular, almost indescribable...
 
 
@@ -399,6 +407,19 @@ Another unexpected thing arised from this topic detection : Bureaucracy ? Taxes 
 
 Were does lie our two winning captions in those topics ?
 """
+
+
+with st.expander("See more about the distribution of our topics"):
+    plot_jpg("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
+    """
+    This graph shows how standardized humor scores (funny_score_scaled) are distributed across different themes. Each theme is represented in a sub-graph, with two elements:
+    - Histogram: illustrates the relative frequency of scores.
+    - KDE (Kernel Density Estimation) curve: indicates the relative probability that a score will take a certain value. The higher the curve, the more likely it is that the scores will fall within that range. KDE allows us to see the overall shape of the distribution, regardless of the exact number of measurements.
+    
+    
+    All distributions observed show significant positive asymmetry (statistically significant skewness, p < 0.05), which means that scores tend to be concentrated at lower values with a tail extending towards higher values.
+    """
+
 
 
 
