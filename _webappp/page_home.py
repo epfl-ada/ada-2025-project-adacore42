@@ -60,6 +60,12 @@ st.write(
     """
 )
 
+st.markdown(
+    '<a href="https://www.newyorker.com/cartoons/contest" target="_blank">'
+    'Go to The New Yorker Cartoon Contest</a>',
+    unsafe_allow_html=True
+)
+
 st.divider()
 
 
