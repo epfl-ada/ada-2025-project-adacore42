@@ -227,11 +227,7 @@ with behind_the_scene_2:
         One way to examine depiction is to look at language itself.
         Which words tend to surround men? Which describe women?
 
-        We extracted verbs and adjectives from gender-labeled captions and counted how
-        often they appeared. The result is a set of word clouds showing the 50 most
-        frequent descriptive words for each gender.
-
-        Word size reflects frequency; color is purely aesthetic.
+        **TO ADD**: METHOD
         """)
 
     TwoTabGraph_C(
@@ -249,11 +245,19 @@ with behind_the_scene_2:
 
     st.write(
         """
-        At first glance, the clouds look similar, men and women seem to share
-        much of the same vocabulary. But when we look closer, we see
-        a more intersting story.
-            
-        **TO COMPLETE**
+        At first glance, both word clouds look busy, colorful, and playfulm just like the contest itself. But if we imagine learning about gender only through these captions, 
+        a pattern quickly emerges.
+
+        On the men’s side, the vocabulary leans toward power, systems, and abstraction. Words like stocks, reinvent, president, employee, diversity, and cop dominate. 
+        Men appear embedded in institutions: finance, work, authority, and public life. Even when humor turns negative (abominable, fired), it often frames men as actors 
+        within larger structures: bosses who fail, leaders who disappoint, systems that collapse. Men are doing things, running things or breaking things.
+
+        The women’s word cloud, by contrast, pulls the reader closer to the body, appearance, and relationships. Words like mom, lipstick, lips, ruffled, collar, wedding, 
+        divorce, and served suggest women are framed through how they look, who they belong to, or what role they play for others. Even neutral words like she or papers feel 
+        contextualized by domestic or relational settings. Humor here leans less toward institutions and more toward personal identity and social expectation.
+
+        So if this contest were our only window into gender, we might conclude this:
+        men inhabit the world, while women inhabit the frame.
         """
         )
 
