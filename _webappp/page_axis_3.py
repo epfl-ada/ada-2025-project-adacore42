@@ -5,7 +5,7 @@ from src.utils.general_utils import plot_html
 
 st.markdown("# Behind the Punchline: The representation of gender")
 
-# pageData = PagesData.AXIS_3.value ALED 
+# pageData = PagesData.AXIS_3.value 
 
 # pageData.page_firstBlock()
 
@@ -35,7 +35,7 @@ st.markdown(
     text_alignment= 'justify'
 )
 
-col1, col2, col3 = st.columns([1, 3, 1]) # pour centrer 
+col1, col2, col3 = st.columns([1, 3, 1]) # for centering
 with col2:
     st.image("data/newyorker_caption_contest_virgin/images/582.jpg", width=600)
     
@@ -78,10 +78,14 @@ plot_choice = st.radio(
     horizontal=True
 )
 
+col1, col2, col3 = st.columns([1, 3, 1]) # for centering
+
 if plot_choice == "Cartoons":
-    plot_html(r"_webappp/assets/graph/counts_cartoons.html", height=450)
+    with col2:
+        plot_html(r"_webappp/assets/graph/counts_cartoons.html", height=450)
 else:
-    plot_html(r"_webappp/assets/graph/counts_captions.html", height=450)
+    with col2: 
+        plot_html(r"_webappp/assets/graph/counts_captions.html", height=450)
 
 st.divider()
 
@@ -112,11 +116,14 @@ wc_type = st.radio(
     ["Verbs", "Adjectives"],
     horizontal=True
 )
+col1, col2, col3 = st.columns([1, 3, 1]) # for centering
 
 if wc_type == "Verbs":
-    st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=1000)
+    with col2:
+        st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=1000)
 else:
-    st.image(r"_webappp/assets/graph/wordclouds_adjs.png", width=1000)
+    with col2: 
+        st.image(r"_webappp/assets/graph/wordclouds_adjs.png", width=1000)
 
 st.markdown("""
     At first glance, the clouds look similar, men and women seem to share
