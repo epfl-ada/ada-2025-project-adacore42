@@ -479,6 +479,22 @@ TwoTabGraph_C(
     additionalComponent_2=additionalComponent_2
 )
 
+# IL EST PASSE OU CE BOUTTON ?
+#    if "plot_winners2" not in st.session_state:
+#        st.session_state.plot_winners2 = False
+#
+#    if st.button(
+#        "Show winning captions in topics",
+#        key="btn_plot_winners2"
+#    ):
+#        st.session_state.plot_winners2 = not st.session_state.plot_winners2
+#
+#    if st.session_state.plot_winners2:
+#        plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html", height=600)
+#    else:
+#        plot_html("_webappp/assets/graph/prop_above_thresh_289.html", height=600)
+
+
 st.divider()
 
 
