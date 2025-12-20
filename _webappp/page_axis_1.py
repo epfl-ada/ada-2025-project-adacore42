@@ -299,9 +299,11 @@ if st.button(
     st.session_state.plot_winners1 = not st.session_state.plot_winners1
 
 if st.session_state.plot_winners1:
-    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html")
+    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html",
+        height=600)
 else:
-    plot_html("_webappp/assets/graph/boxplot_topics_289.html")
+    plot_html("_webappp/assets/graph/boxplot_topics_289.html",
+        height=600)
     
 
 
@@ -341,7 +343,8 @@ st.markdown(
     Let's see how does that changes our topic analysis...
     """
 )
-plot_html(r"_webappp/assets/graph/enrichment_289.html")
+plot_html(r"_webappp/assets/graph/enrichment_289.html",
+        height=600)
 
 st.markdown(
     """
@@ -363,9 +366,11 @@ if st.button(
     st.session_state.plot_winners2 = not st.session_state.plot_winners2
 
 if st.session_state.plot_winners2:
-    plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html")
+    plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html",
+        height=600)
 else:
-    plot_html("_webappp/assets/graph/prop_above_thresh_289.html")
+    plot_html("_webappp/assets/graph/prop_above_thresh_289.html",
+        height=600)
 
 
 
