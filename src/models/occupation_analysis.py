@@ -1,5 +1,6 @@
 #It must be disclosed that this code was generated with the assistance of AI tools, either whole blocks or certain functionalities.
 #The AI used: ChatGPT-5 by OpenAI and GitHub Copilot.
+#plotting was overall done by ChatGPT, to convert between plotly and matplotlib
 
 import numpy as np
 from scipy.stats import ttest_ind
@@ -18,6 +19,10 @@ import vaderSentiment
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import nltk
 from nltk.corpus import wordnet as wn
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+from itertools import combinations
 
 
 
@@ -140,8 +145,7 @@ class OccupationAnalysis:
         "Domestic and Personal Care": [
             "babysitter","nanny","caregiver","housekeeper","house sitter","homemaker","child care","home health aide",
             "personal shopper","personal assistant","personal stylist","life coach","doula"
-        ],
-        "Miscellaneous": []
+        ]
         }
 
         # category: list of canonical occupations
@@ -303,6 +307,7 @@ class OccupationAnalysis:
         #fix occupation categories
         for category, occupations in self.occupation_categories.items():
             self.occupation_categories[category] = [occ for occ in occupations if occ.lower() not in terms_to_remove]
+
     #---------------------------------------------------------#
     # Exploratory analysis functions
     # --------------------------------------------------------#   
@@ -441,60 +446,85 @@ class OccupationAnalysis:
     
     #--------------------------------------------------------#
     # adding a scores column to the occupation dataframe, without rebuilding everything
-    # def add_scores_to_occupation_dataframe(self, overwrite=True):
-    #     '''
-    #     Adds a funniness scores column to the occupation dataframe.
-    #     '''
-    #     funniness_by_occ = {occ: [] for occ in self._occupation_df['term']}
+    def add_scores_to_occupation_dataframe(self, overwrite=True):
+        '''
+        Adds a funniness scores column to the occupation dataframe.
+        '''
+        funniness_by_occ = {occ: [] for occ in self._occupation_df['term']}
 
-    #     #get the scores
-    #     for idx, doc in enumerate(self.documents):
-    #         if (idx+1) % 1000 == 0:
-    #             print(f"Processing document {idx+1}/{len(self.documents)}")
+        #get the scores
+        for idx, doc in enumerate(self.documents):
+            if (idx+1) % 1000 == 0:
+                print(f"Processing document {idx+1}/{len(self.documents)}")
             
-    #         doc_lower = doc.lower()
-    #         score = self.scores[idx]
+            doc_lower = doc.lower()
+            score = self.scores[idx]
 
-    #         for syn, occ in self.syn_to_occ.items():
-    #             if syn in doc_lower and occ in funniness_by_occ:
-    #                 funniness_by_occ[occ].append(score)
+            for syn, occ in self.syn_to_occ.items():
+                if syn in doc_lower and occ in funniness_by_occ:
+                    funniness_by_occ[occ].append(score)
 
-    #     self._occupation_df['funniness_scores'] = self._occupation_df['term'].map(funniness_by_occ)
+        self._occupation_df['funniness_scores'] = self._occupation_df['term'].map(funniness_by_occ)
 
-    #     #save
-    #     if overwrite and self.occupation_df_path is not None:
-    #         self._occupation_df.to_pickle(self.occupation_df_path)
+        #save
+        if overwrite and self.occupation_df_path is not None:
+            self._occupation_df.to_pickle(self.occupation_df_path)
 
-    #     return self._occupation_df
+        return self._occupation_df
     
     #--------------------------------------------------------#
     #Plotting functions in html format for initial exploration
     #--------------------------------------------------------#
 
     #plotting top occupations by count
-    def plot_top_occupations_by_count(self, start = 0, end = 20, save_path=None):
+    def plot_top_occupations_by_count(self, start = 0, end = 20, save_path=None, plot_method = 'plotly', color = 'blugrn'):
         """
         Plots the top N occupation terms by frequency count.
         """
         df_plot = self._occupation_df.sort_values(by='term_count', ascending=False).iloc[start:end].copy()
-        hover_data = {
-            'num_contests': True,
-            'std_funniness': ':.2f',
-            'avg_funniness': ':.2f',
-            'num_contests': True,
-            'term': False
-        }
-        fig = px.bar(df_plot, x = 'term', y='term_count', hover_data = hover_data,
-                     title=f'Top Occupation Terms by Frequency Count (Ranks {start+1} to {end})')
-        
-        fig.update_traces(marker = dict(color = df_plot['avg_funniness'], colorscale = 'Viridis', line = dict(color = "rgba(0,0,0,0.7)", width = 1) ))
-        fig.update_layout(xaxis_title='Occupation Term', yaxis_title='Frequency Count', template = 'plotly_white', xaxis_tickangle = -45, height = 600, hovermode = 'closest', showlegend = False, title = dict(x = 0.5, xanchor = 'center', text = f"Top Occupations by Frequency Count (Ranks {start+1} to {end})<br><sub>Hover to see number of contests and funniness stats</sub>"))
-        if save_path:
-            fig.write_html(save_path)
-        fig.show()
+        if plot_method == 'plotly':
+            hover_data = {
+                'num_contests': True,
+                'std_funniness': ':.2f',
+                'avg_funniness': ':.2f',
+                'num_contests': True,
+                'term': False
+            }
+            fig = px.bar(df_plot, x = 'term', y='term_count', hover_data = hover_data,
+                        title=f'Top Occupation Terms by Frequency Count (Ranks {start+1} to {end})')
+            
+            fig.update_traces(marker = dict(color = df_plot['avg_funniness'], colorscale = color, line = dict(color = "rgba(0,0,0,0.7)", width = 1) ))
+            fig.update_layout(xaxis_title='Occupation Term', yaxis_title='Frequency Count', template = 'plotly_white', xaxis_tickangle = -45, height = 600, hovermode = 'closest', showlegend = False, title = dict(x = 0.5, xanchor = 'center', text = f"Top Occupations by Frequency Count (Ranks {start+1} to {end})<br><sub>Hover to see number of contests and funniness stats</sub>"))
+            if save_path:
+                fig.write_html(save_path)
+            fig.show()
+        elif plot_method == 'plt':
+            terms = df_plot["term"].values
+            counts = df_plot["term_count"].values
+
+            fig, ax = plt.subplots(figsize=(max(10, len(terms) * 0.4), 6))
+
+            ax.bar(terms,counts,color=color,edgecolor="black",linewidth=1)
+
+            ax.set_xlabel("Occupation Term")
+            ax.set_ylabel("Frequency Count")
+
+            plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+
+            ax.set_title(f"Top Occupations by Frequency Count (Ranks {start+1} to {end})",fontsize=12)
+
+            ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+            plt.tight_layout()
+
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+            plt.show()
+
 
     # plotting with dropdown menu
-    def plot_occupation_dropdown(self, page_size=10, save_path=None):
+    def plot_occupation_dropdown(self, page_size=10, save_path=None, color = 'blugrn'):
         """
         Plots an interactive dropdown to explore occupation statistics.
         """
@@ -513,7 +543,7 @@ class OccupationAnalysis:
                 x=df_page['term'],
                 y=df_page['term_count'],
                 visible = (page == 0),
-                marker=dict(color=df_page["term_count"], colorscale = 'Greens'),
+                marker=dict(color=df_page["term_count"], colorscale = color, line=dict(color="rgba(0,0,0,0.7)", width=1)),
                 hovertemplate=(
                     "<b>%{x}</b><br>"
                     "Caption count: %{y}<br>"
@@ -548,30 +578,68 @@ class OccupationAnalysis:
         fig.show()
 
     #plotting top occupations by average or median funniness
-    def plot_top_occupations_by_funniness(self, top_n=20, threshold = 50, save_path=None, measure='avg', ascending=False):
+    def plot_top_occupations_by_funniness(self, top_n=20, threshold = 50, save_path=None, measure='avg', ascending=False, plot_method = 'plotly', color = 'blugrn'):
         """
         Plots the top N occupation terms by average funniness score.
         """
         df_plot = self._occupation_df[self._occupation_df['term_count'] >= threshold].sort_values(by=f'{measure}_funniness', ascending=ascending).head(top_n).copy()
-        hover_data = {
-            'term_count': True,
-            'std_funniness': ':.2f',
-            'avg_funniness': ':.2f',
-            'median_funniness': ':.2f',
-            'term': False
-        }
-        title = 'Average' if measure == 'avg' else 'Median'
-        fig = px.bar(df_plot, x = 'term', y=f'{measure}_funniness', hover_data = hover_data,
-                     title=f'Top {top_n} Occupation Terms by  {title} Funniness Score')
-        
-        fig.update_traces(marker = dict(color = df_plot['term_count'], colorscale = 'Blues', line = dict(color = "rgba(0,0,0,0.7)", width = 1)))
-        fig.update_layout(xaxis_title='Occupation Term', yaxis_title=f'{title} Funniness Score', template = 'plotly_white', xaxis_tickangle = -45, height = 600, hovermode = 'closest', showlegend = False, title = dict(x = 0.5, xanchor = 'center', text = f"Top {top_n} Occupations by {title} Funniness<br><sub>Hover to see frequency and score variability</sub>"))
-        if save_path:
-            fig.write_html(save_path)
-        fig.show()
+        if plot_method == 'plotly':
+            hover_data = {
+                'term_count': True,
+                'std_funniness': ':.2f',
+                'avg_funniness': ':.2f',
+                'median_funniness': ':.2f',
+                'term': False
+            }
+            ascending_string = 'Bottom' if ascending else 'Top'
+            title = 'Average' if measure == 'avg' else 'Median'
+            title_string=  f'{ascending_string} {top_n} Occupation Terms by {title} Funniness Score'
+            fig = px.bar(df_plot, x = 'term', y=f'{measure}_funniness', hover_data = hover_data,
+                        title=title_string)
+            
+            fig.update_traces(marker = dict(color = df_plot['term_count'], colorscale = color, line = dict(color = "rgba(0,0,0,0.7)", width = 1)))
+            fig.update_layout(xaxis_title='Occupation Term', yaxis_title=f'{title} Funniness Score', template = 'plotly_white', xaxis_tickangle = -45, height = 600, hovermode = 'closest', showlegend = False, title = dict(x = 0.5, xanchor = 'center', text = f"Top {top_n} Occupations by {title} Funniness<br><sub>Hover to see frequency and score variability</sub>"))
+            if save_path:
+                fig.write_html(save_path)
+            fig.show()
+        elif plot_method == 'plt':
+            terms = df_plot["term"].values
+            scores = df_plot[f"{measure}_funniness"].values
+            title = "Average" if measure == "avg" else "Median"
+
+            fig, ax = plt.subplots(figsize=(max(10, len(terms) * 0.4), 6))
+
+            ax.bar(
+                terms,
+                scores,
+                color= color,   # Plotly default blue
+                edgecolor="black",
+                linewidth=1
+            )
+
+            ax.set_xlabel("Occupation Term")
+            ax.set_ylabel(f"{title} Funniness Score")
+
+            plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+
+            ax.set_title(
+                f"Top {top_n} Occupation Terms by {title} Funniness Score",
+                fontsize=12
+            )
+
+            ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+            plt.tight_layout()
+
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+            plt.show()
+            
+
 
     #plotting the distribution of a chosen occupation term
-    def plot_occupation_distribution(self, occupation_term, nbins = 30, save_path=None):
+    def plot_occupation_distribution(self, occupation_term, nbins = 30, save_path=None, plot_method = 'plotly', color = 'cornflowerblue'):
         """
         Plots the distribution of funniness scores for a given occupation term.
         """
@@ -587,17 +655,117 @@ class OccupationAnalysis:
         
         df_plot = pd.DataFrame({'funniness_score': scores})
 
-        fig = px.histogram(df_plot, x='funniness_score', nbins=nbins, marginal = "box",
-                         title=f'Distribution of Funniness Scores for "{occupation_term}"',
-                         hover_data = {'funniness_score': ':.2f'})
+        if plot_method == 'plotly':
+            fig = px.histogram(df_plot, x='funniness_score', nbins=nbins, marginal = "box",
+                            title=f'Distribution of Funniness Scores for "{occupation_term}"',
+                            hover_data = {'funniness_score': ':.2f'})
+            fig.update_traces(marker=dict(color=color, line=dict(color="rgba(0,0,0,0.7)", width=1)))            
+            fig.update_layout(xaxis_title='Funniness Score', yaxis_title='Count', template = 'plotly_white', height = 500, hovermode = 'closest', title = dict(x = 0.5, xanchor = 'center', text = f'Distribution of Funniness Scores for "{occupation_term}"'))
+            if save_path:
+                fig.write_html(save_path)
+            fig.show()
+
+        elif plot_method == 'plt':
+            scores = df_plot["funniness_score"].values
+
+            # Layout with boxplot on top and histogram below
+            fig = plt.figure(figsize=(8, 6))
+            gs = fig.add_gridspec(2, 1, height_ratios=[1, 4], hspace=0.05)
+
+            ax_box = fig.add_subplot(gs[0])
+            ax_hist = fig.add_subplot(gs[1], sharex=ax_box)
+
+            # Boxplot (marginal)
+            ax_box.boxplot(scores,vert=False,patch_artist=True,showfliers=True)
+
+            ax_box.set_yticks([])
+            ax_box.set_ylabel("")
+            ax_box.grid(False)
+
+            # Color box (Plotly default blue)
+            for patch in ax_box.artists:
+                patch.set_facecolor(color)
+                patch.set_alpha(0.8)
+
+            # Histogram
+            ax_hist.hist(
+                scores,
+                bins=nbins,
+                color= color,
+                alpha=0.8,
+                edgecolor="black"
+            )
+
+            ax_hist.set_xlabel("Funniness Score")
+            ax_hist.set_ylabel("Count")
+
+            # Clean up layout to mimic plotly_white
+            ax_hist.grid(axis="y", linestyle="--", alpha=0.4)
+
+            # Remove x labels from boxplot
+            plt.setp(ax_box.get_xticklabels(), visible=False)
+
+            # Centered title
+            fig.suptitle(
+                f'Distribution of Funniness Scores for "{occupation_term}"',fontsize=12,y=0.97)
+
+            plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+            plt.show()
+
+        return df_plot
+    
+    def plot_occupation_distribution_multiple(self, occupation_terms, nbins = 30, save_path=None, color = 'cornflowerblue'):
+        """
+        This is the same as above, but with a button to change occupation terms.
+        """
+        df = self.get_occupation_dataframe()
+        occupation_terms_lower = [term.lower() for term in occupation_terms]
+        sub_df = df[df['term'].str.lower().isin(occupation_terms_lower)]
+        if sub_df.empty:
+            raise ValueError("None of the specified occupation terms were found in the occupation dataframe.")
         
-        fig.update_layout(xaxis_title='Funniness Score', yaxis_title='Count', template = 'plotly_white', height = 500, hovermode = 'closest', title = dict(x = 0.5, xanchor = 'center', text = f'Distribution of Funniness Scores for "{occupation_term}"'))
+        fig = go.Figure()
+        terms = sub_df['term'].tolist()
+        for i, (_,row) in enumerate(sub_df.iterrows()):
+            scores = row['funniness_scores']
+            hist = go.Histogram(
+                x=scores,
+                nbinsx=nbins,
+                name=row['term'],
+                visible=(i == 0),
+                marker=dict(color=color, line=dict(color="rgba(0,0,0,0.7)", width=1)),
+                hovertemplate='Funniness Score: %{x:.2f}<br>Count: %{y}<extra></extra>'
+            )
+            fig.add_trace(hist)
+        buttons = []
+        for i, term in enumerate(terms):
+            visibility = [False] * len(terms)
+            visibility[i] = True
+            buttons.append(dict(
+                label=term,
+                method="update",
+                args=[{"visible": visibility},
+                    {"title": f'Distribution of Funniness Scores for "{term}"'}]
+            ))
+        fig.update_layout(
+            updatemenus = [dict(active=0, buttons=buttons, x = 0.5, xanchor = 'center', y = 1.15, yanchor = 'top')],
+            xaxis_title='Funniness Score',
+            yaxis_title='Count',
+            template = 'plotly_white',
+            height = 500,
+            title = f"Distribution of Funniness Scores for \"{terms[0]}\""
+        )
+        
         if save_path:
             fig.write_html(save_path)
         fig.show()
-        return df_plot
 
-    def plot_occupation_box_plot(self, occupation_terms, save_path = None):
+
+    def plot_occupation_box_plot(self, occupation_terms, save_path = None, plot_method = 'plotly', color = 'cornflowerblue'):
         """
         Plotting the box plot of the funniness score of multiple occupations on the same plot close to each other. 
         """
@@ -612,14 +780,64 @@ class OccupationAnalysis:
         #explode the funniness scores
         df_plot = df_reduced[['term', 'funniness_scores']].explode('funniness_scores')
 
-        fig = px.box(df_plot,x="term",y="funniness_scores",points="outliers", title="Funniness score distribution by occupation")
+        if plot_method == 'plotly':
+        
+            fig = px.box(df_plot,x="term",y="funniness_scores",points="outliers", title="Funniness score distribution by occupation", hover_data = {'funniness_scores': ':.2f', 'term': False})
 
-        fig.update_layout(xaxis_title="Occupation", yaxis_title="Funniness score", template="plotly_white", height=600, xaxis_tickangle=-45, hovermode="closest", title=dict(x=0.5, xanchor="center"))
+            fig.update_layout(xaxis_title="Occupation", yaxis_title="Funniness score", template="plotly_white", height=600, xaxis_tickangle=-45, hovermode="closest", title=dict(x=0.5, xanchor="center"))
 
-        if save_path:
-            fig.write_html(save_path)
+            fig.update_traces(marker=dict(color=color, line=dict(color="rgba(0,0,0,0.7)", width=1)), selector =dict(type="box"), )
 
-        fig.show()
+            if save_path:
+                fig.write_html(save_path)
+
+            fig.show()
+        elif plot_method == 'plt':
+            terms = df_plot["term"].unique()
+
+            data = [
+                df_plot.loc[df_plot["term"] == term, "funniness_scores"].values
+                for term in terms]
+
+            fig, ax = plt.subplots(figsize=(max(8, len(terms) * 0.5), 6))
+
+            bp = ax.boxplot(
+                data,
+                labels=terms,
+                patch_artist=True,
+                showfliers=True
+            )
+
+            # Match Plotly default blue
+            for box in bp["boxes"]:
+                box.set_facecolor(color)
+                box.set_alpha(0.8)
+
+            # Axis labels
+            ax.set_xlabel("Occupation")
+            ax.set_ylabel("Funniness score")
+
+            # Rotate x-axis labels
+            plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+
+            # Centered title
+            ax.set_title(
+                "Funniness score distribution by occupation",
+                loc="center",
+                fontsize=12
+            )
+
+            # Light grid like plotly_white
+            ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+            plt.tight_layout()
+
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+            plt.show()
+                    
+
 
 
     #--------------------------------------------------------#
@@ -698,7 +916,7 @@ class OccupationAnalysis:
             raise ValueError("One or both occupation terms have no associated funniness scores.")
         rows_occ1 = np.array(rows_occ1)
         rows_occ2 = np.array(rows_occ2)
-        
+
         n1 = len(rows_occ1)
         n2 = len(rows_occ2)
         greater = sum(1 for x in rows_occ1 for y in rows_occ2 if x > y)
@@ -720,12 +938,27 @@ class OccupationAnalysis:
         
         return delta
 
+
+    def pairwise_occupation_testing(self, occupation_list, alpha = 0.05):
+        pval_matrix = pd.DataFrame(np.ones((len(occupation_list), len(occupation_list))), index=occupation_list, columns=occupation_list)
+        delta_matrix = pd.DataFrame(np.zeros((len(occupation_list), len(occupation_list))), index=occupation_list, columns=occupation_list)
+
+        for occ_1, occ_2 in combinations(occupation_list,2):
+            _, p_value = self.compare_occupations(occ_1, occ_2, interpret = False)
+            delta = self.cliffs_delta_occupations(occ_1, occ_2, interpret = False)
+
+            pval_matrix.loc[occ_1, occ_2] = p_value
+            delta_matrix.loc[occ_1, occ_2] = delta
+            pval_matrix.loc[occ_2, occ_1] = p_value
+            delta_matrix.loc[occ_2, occ_1] = -delta # anti-symmetric
+
+        return pval_matrix, delta_matrix
     #--------------------------------------------------------#
     # Categorical analysis functions
     #--------------------------------------------------------#
     
     #plotting boxplot for category-level funniness scores
-    def plot_category_boxplot(self, order_by="median", save_path=None):
+    def plot_category_boxplot(self, order_by="median", save_path=None, color = 'cornflowerblue', plot_method = 'plotly'):
         '''
         Creates an interactive Plotly boxplot of funniness score distributions
         grouped by occupation category.
@@ -750,60 +983,140 @@ class OccupationAnalysis:
             stats.sort_values(by=order_by, ascending=False)["category"].tolist()
         )
 
-        # Create boxplot
-        fig = px.box(
-            df,
-            x="category",
-            y="funniness_score",
-            category_orders={"category": ordered_categories},
-            title=f"Funniness score distribution by occupation category (ordered by {order_by})"
-        )
+        if plot_method == 'plotly':
+            # Create boxplot
+            fig = px.box(
+                df,
+                x="category",
+                y="funniness_score",
+                category_orders={"category": ordered_categories},
+                title=f"Funniness score distribution by occupation category (ordered by {order_by})"
+            )
 
-        # Add sample size annotations
-        annotations = []
-        y_max = df["funniness_score"].max()
-        y_range = y_max - df["funniness_score"].min()
+            # Add sample size annotations
+            annotations = []
+            y_max = df["funniness_score"].max()
+            y_range = y_max - df["funniness_score"].min()
 
-        for _, row in stats.iterrows():
-            annotations.append(
-                dict(
-                    x=row["category"],
-                    y=y_max + 0.05 * y_range,
-                    text=f"n={int(row['count'])}",
-                    showarrow=False,
-                    font=dict(size=10),
+            for _, row in stats.iterrows():
+                annotations.append(
+                    dict(
+                        x=row["category"],
+                        y=y_max + 0.05 * y_range,
+                        text=f"n={int(row['count'])}",
+                        showarrow=False,
+                        font=dict(size=10),
+                        xanchor="center",
+                        bgcolor="rgba(255,255,255,0.8)",
+                        bordercolor="rgba(0,0,0,0.2)",
+                        borderwidth=1
+                    )
+                )
+            # Final layout
+            fig.update_layout(
+                xaxis_title="Occupation category",
+                yaxis_title="Funny score scaled",
+                template="plotly_white",
+                height=650,
+                xaxis_tickangle=-45,
+                annotations=annotations,
+                showlegend=False,
+                hovermode="closest",
+                title=dict(
+                    x=0.5,
                     xanchor="center",
-                    bgcolor="rgba(255,255,255,0.8)",
-                    bordercolor="rgba(0,0,0,0.2)",
-                    borderwidth=1
+                    text=(
+                        f"Funniness score distribution by occupation category<br>"
+                        f"<sub>{len(ordered_categories)} categories • "
+                        f"{len(df)} caption-category matches • "
+                        f"Global median: {df['funniness_score'].median():.2f}</sub>"
+                    )
                 )
             )
+            fig.update_traces(marker=dict(color=color, line=dict(color="rgba(0,0,0,0.7)", width=1)), selector=dict(type="box"))
+            if save_path:
+                fig.write_html(save_path)
 
-        # Final layout
-        fig.update_layout(
-            xaxis_title="Occupation category",
-            yaxis_title="Funny score scaled",
-            template="plotly_white",
-            height=650,
-            xaxis_tickangle=-45,
-            annotations=annotations,
-            showlegend=False,
-            hovermode="closest",
-            title=dict(
-                x=0.5,
-                xanchor="center",
-                text=(
-                    f"Funniness score distribution by occupation category<br>"
-                    f"<sub>{len(ordered_categories)} categories • "
-                    f"{len(df)} caption-category matches • "
-                    f"Global median: {df['funniness_score'].median():.2f}</sub>"
-                )
+            fig.show()
+        elif plot_method == 'plt':
+
+            # Reorder dataframe by category order
+            df["category"] = pd.Categorical(df["category"],categories=ordered_categories,ordered=True)
+            df = df.sort_values("category")
+
+            # Prepare data for boxplot
+            data = [df.loc[df["category"] == cat, "funniness_score"].values for cat in ordered_categories]
+
+            fig, ax = plt.subplots(figsize=(max(10, len(ordered_categories) * 0.35), 6))
+
+            boxprops = dict(linewidth=1.2)
+            medianprops = dict(color="black", linewidth=1.5)
+            whiskerprops = dict(linewidth=1.2)
+            capprops = dict(linewidth=1.2)
+
+            bp = ax.boxplot(
+                data,
+                patch_artist=True,
+                labels=ordered_categories,
+                boxprops=boxprops,
+                medianprops=medianprops,
+                whiskerprops=whiskerprops,
+                capprops=capprops,
+                showfliers=True
             )
-        )
-        if save_path:
-            fig.write_html(save_path)
 
-        fig.show()
+            # Color boxes (single color similar to Plotly default)
+            for box in bp["boxes"]:
+                box.set_facecolor(color)
+                box.set_alpha(0.8)
+
+            # Axis labels
+            ax.set_xlabel("Occupation category")
+            ax.set_ylabel("Funny score scaled")
+
+            # Rotate x labels
+            plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+
+            # Add sample size annotations
+            y_min = df["funniness_score"].min()
+            y_max = df["funniness_score"].max()
+            y_range = y_max - y_min
+
+            for i, row in stats.iterrows():
+                ax.text(
+                    x=ordered_categories.index(row["category"]) + 1,
+                    y=y_max + 0.05 * y_range,
+                    s=f"n={int(row['count'])}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=9,
+                    bbox=dict(
+                        facecolor="white",
+                        edgecolor="black",
+                        boxstyle="round,pad=0.25",
+                        linewidth=0.5,
+                        alpha=0.8
+                    )
+                )
+
+            # Title + subtitle
+            ax.set_title(
+                "Funniness score distribution by occupation category\n"
+                f"{len(ordered_categories)} categories • "
+                f"{len(df)} caption-category matches • "
+                f"Global median: {df['funniness_score'].median():.2f}",
+                fontsize=12
+            )
+
+            # Improve layout
+            ax.grid(axis="y", linestyle="--", alpha=0.4)
+            plt.tight_layout()
+
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+            plt.show()
+                    
 
     #statistical testing between categories
     def kruskal_wallis_test(self, interpret = False, alpha =    0.05):
@@ -903,7 +1216,7 @@ class OccupationAnalysis:
         
         return counts_per_contest
 
-    def plot_temporal_trends(self, occupations, title = None, cumulative = False, save_path=None):
+    def plot_temporal_trends(self, occupations, title = None, cumulative = False, save_path=None, color='crimson'):
         '''
         Plots temporal trends for a list of occupations.
         '''
@@ -920,6 +1233,7 @@ class OccupationAnalysis:
         
         fig = px.line(x = list(y.keys()), y = list(y.values()), markers = True, labels = {'x':'Contest ID', 'y':'Cumulative Count' if cumulative else 'Count'},
                       title = title or f'Temporal Trend for Occupations: {", ".join(occupations)}')
+        fig.update_traces(line=dict(color=color))
         
         fig.update_layout(template = 'plotly_white', height = 500, hovermode = 'closest', title = dict(x = 0.5, xanchor = 'center', text = title or f'Temporal Trend for Occupations: {", ".join(occupations)}'))
 
@@ -950,7 +1264,7 @@ class OccupationAnalysis:
             fig.add_scatter(x = y.index, y = y.values, mode = 'lines+markers', name = group_name)
 
         fig.update_layout(template = 'plotly_white', height = 600, hovermode = 'closest',
-                          title = dict(x = 0.5, xanchor = 'center', text = 'Temporal Trends for Occupation Groups'),
+                          title = dict(x = 0.5, xanchor = 'center', text = 'Temporal Trends for Occupation Groups ({cumulative} counts)'.format(cumulative = 'Cumulative' if cumulative else 'Non-cumulative')),
                           xaxis_title = 'Contest ID',
                           yaxis_title = 'Cumulative Count' if cumulative else 'Count')
 
@@ -962,7 +1276,7 @@ class OccupationAnalysis:
     #--------------------------------------------------------#
     # Topic modelling
     #--------------------------------------------------------#
-    def topic_model_category(self, category_name, min_topics = 15, ngram_size = (1,2), min_tokens = 2, model_name = "all-MiniLM-L6-v2", random_state = 42):
+    def topic_model_category(self, category_name, min_topics = 15, ngram_size = (1,2), min_tokens = 2, model_name = "all-MiniLM-L6-v2"):
         '''
         Topic modelling with BERTopic for a given occupation category.
         '''
@@ -1008,7 +1322,6 @@ class OccupationAnalysis:
             min_topic_size = min_topics,
             n_gram_range = ngram_size,
             embedding_model = sentence_model,
-            random_state = random_state,
             verbose = True
         )
 
@@ -1018,6 +1331,110 @@ class OccupationAnalysis:
         output['topic'] = topics
         output['topic_probability'] = probs
         return topic_model, output
+
+    def map_aggragate_topics_external(self, topic_info, aggregation_dict, label_dict):
+        '''
+        Maps and aggregates topics based on a provided aggregation dictionary.
+        topic info: Datafram with Count and Name columns
+        aggregation_dict : dictionary mapping the Names to new aggregated topics
+        label_dict: human readable format of aggregation_dict
+        '''
+        topic_to_group = {}
+        for group, topics in aggregation_dict.items():
+            for topic in topics:
+                topic_to_group[topic] = group
+        
+        topic_to_label = {}
+        for group, labels in label_dict.items():
+            for label in labels:
+                topic_to_label[label] = group
+        df = topic_info.copy()
+        df['aggregated_topic'] = df['Name'].map(topic_to_group)
+        df = df.dropna(subset=['aggregated_topic'])
+
+        grouping = df.groupby('aggregated_topic').agg(total_count = ('Count', 'sum'), topics = ('Name', list), n_topics = ('Name', 'count')).reset_index()
+        
+        grouping["topic_labels"] = grouping["topics"].apply(lambda topics: [topic_to_label.get(t, t) for t in topics])
+        return grouping
+
+    def plot_aggregated_topics_treemap_external(self,aggregated_topic_df,min_mentions=200,save_path=None,color="Pastel",max_topics=20,title=None,):
+
+        df = aggregated_topic_df[aggregated_topic_df["total_count"] >= min_mentions].copy()
+
+        if df.empty:
+            print("No aggregated topics meet the minimum mentions threshold.")
+            return
+
+        total = df["total_count"].sum()
+        df["percentage"] = df["total_count"] / total * 100
+
+        circle_data = []
+
+        for _, row in df.iterrows():
+            group = row["aggregated_topic"]
+            count = row["total_count"]
+            percentage = row["percentage"]
+            topics = row["topic_labels"][:max_topics]
+
+            # Group node
+            circle_data.append(dict(id=group,label=group,parent="",value=count,type="group",percent=percentage,))
+
+            # Child nodes (kept, but will be hidden visually)
+            child_value = max(count / max(len(topics), 1), 1)
+
+            for topic in topics:
+                circle_data.append(dict(id=f"{group}::{topic}",label=topic,parent=group,value=child_value,type="topic",percent=None,))
+
+        df_circle = pd.DataFrame(circle_data)
+
+        # Colors
+        palette = (getattr(px.colors.qualitative, color) if isinstance(color, str) else color)
+
+        group_colors = {g: palette[i % len(palette)] for i, g in enumerate(df["aggregated_topic"])}
+
+        df_circle["color"] = df_circle.apply(lambda r: group_colors[r["id"]] if r["type"] == "group" else group_colors[r["parent"]], axis=1,)
+
+        color_map = dict(zip(df_circle["id"], df_circle["color"]))
+
+        # Hover text (groups only)
+        df_circle["hover_text"] = df_circle.apply(
+            lambda r: (
+                f"<b>{r['label']}</b><br>"
+                f"Total mentions: {r['value']}<br>"
+                f"Share: {r['percent']:.2f}%"
+            )
+            if r["type"] == "group"
+            else f"<b>{r['label']}</b><br>Group: {r['parent']}",
+            axis=1,
+        )
+
+        # Treemap
+        fig = px.treemap(
+            df_circle,
+            ids="id",
+            names="label",
+            parents="parent",
+            values="value",
+            color="id",
+            color_discrete_map=color_map,
+            custom_data=["hover_text"],
+            title=title or f"Aggregated Topics (min mentions: {min_mentions})",
+        )
+
+        # hiding sub groups(could not fix to look better)
+        fig.update_traces(
+            maxdepth=1,
+            root_color="lightgrey",
+            hovertemplate="%{customdata[0]}<extra></extra>",
+            textinfo="label",  # only group titles
+        )
+
+        fig.update_layout(width=1200, height=500)
+
+        if save_path:
+            fig.write_html(save_path)
+
+        fig.show()
 
 
     #--------------------------------------------------------#
@@ -1093,15 +1510,68 @@ class OccupationAnalysis:
         }
         return summary
     
+    def plot_sentiment_distribution_external(self, sentiment_dfs, type_of_sentiment='compound', save_path=None, colors=['mediumseagreen'], plot_method='plotly'):
+        '''
+        Plots a kde distribution of sentiment scores for multiple occupation categories.
+        sentiment_dfs : list of sentiment dataframes for different categories
+        '''
+
+    
+        if plot_method == 'plotly':
+            fig = go.Figure()
+            for i, df in enumerate(sentiment_dfs):
+                category = df['category'].iloc[0]
+                
+                fig.add_histogram(
+                x=df[type_of_sentiment],
+                histnorm="probability", # density
+                nbinsx=100,
+                name=category,
+                opacity=0.5,
+                marker=dict(color=colors[i % len(colors)],line=dict(color="rgba(0,0,0,0.5)", width=1),),)
+
+            fig.update_layout(
+                barmode="overlay",
+                template="plotly_white",
+                height=500,
+                xaxis_title="Sentiment Score",
+                yaxis_title="Density",
+                title=dict(
+                    text=f"Sentiment Score Distribution ({type_of_sentiment})",
+                    x=0.5,
+                    xanchor="center",
+                ),
+                legend_title_text="Category",
+            )
+
+            if save_path:
+                fig.write_html(save_path)
+
+            fig.show()
+
+        elif plot_method == 'plt':
+            plt.figure(figsize=(10,6))
+            for i, sentiment_df in enumerate(sentiment_dfs):
+                sns.kdeplot(sentiment_df[type_of_sentiment], fill=True, alpha=0.5, label=sentiment_df['category'].iloc[0], color=colors[i])
+            plt.title(f"Sentiment Score Distribution ({type_of_sentiment}) for Category: {sentiment_df['category'].iloc[0]}")
+            plt.xlabel("Sentiment Score")
+            plt.ylabel("Density")
+            plt.grid(axis='y', linestyle='--', alpha=0.4)
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            plt.show()
+
+        
+    
     # this could have been made easier if sentiments was part of the class, but was done rushed
-    def sentiment_kruskal_wallis_test_external(self, sentiment_dfs, interpret = False, alpha = 0.05):
+    def sentiment_kruskal_wallis_test_external(self, sentiment_dfs, interpret = False, alpha = 0.05, type_of_sentiment='compound'):
         '''
         Performs Kruskal-Wallis H-test to determine if there are statistically significant differences
         in sentiment scores across occupation categories.
         sentiment_dfs : list of sentiment dataframes for different categories
         '''
 
-        category_groups = [df['compound'].values for df in sentiment_dfs]
+        category_groups = [df[type_of_sentiment].values for df in sentiment_dfs]
 
         stat, p_value = stats.kruskal(*category_groups)
         if interpret:
@@ -1114,13 +1584,13 @@ class OccupationAnalysis:
         return stat, p_value
     
     # this could have been made easier if sentimentdf1 and sentimentdf2 were part of the class, but for flexibility we keep them as arguments
-    def sentiment_cliffs_delta_external(self, sentiment_df1, sentiment_df2, interpret = False):
+    def sentiment_cliffs_delta_external(self, sentiment_df1, sentiment_df2, interpret = False, type_of_sentiment='compound'):
         '''
         Computes Cliff's Delta effect size between two occupation categories based on sentiment scores.
         sentiment_df1, sentiment_df2 : sentiment dataframes for the two categories
         '''
-        scores_cat1 = sentiment_df1['compound'].values
-        scores_cat2 = sentiment_df2['compound'].values
+        scores_cat1 = sentiment_df1[type_of_sentiment].values
+        scores_cat2 = sentiment_df2[type_of_sentiment].values
 
         if len(scores_cat1) == 0 or len(scores_cat2) == 0:
             raise ValueError("One or both categories have no associated sentiment scores.")
@@ -1149,9 +1619,9 @@ class OccupationAnalysis:
         return delta
     
     #again, external keyword means the dataframes are passed as arguments, not part of the class
-    def sentiment_mann_whitney_external(self, sentiment_df1, sentiment_df2, interpret = False, alpha = 0.05, alternative = 'two-sided'):
-        scores_cat1 = sentiment_df1['compound'].values
-        scores_cat2 = sentiment_df2['compound'].values
+    def sentiment_mann_whitney_external(self, sentiment_df1, sentiment_df2, interpret = False, alpha = 0.05, alternative = 'two-sided', type_of_sentiment='compound'):
+        scores_cat1 = sentiment_df1[type_of_sentiment].values
+        scores_cat2 = sentiment_df2[type_of_sentiment].values
 
         if len(scores_cat1) == 0 or len(scores_cat2) == 0:
             raise ValueError("One or both categories have no associated sentiment scores.")
