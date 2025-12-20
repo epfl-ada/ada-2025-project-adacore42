@@ -228,9 +228,7 @@ class CaptionClustering:
 
 
 
-    def benchmark_clustering_algorithms(self, 
-                                        algorithms=None,
-                                        text_col='caption'):
+    def benchmark_clustering_algorithms(self, algorithms=None, text_col='caption'):
         """
         Automatically benchmark multiple clustering algorithms on SBERT embeddings.
         
@@ -243,10 +241,8 @@ class CaptionClustering:
         Parameters:
         - algorithms: dict of clustering constructor definitions.
             Example:
-                {
-                    "kmeans": KMeans(n_clusters=10),
-                    "dbscan": DBSCAN(eps=0.4, min_samples=4),
-                }
+                {"kmeans": KMeans(n_clusters=10),
+                "dbscan": DBSCAN(eps=0.4, min_samples=4)}
         """
 
         # Encode captions if not done yet
@@ -260,22 +256,20 @@ class CaptionClustering:
                 "KMeans": KMeans(n_clusters=self.n_clusters, random_state=42),
                 "Agglomerative": AgglomerativeClustering(n_clusters=self.n_clusters),
                 "DBSCAN": DBSCAN(eps=0.5, min_samples=20),
-                "spectral": SpectralClustering(n_clusters=self.n_clusters, affinity="nearest_neighbors")
-
-            }
+                "spectral": SpectralClustering(n_clusters=self.n_clusters, affinity="nearest_neighbors")}
 
         results = []
 
         print("=== Running clustering benchmark ===")
 
         for name, algo in algorithms.items():
-            print(f"\n→ Testing {name}...")
+            print(f"\nTesting {name}...")
             t0 = time.time()
 
             try:
                 labels = algo.fit_predict(X)
             except Exception as e:
-                print(f"❌ {name} failed: {e}")
+                print(f"{name} failed: {e}")
                 results.append({
                     "algorithm": name,
                     "n_clusters": None,

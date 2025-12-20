@@ -361,14 +361,16 @@ class CaptionTopicClusterer:
     # ---------------------------------------------------------
 
     #plot topic scor
-    def plot_topic_scores_plt(self, df_data, df_scores):
-        plt.figure(figsize=(10, 6))
+    def plot_topic_scores_plt(self, df_data, df_scores, save=None):
+        fig = plt.figure(figsize=(10, 6))
         sns.boxplot(data=df_data.sort_values(by=self.fun_metric, ascending=False), x="aggregated_topic", y=self.fun_metric)
         plt.title(f"Distribution {self.fun_metric} par topic agrégé")
         plt.xticks(rotation=90)
         plt.xlabel("Topic agrégé")
         plt.ylabel(self.fun_metric)
         plt.tight_layout()
+        if save:
+            fig.savefig(save, bbox_inches='tight', dpi=300)
         plt.show()
     
 
@@ -549,6 +551,28 @@ class CaptionTopicClusterer:
                 trace.marker.size = 7   # outliers plus visibles
                 trace.boxmean = None
 
+        annotations = []
+        y_max = df[self.fun_metric].max()
+        y_range = df[self.fun_metric].max() - df[self.fun_metric].min()
+
+        for _, row in stats.iterrows():
+            topic = row["aggregated_topic"]
+            annotations.append(
+                dict(
+                    x=topic,
+                    y=y_max + y_range * 0.05,
+                    text=f"<b>n={int(row['count'])}",
+                    showarrow=False,
+                    yshift=10,
+                    font=dict(size=9, color='#333'),
+                    bgcolor='rgba(255,255,255,0.8)',
+                    bordercolor='rgba(0,0,0,0.2)',
+                    borderwidth=1,
+                    borderpad=3
+                )
+            )
+    
+
         # --- Layout final ---
         fig.update_layout(
             xaxis_title="Aggregated topic",
@@ -565,8 +589,8 @@ class CaptionTopicClusterer:
                 x=0.5
             ),
             hovermode="closest",
-            showlegend=False
-        )
+            showlegend=False,
+            annotations = annotations)
         winner_specs = [
             (caption_tny, "Winner (TNY)", "#1f77b4"),
             (caption_crowd, "Winner (Crowd)", "#ff7f0e"),
@@ -620,7 +644,14 @@ class CaptionTopicClusterer:
         fig.show()
 
 
-    def plot_topic_scores2_with_winners_plt(self, df_data, df_scores, caption_crowd, caption_tny, order_by="median", show_points="outliers"):
+
+
+        print(f"Caption TNY trouvée : {caption_tny in df['caption'].values}")
+        print(f"Caption Crowd trouvée : {caption_crowd in df['caption'].values}")
+
+
+
+    def plot_topic_scores2_with_winners_plt(self, df_data, df_scores, caption_crowd, caption_tny, order_by="median", show_points="outliers", save=None):
         df = df_data.dropna(subset=[self.fun_metric]).copy()
 
         # --- Stats pour l'ordre ---
@@ -650,10 +681,8 @@ class CaptionTopicClusterer:
             for topic in ordered_topics
         ]
 
-        # --- Couleurs (gradient) ---
-        values_for_color = stats[
-            sort_col if sort_col != "var" else "median"
-        ]
+        # --- Couleurs (gradient basé sur le count) ---
+        values_for_color = stats["count"]
         norm = (values_for_color - values_for_color.min()) / (
             values_for_color.max() - values_for_color.min()
         )
@@ -662,7 +691,7 @@ class CaptionTopicClusterer:
         colors = [cmap(0.3 + 0.6 * v) for v in norm]
 
         # --- Figure ---
-        plt.figure(figsize=(14, 6))
+        fig = plt.figure(figsize=(14, 6))
 
         box = plt.boxplot(
             data,
@@ -706,7 +735,7 @@ class CaptionTopicClusterer:
                     s=120,
                     color=color,
                     edgecolor="black",
-                                    zorder=5
+                    zorder=5
                 )
 
                 # Annotation
@@ -720,6 +749,12 @@ class CaptionTopicClusterer:
                     color=color,
                     va="center"
                 )
+
+        # --- Légende pour les boxplots (basé sur le count) ---
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=values_for_color.min(), vmax=values_for_color.max()))
+        sm.set_array([])
+        cbar = plt.colorbar(sm, ax=plt.gca(), pad=0.02, aspect=30, shrink=0.7)
+        cbar.set_label('Number of captions per topic', rotation=270, labelpad=15)
 
         # --- Axes ---
         plt.xticks(
@@ -741,6 +776,9 @@ class CaptionTopicClusterer:
 
         plt.grid(axis="y", linestyle="--", alpha=0.3)
         plt.tight_layout()
+        
+        if save:
+            fig.savefig(save, bbox_inches='tight', dpi=300)
 
         plt.show()
 
@@ -750,10 +788,14 @@ class CaptionTopicClusterer:
 
 
     # bubble enrichment
-    def plot_bubble_enrichment(self, merged, top_n=30, save=None): 
-        df_plot = merged.head(top_n).copy()
+    def plot_bubble_enrichment(self, merged, top_n=30, save=None):
+        df_plot = (
+            merged
+            .sort_values("enrichment_top_vs_overall", ascending=False)
+            .head(top_n)
+            .copy()
+        )
 
-        # --- Colormap personnalisée : jaune (bas) -> vert (haut)
         custom_colorscale = [
             (0.0, "#f1c40f"),  # jaune
             (0.5, "#a3cb38"),  # jaune-vert
@@ -763,8 +805,9 @@ class CaptionTopicClusterer:
         fig = px.scatter(
             df_plot,
             x="aggregated_topic",
-            y="enrichment_top_vs_overall",
-            size="overall_count",
+            y="overall_count",
+            log_y=True,
+            size="top_count",
             color="enrichment_top_vs_overall",
             color_continuous_scale=custom_colorscale,
             size_max=40,
@@ -774,21 +817,24 @@ class CaptionTopicClusterer:
                 "enrichment_top_vs_overall": ":.2f",
                 "aggregated_topic": False
             },
-            title="Topic enrichment : overrepresentation of topic within top vs global captions"
+            title="Topic enrichment vs number of captions (sorted by enrichment)"
         )
 
         fig.update_layout(
             template="plotly_white",
             height=550,
-            xaxis_title="Topic",
-            yaxis_title="Enrichment (top / global)",
-            xaxis_tickangle=-45,
+            xaxis=dict(
+                title="Topic",
+                tickangle=-45,
+                categoryorder="array",
+                categoryarray=df_plot["aggregated_topic"].tolist()
+            ),
+            yaxis_title="Number of captions in topic",
             coloraxis_colorbar=dict(
                 title="Enrichment",
                 ticks="outside"
             ),
-            showlegend=True,
-            legend_title_text="Global number of captions in the topic"
+            showlegend=False
         )
 
         fig.update_traces(
@@ -806,57 +852,44 @@ class CaptionTopicClusterer:
             zerolinecolor="gray"
         )
 
-        if save: 
+        if save:
             fig.write_html(save)
+
         fig.show()
 
 
 
-    def plot_bubble_enrichment_plt(self, merged, top_n=30):
-        df_plot = merged.head(top_n).copy()
 
-        x = np.arange(len(df_plot))
-        y = df_plot["enrichment_top_vs_overall"]
-        sizes = df_plot["overall_count"]
+    def plot_bubble_enrichment_plt(self, merged, top_n=30, save=None):
+
+        df_plot = (merged.sort_values("enrichment_top_vs_overall", ascending=False).head(top_n).copy())
+
+        x = np.arange(len(df_plot))  # positions numériques pour les topics
+        y = df_plot["overall_count"]
+        sizes = df_plot["top_count"] * 20  # facteur d’échelle à ajuster
         colors = df_plot["enrichment_top_vs_overall"]
 
-        # Normalisation des tailles pour matplotlib
-        size_scaled = 500 * (sizes / sizes.max())
+        fig = plt.figure(figsize=(14, 9))
 
-        plt.figure(figsize=(12, 6))
+        scatter = plt.scatter(x, y, s=sizes, c=colors, cmap="YlGn", edgecolors="black", linewidths=0.8, alpha=0.9)
+        plt.yscale("log")
+        # Axe X : topics triés
+        plt.xticks(ticks=x, labels=df_plot["aggregated_topic"], rotation=45, ha="right")
 
-        scatter = plt.scatter(
-            x,
-            y,
-            s=size_scaled,
-            c=colors,
-            cmap="summer",
-            alpha=0.8,
-            edgecolors="black",
-            linewidths=1
-        )
-
-        # Axes et labels
-        plt.xticks(
-            x,
-            df_plot["aggregated_topic"],
-            rotation=45,
-            ha="right"
-        )
         plt.xlabel("Topic")
-        plt.ylabel("Enrichment (top / global)")
-        plt.title(
-            "Topic enrichment : overrepresentation of topic within top vs global captions"
-        )
+        plt.ylabel("Number of captions in topic")
+        plt.title("Topic enrichment vs number of captions (sorted by enrichment)")
 
-        # Ligne y=0
-        plt.axhline(0, color="gray", linewidth=1)
-
-        # Colorbar
+        # Colorbar = enrichissement
         cbar = plt.colorbar(scatter)
-        cbar.set_label("Enrichment")
+        cbar.set_label("Enrichment (top / global)")
 
+        plt.grid(linestyle="--", alpha=0.4, which='both')
         plt.tight_layout()
+        
+        if save:
+            fig.savefig(save, bbox_inches='tight', dpi=300)
+
         plt.show()
 
 
@@ -1011,7 +1044,7 @@ class CaptionTopicClusterer:
         fig.show()
 
 
-    def plot_proportion_above_threshold_with_winners_plt(self, df_data, win_topic_crowd, win_topic_tny, threshold=1.5):
+    def plot_proportion_above_threshold_with_winners_plt(self, df_data, win_topic_crowd, win_topic_tny, threshold=1.5, save=None):
         df = df_data.copy()
         df["above"] = (df[self.fun_metric] >= threshold).astype(int)
 
@@ -1036,7 +1069,7 @@ class CaptionTopicClusterer:
         x = np.arange(len(prop))
         y = prop["prop_above"]
 
-        plt.figure(figsize=(12, 6))
+        fig = plt.figure(figsize=(12, 6))
 
         bars = plt.bar(
             x,
@@ -1097,7 +1130,9 @@ class CaptionTopicClusterer:
 
         plt.ylim(0, max(y) * 1.15)
         plt.tight_layout()
-
+        
+        if save:
+            fig.savefig(save, bbox_inches='tight', dpi=300)
         plt.show()
 
 
