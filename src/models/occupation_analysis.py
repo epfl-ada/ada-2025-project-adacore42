@@ -638,6 +638,128 @@ class OccupationAnalysis:
             
 
 
+    def plot_best_worst_occupations_by_median(
+        self,
+        top_n=20,
+        threshold=50,
+        color="blugrn",
+        height=600,
+        save_path=None,
+    ):
+        df = self._occupation_df[self._occupation_df["term_count"] >= threshold].copy()
+
+        # Best (highest median)
+        df_best = (
+            df.sort_values(by="median_funniness", ascending=False)
+            .head(top_n)
+            .copy()
+        )
+
+        # Worst (lowest median)
+        df_worst = (
+            df.sort_values(by="median_funniness", ascending=True)
+            .head(top_n)
+            .copy()
+        )
+
+        hover_data = {
+            "term_count": True,
+            "std_funniness": ":.2f",
+            "avg_funniness": ":.2f",
+            "median_funniness": ":.2f",
+            "term": False,
+        }
+
+        fig_best = px.bar(
+            df_best,
+            x="term",
+            y="median_funniness",
+            hover_data=hover_data,
+        )
+
+        fig_worst = px.bar(
+            df_worst,
+            x="term",
+            y="median_funniness",
+            hover_data=hover_data,
+        )
+
+        fig = go.Figure(data=fig_best.data + fig_worst.data)
+
+        # Initial visibility
+        fig.data[0].visible = True
+        fig.data[1].visible = False
+
+        # Coloring
+        fig.data[0].update(
+            marker=dict(
+                color=df_best["term_count"],
+                colorscale=color,
+                line=dict(color="rgba(0,0,0,0.7)", width=1),
+            )
+        )
+        fig.data[1].update(
+            marker=dict(
+                color=df_worst["term_count"],
+                colorscale=color,
+                line=dict(color="rgba(0,0,0,0.7)", width=1),
+            )
+        )
+
+        fig.update_layout(
+            title=dict(
+                text=f"Top {top_n} Occupations by Median Funniness",
+                x=0.5,
+                xanchor="center",
+            ),
+            xaxis_title="Occupation Term",
+            yaxis_title="Median Funniness Score",
+            template="plotly_white",
+            xaxis_tickangle=-45,
+            height=height,
+            hovermode="closest",
+            showlegend=False,
+            margin=dict(t=120),
+            updatemenus=[
+                dict(
+                    type="buttons",
+                    direction="right",
+                    x=0.5,
+                    y=1.08,
+                    xanchor="center",
+                    yanchor="top",
+                    buttons=[
+                        dict(
+                            label="Best (Highest Median)",
+                            method="update",
+                            args=[
+                                {"visible": [True, False]},
+                                {
+                                    "title.text": f"Top {top_n} Occupations by Median Funniness"
+                                },
+                            ],
+                        ),
+                        dict(
+                            label="Worst (Lowest Median)",
+                            method="update",
+                            args=[
+                                {"visible": [False, True]},
+                                {
+                                    "title.text": f"Bottom {top_n} Occupations by Median Funniness"
+                                },
+                            ],
+                        ),
+                    ],
+                )
+            ],
+        )
+
+        if save_path:
+            fig.write_html(save_path)
+
+        fig.show()
+
+
     #plotting the distribution of a chosen occupation term
     def plot_occupation_distribution(self, occupation_term, nbins = 30, save_path=None, plot_method = 'plotly', color = 'cornflowerblue'):
         """
@@ -1191,6 +1313,22 @@ class OccupationAnalysis:
             print(f"Cliff's Delta: {delta:.4f} (effect size: {size})")
 
         return delta
+
+    def pairwise_category_testing(self, category_list, alpha = 0.05):
+        pval_matrix = pd.DataFrame(np.ones((len(category_list), len(category_list))), index=category_list, columns=category_list)
+        delta_matrix = pd.DataFrame(np.zeros((len(category_list), len(category_list))), index=category_list, columns=category_list)
+
+        for cat_1, cat_2 in combinations(category_list,2):
+            _, p_value = self.targeted_category_test(cat_1, cat_2, interpret = False)
+            delta = self.cliffs_delta(cat_1, cat_2, interpret = False)
+
+            pval_matrix.loc[cat_1, cat_2] = p_value
+            delta_matrix.loc[cat_1, cat_2] = delta
+            pval_matrix.loc[cat_2, cat_1] = p_value
+            delta_matrix.loc[cat_2, cat_1] = -delta # anti-symmetric
+
+        return pval_matrix, delta_matrix
+    
     #--------------------------------------------------------#
     # Temporal analyses functions
     #--------------------------------------------------------#
