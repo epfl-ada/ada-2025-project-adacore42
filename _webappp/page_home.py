@@ -3,6 +3,26 @@ from _webappp.assets.app_definitions import HomePageAxis_C
 from _webappp.assets.app_content import PagesData as PD
 from _webappp.assets.app_definitions import AppParams as AP
 
+st.markdown(
+    """
+    <style>
+    div.stButton > button {
+        background-color: #4CAF50;   /* vert */
+        color: white;
+        font-size: 20px;
+        padding: 12px 28px;
+        border-radius: 10px;
+        border: none;
+        width: 100%;
+    }
+    div.stButton > button:hover {
+        background-color: #45a049;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Title and Header 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -39,9 +59,9 @@ st.write(
     """
     Humor is a universal yet complex form of expression. The more we think about it and the more complexes it appear! There are numerous genres of humor, and it can be used in almost every life context. Humor can even serve serious purposes, such as addressing sensitive or difficult topics and easing social tensions.
 
-    With this in mind, this project aim to investigate how jokes reflect societal traits and values. We will begin by examining what is generally perceived as “funny” and “unfunny,” and then explore how humor operates on two main topic : politics and gender. 
+    With this in mind, this project aim to investigate how jokes reflect societal traits and values. We will begin by examining what is generally perceived as “funny” and “unfunny”, and then explore how humor operates on two main topic : politics and gender. 
 
-    In order to answer this questions, we will analyze thousands of captions from the *New Yorker* Caption Contest. In this contest, a cartoon is published weekly or biweekly without a caption, and readers are invited to submit their own humorous responses. Other participants then vote on whether each caption is funny, somewhat funny, or unfunny. This process provides a rich dataset that captures public humor preferences and social attitudes, a perfect opportunity to explore how humor reflects societal norms!
+    In order to cover this subject, we will analyze thousands of captions from the *New Yorker* Caption Contest. In this contest, a cartoon is published weekly or biweekly without a caption, and readers are invited to submit their own humorous responses. Other participants then vote on whether each caption is funny, somewhat funny, or unfunny. This process provides a rich dataset that captures public humor preferences and social attitudes, a perfect opportunity to explore how humor reflects societal norms!
     """
 )
 
@@ -64,7 +84,7 @@ with methodsNglance_c:
     st.subheader("Methods at a Glance")
 
     "**Funny Score**"  
-    st.info("A composite metric combining funny/unfunny ratios with vote weighting and z-score standardisation to identify reliably funny captions.")
+    st.info("We created a metric that woul take better into account the perception of funny for higher number of people.")
 
     "**Semantic Similarity & Clustering** "
     st.info("SBERT embeddings (all-MiniLM-L6-v2), K-means clusters, UMAP projections, and cluster quality evaluation via intra- vs inter-cluster similarity.")
@@ -79,11 +99,8 @@ with methodsNglance_c:
     """
     )
     ### PLEASE FIX :
-    #st.page_link("page_methods.py", label="Go to Methods Page", icon="➡️") # do not work yet PLEASE FIX
-    HomePageAxis_C(
-        title=PD.METHODS.value.title,
-        description=PD.METHODS.value.description,
-        axisPath=PD.METHODS.value.path)
+    if st.button("Go to Methods →"):
+        st.switch_page(PD.METHODS.value.path)
 
     st.divider()
 

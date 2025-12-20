@@ -7,6 +7,7 @@ from src.utils.general_utils import plot_cartoon
 from _webappp.assets.app_definitions import get_absolute_project_root
 get_absolute_project_root()
 from src.utils.web_app_plots.app_plots import PWA
+from _webappp.assets.app_definitions import AppParams as AP
 
 st.write(
     """

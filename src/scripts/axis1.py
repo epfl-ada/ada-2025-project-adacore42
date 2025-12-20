@@ -32,6 +32,78 @@ import plotly.graph_objects as go
 # ============================
 #   1.1. What is funny ? 
 # ============================
+
+def plot_boxplot_static(df, columns_category, features, save_fig=False, title=None,figsize_per_feature=4):
+    feature_labels = {
+        'polarity': 'Sentiment Polarity',
+        'subjectivity': 'Subjectivity',
+        'num_words': 'Number of Words',
+        'num_punct': 'Number of Punctuations',
+        'num_repeats': 'Repetitions'
+    }
+
+    groups = df[columns_category].unique()
+
+    fig, axes = plt.subplots(1, len(features), figsize=(figsize_per_feature * len(features),5),sharey=False)
+
+    if len(features) == 1:
+        axes = [axes]
+
+    for i, f in enumerate(features):
+        ax = axes[i]
+
+        sns.boxplot(
+            data=df,
+            x=columns_category,
+            y=f,
+            ax=ax,
+            hue=columns_category,
+            palette=["green", "orange"]
+        )
+        #sns.set_theme(style="whitegrid")
+
+        ax.set_title(feature_labels.get(f, f))
+        ax.set_xlabel("")
+        ax.tick_params(axis='x', rotation=0)
+        plt.grid(True, linestyle='-', alpha=0.6)
+        plt.gca().set_axisbelow(True)
+
+        # Statistical test
+        g1 = df[df[columns_category] == groups[0]][f]
+        g2 = df[df[columns_category] == groups[1]][f]
+        t_stat, p_val = ttest_ind(g1, g2, equal_var=False)
+
+        # Annotation p-value
+        y_max = df[f].max()
+        text = f"p = {p_val:.2e}"
+        if p_val < 0.05:
+            text += " *"
+
+        ax.text(
+            0.5,
+            0.9,
+            text,
+            ha='center',
+            va='bottom',
+            fontsize=11,
+            transform=ax.get_xaxis_transform()
+        )
+
+    # Title global
+    if columns_category == "caption_type":
+        suptitle = "Comparison of best and worst captions in each contest"
+    else:
+        suptitle = "Comparison of best and worst captions overall contests"
+
+    plt.suptitle(suptitle, fontsize=16)
+    plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+
+    if save_fig:
+        plt.savefig(f"boxplot_{title}.png", dpi=300)
+
+    plt.show()
+    
 def plot_boxplot_interactive(df, columns_category, features, save_fig = False, title=None):
     feature_labels = {
         'polarity': 'Sentiment Polarity',

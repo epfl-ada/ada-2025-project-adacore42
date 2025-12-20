@@ -9,11 +9,6 @@ st.markdown("# Behind the Punchline: The representation of gender")
 
 # pageData.page_firstBlock()
 
-# st.markdown("# Big title")
-# st.markdown("## Section title")
-# st.markdown("### Subsection")
-# st.markdown("Normal paragraph")
-
 st.markdown(
     """
     What if your understanding of gender came from a single source: 
@@ -40,7 +35,7 @@ st.markdown(
     text_alignment= 'justify'
 )
 
-st.image("data/newyorker_caption_contest_virgin/images/582.jpg", width=700)
+st.image("data/newyorker_caption_contest_virgin/images/582.jpg", width=600)
 st.markdown(
     "<h3 style='text-align: center;'>Yes, I see the train but I think we can beat it.</h3>",
     unsafe_allow_html=True
@@ -73,10 +68,6 @@ st.markdown("""
     conclude that men occupy far more narrative space.""",
     text_alignment= 'justify'
     )
-# If possible, I would like to have a button were you can select which plot you see: either the one for the 
-# cartoons or the one for the captions. I put the two plot next.
-# plot_html(r"_webappp/assets/graph/counts_cartoons.html")
-# plot_html(r"_webappp/assets/graph/counts_captions.html")
 
 plot_choice = st.radio(
     "Select which distribution to display:",
@@ -91,16 +82,12 @@ else:
 
 st.divider()
 
-# There is a big gap in the website here idk why
-
 st.markdown("## 2. Behind the Scene: How Gender Is Depicted")
 
 st.markdown("""
     Presence, however, is only part of the story. Now we have to investigate how
     are men and women are portrayed once they appear.""",
     text_alignment= 'justify')
-    
-
 
 st.markdown("### Words Matter")
 st.markdown("""
@@ -115,8 +102,6 @@ st.markdown("""
     """,
     text_alignment= 'justify')
 
-# # Insert wordclouds. Man and Women wordcloud next to each other with a 
-# # button where you can choose if you want to see the verbs or adjectives
 # # The image appears blurry, idk why
 
 wc_type = st.radio(
@@ -126,9 +111,9 @@ wc_type = st.radio(
 )
 
 if wc_type == "Verbs":
-    st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=700)
+    st.image(r"_webappp/assets/graph/wordclouds_verbs.png", width=1000)
 else:
-    st.image(r"_webappp/assets/graph/wordclouds_adjs.png", width=700)
+    st.image(r"_webappp/assets/graph/wordclouds_adjs.png", width=1000)
 
 st.markdown("""
     At first glance, the clouds look similar, men and women seem to share
@@ -151,8 +136,6 @@ st.markdown("""
     """,
     text_alignment= 'justify')
 
-# If possible have a sort of markdown and when you click on "The magic of BERTopic" it shows the explanation
-
 with st.expander("The magic of BERTopic"):  
     st.markdown("""       
         BERTopic is a topic modeling method that groups captions based on meaning, not just word frequency. Instead 
@@ -167,7 +150,6 @@ with st.expander("The magic of BERTopic"):
         """,
     text_alignment= 'justify')
 
-st.divider()
 
 st.markdown("""
     Using this approach, we identified recurring topics and aggregated them into broader,
@@ -194,49 +176,50 @@ gender_choice = st.radio(
 
 if gender_choice == "Men":
     plot_html(r"_webappp/assets/graph/topic_male.html", height=450)
-    st.markdown("***Men eat… a lot***")
-    st.markdown(
-        """ 
-        Food-related theme take up a surprisingly large share of male-labeled captions, but not the wholesome kind. 
-        Think alcohol, junk food, dinner menus, and indulgent eating. The humor paints men as enthusiastic consumers, 
-        always one drink or snack away from the punchline.""",
-        text_alignment= 'justify')
 
-    st.markdown("***Politics, but it is in fact Trump***")
-    st.markdown("""
-        Political humor does appear in male captions, but with no diversity: it’s Trump, Trump, and… Trump again. 
-        Apparently, when men enter politics in New Yorker cartoons, they do so wearing a red tie and making headlines.
-    """,
-    text_alignment= 'justify'
-    )
+    with st.expander("Men eat… a lot."):
+        st.markdown(
+            """ 
+            Food-related theme take up a surprisingly large share of male-labeled captions, but not the wholesome kind. 
+            Think alcohol, junk food, dinner menus, and indulgent eating. The humor paints men as enthusiastic consumers, 
+            always one drink or snack away from the punchline.""",
+            text_alignment= 'justify')
     
-    st.markdown("***Only men get the full life arc.***")
-    st.markdown("""    
-    Certain themes appear exclusively in male-labeled captions: transportation, death, arts & music, and pop culture. 
-    According to these cartoons, only men take the subway, play guitars, play some baseball, watch Edward Scissorhands, contemplate mortality 
-    and... eventually die. A complete journey, really.
-    ...
-    """,
-    text_alignment= 'justify')
+    with st.expander("Politics, but it is in fact Trump."):
+        st.markdown("""
+            Political humor does appear in male captions, but with no diversity: it’s Trump, Trump, and… Trump again. 
+            Apparently, when men enter politics in New Yorker cartoons, they do so wearing a red tie and making headlines.
+        """,
+        text_alignment= 'justify'
+        )
+    
+    with st.expander("Only men get the full life arc."):
+        st.markdown("""    
+        Certain themes appear exclusively in male-labeled captions: transportation, death, arts & music, and pop culture. 
+        According to these cartoons, only men take the subway, play guitars, play some baseball, watch Edward Scissorhands, contemplate mortality 
+        and... eventually die. A complete journey, really.
+        ...
+        """,
+        text_alignment= 'justify')
 else:
     plot_html(r"_webappp/assets/graph/topic_female.html")
-    st.markdown("***Karen is… just a name. Or is it?***")
-    st.markdown("""
-    If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
-    it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
-    complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
-    full personality without the need of a backstory.
-    """,
-    text_alignment='justify') 
+    with st.expander("Karen is… just a name. Or is it?"):
+        st.markdown("""
+        If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
+        it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
+        complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
+        full personality without the need of a backstory.
+        """,
+        text_alignment='justify') 
     
+    with st.expander("Women in politics: meet Hillary. That’s it."):
 
-    st.markdown("***Women in politics: meet Hillary. That’s it.***")
-    st.markdown("""
-    Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
-    only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
-    The absence of other female political figures is striking... and telling...
-    """, 
-    text_alignment='justify') 
+        st.markdown("""
+        Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
+        only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
+        The absence of other female political figures is striking... and telling...
+        """, 
+        text_alignment='justify') 
 
 st.divider()  
 
@@ -265,14 +248,39 @@ st.markdown("## 3. Does Gender Win the Crowd?")
 
 st.markdown("### Are gendered captions funnier?")
 
+st.markdown("""
+    Now that we have explored how men and women are depicted in the contest, we turn to a different question: how does the audience respond to those depictions?
+    In other words, does gendered humor actually land differently with readers? To get a first intuition, we start with two descriptive views of the funny score:
+    
+    1) The evolution of the average funny score over time, shown with its variability
+
+    2) The overall distribution of funny scores for men- and women-labeled captions
+            
+    You can select which plot you want to see with the following buttons. Also, if you want to see the results
+    better, you can select which gender you want to see by clicking on the legend of the plots.
+    """)
+
+funny_choice = st.radio(
+    "Select distribution or evolution over time:",
+    ["Distribution", "Evolution"],
+    horizontal=True
+)
+
+if funny_choice == "Distribution":
+    plot_html(r"_webappp\assets\graph\funniness_distrib_by_gender.html")
+else:
+    plot_html(r"_webappp\assets\graph\evolution_funny_score.html", height=500)
+
 st.markdown(
-    """To compare how the audience responds to gendered captions, we relied on two complementary statistical tools: the Mann–Whitney U test and Cliff’s delta. 
+    """
+    At first glance, the result is surprising: the curves are almost identical.
+    Both over time and across the full distribution, men- and women-labeled captions appear to receive very similar audience scores.
+    But visual similarity does not necessarily mean statistical equality.  We turn to statistical testing to verify it. 
+
+    To compare how the audience responds to gendered captions, we relied on two complementary statistical tools: the Mann–Whitney U test and Cliff’s delta. 
     Together, they answer two different questions: Is there a difference? and Does that difference actually matter?
     If you don't know any of these tests, don't worry we included explanations for both of them.""",
     text_alignment='justify')
-
-# just as for BERTopic, include a sort of markdown that when you click on 
-# the definition for the test appears
 
 with st.expander("Mann–Whitney U Test or *“Are these scores different at all”*?"):
 
@@ -319,23 +327,76 @@ with st.expander("Cliff’s delta or *“How big is the difference, really?”*"
         - |δ| ≥ 0.47 → Large effect 
         
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
+        text_alignment='justify'
     )
+
+st.markdown("""
+    We test the following hypothesis:
+
+    H₀ (null hypothesis):
+    There is no difference in funny score distributions between men- and women-labeled captions.
+
+    Here is what got from it:
+    - Mann–Whitney U test: p-value ≈ 3.2 × 10⁻²⁶ → statistically significant
+    - Cliff’s delta: δ ≈ –0.029 → negligible effect size
+    -> include the hypothesis, the results and analyse them.
+    
+    This means that, in practice, the audience does not meaningfully prefer captions about one
+    gender over the other.
+    """,
+    text_alignment='justify')
 
 st.markdown("### What about the top and worst captions?")
 
-st.markdown(""" **TO CHANGE**
-    Since we did not see a significant difference when looking at the whole set of captions, we decided to dig deeper.
-    We decided to focus on the top and worst 5% of caption of each gender to see if they were laughed at differently.
-    """)
-
-plot_html(r"_webappp\assets\graph\evolution_funny_score.html")
-
-plot_html(r"_webappp\assets\graph\funniness_distrib_by_gender.html")
+st.markdown("""
+    Since there is no statistical difference when looking at the whole set of captions, we dig deeper.
+    Instead of looking at all captions, we focus on the edges of audience reaction:
+    - the top 5% most upvoted captions
+    - the bottom least liked captions
+    
+    We did this for both gender. Here is the resulting distributions. For these plots, it's the same as before,
+    you can click on the legend to select the gender you want to see. 
+    """,
+    text_alignment='justify')
 
 plot_html(r"_webappp\assets\graph\funny_score_distrib_5.html")
 
+st.markdown("""
+    And the conclusion: even among the funniest and least funny captions, the distributions remain similar. 
+    Still, we test this hypothesis formally, by applying the same tests as before.
+
+    **Worst 5%**
+    - p-value: 4.4 × 10⁻⁶⁶ → statistically significant
+    - Cliff’s delta: –0.207 → small effect
+    This means that among the worst-performing captions, women-labeled captions tend to score
+    slightly lower than the men labeled ones. The difference is statistically clear, but the effect
+    remains small. Not the dramatic result we were expecting...
+            
+    **Top 5%**
+    - p-value: 0.094 → not statistically significant
+    - Cliff’s delta: 0.020 → negligible effect
+    Among the best-performing captions, there is no statistically significant difference.
+    """,
+    text_alignment='justify')
+
+st.markdown("### What does this tell us?")
+
+st.markdown("""
+    Despite the clear difference in representation, audience response stays remarkably
+    gender-neutral. This sets up a compelling tension for the data story:
+    while stereotypes and archetypes persist in content, they do not translate into clear 
+    rewards from the crowd.
+    """,
+    text_alignment='justify')
+
 st.divider()
 
-st.markdown("## 4. So What’s the Joke, Really?")
-"**Conclusion**"
+st.markdown("## 4. So... What did we learn about gender?")
+
+st.markdown("""
+    Gender in the New Yorker Caption Contest is highly visible, strongly patterned, but weakly consequential. Men and women are not 
+    depicted in the same ways — stereotypes persist, roles differ, archetypes dominate — yet these differences rarely translate into measurable 
+    differences in audience approval. Gender shapes how the joke is told, but not necessarily how well it lands.
+    """,
+    text_alignment='justify')
