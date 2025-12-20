@@ -1,6 +1,7 @@
 #It must be disclosed that this code was generated with the assistance of AI tools, either whole blocks or certain functionalities.
 #The AI used: ChatGPT-5 by OpenAI and GitHub Copilot.
-#plotting was overall done by ChatGPT, to convert between plotly and matplotlib
+#plotting was overall done by ChatGPT, epecially to convert matplotlib to plotly
+#Code was primarily written in a different file (see _Other/andras_analysis/axis2_complete.ipynb) and then ported here.
 
 import numpy as np
 from scipy.stats import ttest_ind

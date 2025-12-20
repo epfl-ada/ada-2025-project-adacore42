@@ -87,7 +87,7 @@ st.write("""
 st.divider()
 st.subheader("Are some categories of occupations funnier than others?")
 st.write("""
-        From the 3000 or so occupations that were found in the captions, we have created 14 categories to group them into, and discarded any occupations that did not fit into these categories, or were too hard to categorise correctly. We created the following categories:
+        From the approximately 3000 or so occupations that were found in the captions, we have created 14 categories to group them into, and discarded any occupations that did not fit into these categories, or were too hard to categorise correctly. We created the following categories:
         """)
 st.markdown("""
             - Arts and Entertainment (e.g. actor, musician, artist)
@@ -170,7 +170,7 @@ st.write("""
 st.write("""
         Unsurpringly, most occupational categories cluster around a neutral sentiment. This suggests that while captions do reference occupations, they do not consistently frame them in a positive or negative light but rather rely on other elements to carry the humour. However, we also see a slightly larger shift towards a positive sentiment for all occupations, with Law, Government and Politics being the most positive and Public Safety, Military and Security being the most negative. This could reflect a tendency to view professions related to governance and public service in a favourable light, while occupations in the arts might be associated with more critical or satirical humour. Nevertheless, the overall sentiment distributions are relatively similar across categories, indicating that occupational references alone do not strongly influence the tone of the humour.
                 """)
-#plot_html("_webappp/assets/graphs/occupation_sentiment_distribution.html")
+plot_html("_webappp/assets/graphs/occupation_sentiment_distribution.html")
 
 st.write("""
         To provide some statistical backing to these observations, we can conduct analyse the statistical descriptors of the distributions. The table below shows the mean, median, standard deviation as well as the fraction of positive, negaive and neutral captions for each occupational category. The polarity imbalance simply measures the difference between the fraction of positive and negative captions, giving us a sense of the overall sentiment tilt for each category.
@@ -216,15 +216,15 @@ st.write("""
          """)
 
 st.write("""
-        To further the sentiment analysis, we can again conduct a series of statistical tests to compare the sentiment distributions across occupation categories. The heatmap below summarises the results of these tests, where a darker color indicates a more significant difference in sentiment between the two categories being compared.
-         """)
-#plot_html("_webappp/assets/graphs/pairwise_occupation_category_sentiment_heatmaps.html")
-st.write("""
-        The heatmap reveals that ...
+        To further the sentiment analysis, we can again conduct a series of statistical tests to compare the sentiment distributions across occupation categories. Pairwise Mann Whitney U tests reveal that most categories have significantly different sentiment distributions from each other, with a few exceptions. In fact, we find that the null hypothesis of equal distributions cannot be rejected for the following pairs: Arts and Entertainment vs Public Safety, Military and Security, then Business, Management and Finance vs Service Industry and Hospitality, and finally Healthcare and Medicine vs Law, Government and Politics. This suggests that for these pairs of categories, the sentiment distributions are similar enough that we cannot confidently say they differ significantly.
+         
+        To interpret these results, we can try and think of why certain occupation categories might have similar sentiment distributions. For example, both Arts and Entertainment and Public Safety, Military and Security might evoke a mix of admiration and criticism, leading to a balanced sentiment distribution. Similarly, Business, Management and Finance and Service Industry and Hospitality might both be associated with customer service and workplace dynamics, resulting in comparable sentiment patterns. Finally, Healthcare and Medicine and Law, Government and Politics might both involve high-stakes decision-making and ethical considerations, leading to similar sentiment distributions. While these are some possible interpretation, they serve to influence the reader to think about the underlying reasons for the observed statistical similarities. 
+         
+         Once again, conducting a U-test is not enough to draw conclusions, we should also inspect Cliff's delta values to understand the effect sizes of these differences. We infact find that every pair of occupation categories has a small effect size (|d| < 0.147), indicating that while the sentiment distributions are statistically different, the practical significance of these differences is limited. This further shows the need to improve our methodology to capture more nuanced sentiment differences across occupational categories. Nevertheless, these results provide us with some insights into how sentiment varies across different professions in humour contexts.
          """)
 
 st.write("""
-        To summarise, our sentiment analysis of occupational categories in captions indicates that while there are slight variations in sentiment across different professions, the overall tone remains relatively balanced and neutral. This suggests that humour related to occupations does not consistently lean towards positivity or negativity, but rather reflects a diverse range of perspectives and attitudes towards different professions.
+        To summarise, our sentiment analysis of occupational categories in captions indicates that while there are slight variations in sentiment across different professions, the overall tone remains relatively balanced and neutral. This suggests that humour related to occupations does not consistently lean towards positivity or negativity, but rather reflects a diverse range of perspectives and attitudes towards different professions. Furthermore, the statistical tests reveal that while most occupational categories have significantly different sentiment distributions, the effect sizes of these differences are small, indicating limited practical significance. This highlights the complexity of humour and the need for more nuanced approaches to capture the subtleties of sentiment in occupational humour.
          """)
 
 st.divider()
@@ -238,6 +238,14 @@ st.write("""
          
         As a final reflection, our exploration of occupations in humour has underscored the complexity of comedic expression. Occupations provide a rich tapestry of themes and stereotypes that comedians can draw upon, but the success of a joke often hinges on more than just the job title itself. Instead, it is the interplay of context, societal attitudes, and individual creativity that ultimately determines what makes us laugh.
          
-        Enjoy this final cartoon from contest that features occupational humour!
+        Enjoy this final cartoon from contest #726 that features occupational humour!
          """)
+ImageCaptionCenter_C(
+    image_path="data/newyorker_caption_contest_virgin/images/726.jpg",
+    caption=[
+        "The President says that we should ignore them they will just go away.",
+        "Relax! The president says they're harmless.",
+        "Should I call the SWAT team?",
+    ],
+)
 #
