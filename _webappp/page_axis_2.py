@@ -3,6 +3,8 @@ from _webappp.assets.app_content import PagesData
 from src.utils.general_utils import plot_html
 from _webappp.assets.app_design import *
 from _webappp.assets.app_definitions import *
+import pandas as pd
+import numpy as np
 
 PagesData.AXIS_2.value.description = """
     Humour is something so hard to model, that it is often simpler to look for patterns surrounding certain topics rather than trying to directly model exactly what makes something funny. In this section of our story on humour in  the New Yorker Caption Contest, we focus on occupational references in captions. Why? Our whole lives are oriented around our works and professions, thus it is no suprise that occupations have tunneled their way into our humour. Look at the figure below and decide which caption you find the funniest! 
@@ -18,18 +20,14 @@ ImageCaptionCenter_C(
         "I hear he had a meltdown after the holidays last year.",
     ],
 )
-st.write( 
-    """
-    The captions listed above are some of the funniest captions submitted for the given cartoon in caption contest. The winner was the second caption, which makes a reference to managers and plays on the stereotype of managers and corporate culture. You might say, okay, this is just one cartoon, but occupational references are actually quite common in our everyday humour. If the reader is interested in exploring how occupational humour is present, performs, and is distributed across the New Yorker Caption Contest dataset, then we encourage them to read on!
-    """
-)
+st.write( """
+    The captions above are among the funniest captions submitted for this cartoon. The winner was the second caption, which makes a reference to managers and plays on the stereotype of managers and corporate culture. You could reasonably shrug and say that this is only one cartoon, but occupational references are actually quite common in everyday humour. If you would like to see where occupational humour appears, how well it tends to perform, and how it is distributed across the New Yorker Caption Contest, read on.
+""")
 
 st.subheader("A few words about our methodology")
-st.write(
-    """
-    Identifying occupation references in captions is no easy feat: people make all kinds of references, from direct mentions of job titles to more subtle allusions to work-related activities or stereotypes. At the same time, we have a huge dataset of captions to analyse, so manual annotation is out of the question. To tackle the challenge, we have limited the research to looking for direct mentions of job titles from a curated list of about 33,000 occupations. We then preprocessed the captions to standardise the text (lowercasing, removing punctuation, etc.) and used string matching to identify occurences of job titles in the captions (plural forms were also considered). This method provides a solid foundation for seeing how we directly make fun of occupations, wihtout the complexity of trying to devise a more sophisticated NLP model to capture indirect references. However, we acknowledge that this approach misses a large part of humour related to subtle or indirect references to occupations, which could be explored in future work.
-"""
-)
+st.write("""
+        Identifying occupational references in captions is not straightforward. People can be explicit, by naming a job title, but they can also be indirect, by hinting at workplace routines, professional stereotypes, or role specific jargon. With a dataset this large, manual annotation is not feasible, so we take a deliberately simple approach: we restrict the analysis to direct mentions of job titles taken from a curated list of roughly 33,000 occupations. We then preprocess the captions to standardise the text by lowercasing and removing punctuation, and use string matching to detect job titles, including plural forms. This gives us a reliable baseline for studying where occupations appear and how they perform in humour, without introducing the extra assumptions and complexity of a model designed to infer indirect references. However, we acknowledge that this approach misses a large part of humour related to subtle or indirect references to occupations, which could be explored in future work.
+""")
 st.subheader("Where do occupations appear and how frequent are they?")
 
 st.write("""
@@ -48,6 +46,7 @@ ImageCaptionCenter_C(
         "Grouchy, you'll be Press Secretary, Dopey you'll be Attorney General...",
     ],
 )
+
 st.divider()
 
 st.write("""
@@ -59,11 +58,11 @@ st.write(
     Well, it seems like people like to joke about quite serious jobs, and perhaps jobs that everyone can relate to in some ways. So now that we know the most frequently occuring occupations, it makes sense to see in how many contests thy each appear in, becuase, what if their appearance is only due to the given setting? Well, the bar graph below for the 20 most common occupations tells us that all of the most frequent occupations are mentioned in around half the captions, with some being virtually everywhere. For instance, we see that some occupations like "president" and "cop" appear in nearly all contests (there are in total 383 contests in our dataset), while only "chef" appears in less than half of the contests. This suggests that all of these occupations are quite common and do not depend much on the specific cartoon content, however, there are some occupations which occur much more frequently than others, indicating that some jobs are more likely to be referenced in humour than others, no matter if the joke is actually funny or not.
     """
 )
-plot_html("_webappp/assets/graphs/occupation_frequency_plot.html")
+plot_html("_webappp/assets/graphs/term_num_contests_bar.html")
 st.write("""
-          Beyond simple frequency counts, we can check which occupations are actually the funniest, or the worst performers. This can be done by looking at the average or median funny scores, introduced in axis 1, of captions that reference each occupation above a certain threshold frequency to avoid noise. The results show us that it is indeed not the most frequent occupations that are present in the funniest captions: only "rabbi" made both cuts while the term "leader" were also among the worst performers. Notice however that the difference between the funniest and least funny occupations (in terms of both average and median funny score) is only around 5 points, which is not a very large margin considering the funny score scale from 0 to 100. This suggests that while some occupations might be slightly funnier than others on average, the overall difference in humour related to occupations is relatively small.
+          Beyond simple frequency counts, we can check which occupations are actually the funniest, or the worst performers. This can be done by looking at the average or median funny scores, introduced in axis 1, of captions that reference each occupation above a certain threshold frequency to avoid noise. The results show us that it is indeed not the most frequent occupations that are present in the funniest captions: only "rabbi" made both cuts while the term "leader" were also among the worst performers. Notice however that the difference between the funniest and least funny occupations is only around 5 points, which is not a very large margin considering the funny score scale from 0 to 100. This suggests that while some occupations might be slightly funnier than others on "average", the overall difference in humour related to occupations is relatively small.
          """)
-#insert bar charts with funniest and least funny occupations
+plot_html("_webappp/assets/graphs/best_worst_occupations_by_median.html")
 st.write("""
          Now that we have an idea of the most frequent, the best performers in terms of humour, and those that fell flat, we can choose a certain set of occupation that we can track a bit more in depth! We handpick frequent jobs so that we can make proper statistical tests. We choose to follow doctors, nurses, presidents, lawyers, interns, ceos, cops and clowns a bit more closely. More importantly, we are interested in the distribution of their funny score across different contests, to deduce which jobs from this list do we find to contribute to a joke the not. On a more statistical note, it is best to look at distributions instead of simply comparing jobs based on their averages or median funniness. 
          """)
@@ -107,45 +106,137 @@ st.markdown("""
          """)
 
 st.write("""
-          We believe these categories cover a large portion of the common occupations found in captions, and provide a good basis for following them for the rest of the analysis. So, how is funniness distributed across these categories? 
+          These categories cover a large portion of the general occupations found in captions, and provide a good basis for following them for the rest of the analysis. So now we can ask how funniness is distributed across these categories? 
          """)
 plot_html("_webappp/assets/graphs/occupation_category_boxplot.html")
 st.write("""
-        From the box plot above, we can see that ...
-         """)
+        The box plot tells a story that feels familiar by now, but still worth pausing on. Across all occupation categories, the typical caption lands at a global median funniness score of 23.12. Education and Academia comes out on top, while Public Safety, Military and Security sits at the bottom. Yet the bigger pattern is not the ranking, it is the shape. Every category leans left, meaning most captions that mention an occupation are rated on the unfunny side, with the occasional standout joke stretching the distribution upwards. In other words, occupational humour is usually ordinary, but it sometimes produces a real hit.
+
+This is a useful reminder for reading these plots in a data story. We are not simply asking which category is funniest on average. We are asking how humour behaves. The clusters near the lower scores suggest that job titles alone rarely carry a joke. The higher outliers suggest that when an occupation based caption works, it tends to work because it adds something else, such as a recognisable stereotype, a surprising role reversal, or a sharp twist on workplace culture.
+
+There is a practical implication too. These categories do not appear equally often in the dataset. Only five categories have more than 10,000 captions that mention them, so some boxes are built from much smaller evidence. That imbalance matters for interpretation, and it is why the distributional view is so helpful: it lets us separate broad patterns from a handful of unusually strong captions.
+         
+""")
 
 st.write("""
-        Through a Whitney-Mann U test (see methodology) we can show that the jobs in the group ... perform funnier than all other groups, followed by ... and .... The least funny occupation according to their performance compared to the others is ... While this statistic proves our intuition and shows us that indeed people in our society tend to laugh about ... more than about ..., A Cliffs delta test actually shows that due to the limited size of ech of these datasets, we cannot deduce conclusively that a group is certainly bigger than the other. 
-         
-        """)
+Using a series of Mann Whitney U tests (see Methodology), we can compare the funniness distributions across occupation groups rather than relying on a single measure. As before, the heatmap is astonishingly clear. Almost every category is significantly different from almost every other category. The only exceptions are MISSING
+""")
+plot_html("_webappp/assets/graphs/pairwise_occupation_category_heatmaps.html")
+st.write("""
+        This MISSING
+         """)
+st.write("""
+        So what have we learnt so the identified professional fields? Well, we can see that no occupational field is particularly funnier than others, but we can see that there are significant differences in funniness distributions between almost all categories. This suggests that while occupations do not strongly influence humour on their own, they do interact with other elements of a caption to produce different humour outcomes. This leads us to wonder what other elements might be at play here? Are there certain themes or topics that co occur with these occupational categories that might influence their funniness? Let's find out!
+         """)
 st.divider()
 
 st.subheader("Themes Across Captions")
+
+"""
+A natural next step is to look beyond how often occupations appear, and ask what tends to appear alongside them. When captions mention doctors, are they framed as heroes, as exhausted workers, or as something else entirely. When they mention law and government, do we see power, bureaucracy, or everyday frustration.
+
+ Before modelling, we remove the occupation terms themselves so that the model surfaces what co occurs with the jobs, rather than simply repeating the job titles. The interactive figures below summarise the most prominent themes within each category, giving us a clearer picture of the ideas, stereotypes, and situations that cluster around different kinds of work. Do any of these themes surprise you.
+"""
 st.write("""
-        A natural next step in the analysis of how occupations occur in captions concern what are the general topics that occur with each of the categories examined before. Are doctors seen as heroes who save our lives? What do we really associate with people in the legal ang fovernemnt field?
+        A natural next step is to look beyond how occupations occur in captions and concern ourselves with what tends to appear alongside them. When a caption mentions doctors, are they framed as heroes, as exhausted workers, or as something else entirely? When they mention law and government, do we see power, bureaucracy, or everyday frustration?
          
-        BERTopic is an amazing tool for finding patterns and topcis within sentences. Therefore, by grouping together all captions that mention a given category, we can fin what are the topics that occur in these captions (after removing the occupation itself). This can help us visualise what comes with the occupations in the sentence, and whether there are any recurring terms. The interactiv figures shown below highlight the most pertinent groupings found within each occupational category? Are there Any surprises?
+        To explore this, we group together all captions that reference each occupational category and run a topic model using BERTopic. You can find out more about BERTopic in the Methodology section. The interactive figures below summarise the most prominent themes within each category, giving us a clearer picture of the co-occuring themes with the different kinds of work. Do any of these themes surprise you?
          """
         )
-# interactive plot to change categorical grouping like Amelie did
+plot_html("_webappp/assets/graphs/aggregated_topics_all_categories.html")
+
 st.write("""
-        Let us highlight the most unexpected topics found for the groups. ...
+        That shows up immediately in the topic results: themes are less stable, and in a few cases no topic appears more than 200 times. This is a limitation of both the dataset and our deliberately conservative method, but it is also informative in its own right. Some kinds of work simply show up less often in caption humour, at least when we restrict ourselves to direct mentions of job titles.
+
+        Beyond that, we can see some interesting patterns emerging from the different topics. For certain categories like Arts and Entertainment the share of each topic is quite evenly distributed, suggesting a wider range of comedic angles people take. Meanwhile, in others, certain topic overshadow the rest. For example, in the Law, Government and Politics category, topics related to elections and democracy as well as Courts and legal proceedings dominate the humour landscape, while in Business, Management and Finance, topics related to corporate culture and office life are most prominent. 
+         
+        One thread runs through nearly every category: a taste for absurdism, satire, and metaphor. Captions frequently lean on exaggeration and improbable scenarios, not only to make a joke land, but also to sharpen whatever social observation sits behind it challenges of different professions. Finally, we can see that most of the topics we find for each category make sense given the nature of the occupations involved and we do not see any particularly surprising themes emerging.
          """)
 
 st.write("""
-        So what have we learnt so far? 
+        As we have now looked at the themes that occur alongside occupations, we can wonder how the sentiment related to these occupations varies. Do we tend to joke positively about certain professions while being more negative towards others? For example, do we see more positive sentiment towards healthcare workers compared to politicians? 
          """)
 
 st.divider()
 
 st.subheader("Do we appriciate the work of other people?")
 st.write("""
-        It is all fun and interesting to joke about occupations, we all do it, but do we paint certain occupations always negatively or positively? For example, doctors and nurses are heroes who help us when we get sick, but they are also somewhat related to death and so people might be afraid of them? or for example, a common stereotype linked to politicians is that they always lie... but is this reflected in the sentiment felt towards these jobs? Well let's find out. 
+        Joking about occupations is fun, and we all do it, but it raises a sharper question: do we consistently paint some jobs in a positive light and others in a negative one. For example, doctors and nurses are heroes who help us when we get sick, but they are also somewhat related to death and so people might be afraid of them? or take Politicians: A familiar stereotype paints them as slippery or dishonest, but does that cynicism actually show up in the tone of the captions. Let's find out!
+         
+        To explore this, we assign each caption a sentiment score using a standard sentiment analysis approach described in the Methodology section. We will follow closely the categories that had a large number of mentions to provide us with some statistical footing. The hitogram below summarises the sentiment distributions for each occupational category. A negative sentiment score indicates a more negative tone, while a positive score indicates a more positive tone.
          """)
 
 st.write("""
-        Vader's Sentiment is the perfect tool to look at the sentiment related to our categories of jobs. It provides a positive, negative and compound measure of the sentiment. We evaluate the sentiment towards the 5 groups identified in the previous section, and continue evaluating the sentiment related to them. The plots clearly show that there is no difference in sentimental ditribution: most of the comments show a neutral related to each group....
+        Unsurpringly, most occupational categories cluster around a neutral sentiment. This suggests that while captions do reference occupations, they do not consistently frame them in a positive or negative light but rather rely on other elements to carry the humour. However, we also see a slightly larger shift towards a positive sentiment for all occupations, with Law, Government and Politics being the most positive and Public Safety, Military and Security being the most negative. This could reflect a tendency to view professions related to governance and public service in a favourable light, while occupations in the arts might be associated with more critical or satirical humour. Nevertheless, the overall sentiment distributions are relatively similar across categories, indicating that occupational references alone do not strongly influence the tone of the humour.
+                """)
+#plot_html("_webappp/assets/graphs/occupation_sentiment_distribution.html")
+
+st.write("""
+        To provide some statistical backing to these observations, we can conduct analyse the statistical descriptors of the distributions. The table below shows the mean, median, standard deviation as well as the fraction of positive, negaive and neutral captions for each occupational category. The polarity imbalance simply measures the difference between the fraction of positive and negative captions, giving us a sense of the overall sentiment tilt for each category.
          """)
 
+data = [
+    ["Arts and Entertainment", 15660, 0.053247, 0.0, 0.332061, 0.325479, 0.235888, 0.438633, 0.089591],
+    ["Business, Management and Finance", 12721, 0.09743, 0.0, 0.317269, 0.351859, 0.161701, 0.48644, 0.190158],
+    ["Law, Government and Politics", 16707, 0.077949, 0.0, 0.338742, 0.355001, 0.198959, 0.446041, 0.156042],
+    ["Healthcare and Medicine", 8349, 0.07694, 0.0, 0.326821, 0.349144, 0.197628, 0.453228, 0.151515],
+    ["Service Industry and Hospitality", 13505, 0.09202, 0.0, 0.313933, 0.360163, 0.16468, 0.475157, 0.195483],
+    ["Public Safety, Military and Security", 10276, 0.052072, 0.0, 0.333473, 0.329895, 0.240658, 0.429447, 0.089237],
+]
+cols = [
+    "Occupation Category", "num_sentences", "avg_sentiment", "median_sentiment", "std_sentiment",
+    "pct_positive", "pct_negative", "pct_neutral", "polarity_imbalance"
+]
+df = pd.DataFrame(data, columns=cols)
 
+st.subheader("Sentiment summary by occupation category")
 
+# Nice interactive table
+st.dataframe(
+    df,
+    use_container_width=True,
+    hide_index=True,
+    column_config={
+        "Occupation Category": st.column_config.TextColumn(width="large"),
+        "Number of Sentences": st.column_config.NumberColumn("Captions", format="%d"),
+        "Average sentiment": st.column_config.NumberColumn("Mean sentiment", format="%.3f"),
+        "Median sentiment": st.column_config.NumberColumn("Median sentiment", format="%.3f"),
+        "Std sentiment": st.column_config.NumberColumn("Std dev", format="%.3f"),
+        "Positive (%)": st.column_config.NumberColumn("% positive", format="%.1f%%"),
+        "Negative (%)": st.column_config.NumberColumn("% negative", format="%.1f%%"),
+        "Neutral (%)": st.column_config.NumberColumn("% neutral", format="%.1f%%"),
+        "Polarity imbalance": st.column_config.NumberColumn("Polarity imbalance", format="%.3f"),
+    },
+)
+st.write("""
+        From the table, we can see that all occupational categories have a slightly positive average sentiment, with Business, Management and Finance having the highest average sentiment of 0.09743, while Public Safety, Military and Security has the lowest average sentiment of 0.052072. The median sentiment for all categories is 0.0, indicating that the tone linked to a category cannot be easily classified as positive or negative. The standard deviation of sentiment scores is relatively similar across categories, ranging from 0.313933 to 0.338742, suggesting a comparable level of sentiment variability within each category.
+        
+         All these statistical terms simply confirm our previous observations from the histograms: while there are slight differences in sentiment across occupational categories, the overall sentiment distributions are relatively similar, with a slight positive tilt. This suggests that while occupations do influence the tone of humour to some extent, they do not strongly dictate whether captions are perceived as positive or negative. Furthermore, in captions, people tend to make approximately the same number of positive as negative jokes about occupations, as the median sentiment is 0.0 for all categories. This indicates a balanced approach to humour, where occupations are not consistently framed in a positive or negative light.
+         """)
+
+st.write("""
+        To further the sentiment analysis, we can again conduct a series of statistical tests to compare the sentiment distributions across occupation categories. The heatmap below summarises the results of these tests, where a darker color indicates a more significant difference in sentiment between the two categories being compared.
+         """)
+#plot_html("_webappp/assets/graphs/pairwise_occupation_category_sentiment_heatmaps.html")
+st.write("""
+        The heatmap reveals that ...
+         """)
+
+st.write("""
+        To summarise, our sentiment analysis of occupational categories in captions indicates that while there are slight variations in sentiment across different professions, the overall tone remains relatively balanced and neutral. This suggests that humour related to occupations does not consistently lean towards positivity or negativity, but rather reflects a diverse range of perspectives and attitudes towards different professions.
+         """)
+
+st.divider()
+st.subheader("What have we learned?")
+st.write("""
+        This axis of our research into humour in the New Yorker Caption Contest has taken us on a journey through occupations, revealing intriguing patterns about how different professions are portrayed in comedic contexts. We began by identifying the most frequently mentioned occupations in captions, discovering that while some jobs like "clown" and "president" appear often, they do not necessarily correlate with higher funniness scores. Instead, we found that the funniness of captions mentioning occupations tends to cluster around a neutral median score, with occasional outliers that stand out as particularly funny. This suggests that while occupations can provide a backdrop for humour, they rarely carry the joke on their own. 
+
+        We then grouped occupations into broader categories, such as Healthcare, Law, and Arts, to explore whether certain fields were funnier than others. Our analysis revealed significant differences in funniness distributions across these categories, indicating that the context and stereotypes associated with different professions play a crucial role in shaping humour. For instance, captions referencing Education and Academia tended to be funnier on average compared to those about Public Safety and Security.
+         
+        Delving deeper, we employed topic modelling to uncover the themes that co-occur with occupational references in captions. This approach highlighted the diverse angles from which different professions are joked about, ranging from workplace culture to societal roles. Finally, our sentiment analysis revealed that while there are slight variations in sentiment across occupational categories, the overall tone remains relatively balanced and neutral. This suggests that humour related to occupations does not consistently lean towards positivity or negativity, but rather reflects a diverse range of perspectives and attitudes towards different professions.
+         
+        As a final reflection, our exploration of occupations in humour has underscored the complexity of comedic expression. Occupations provide a rich tapestry of themes and stereotypes that comedians can draw upon, but the success of a joke often hinges on more than just the job title itself. Instead, it is the interplay of context, societal attitudes, and individual creativity that ultimately determines what makes us laugh.
+         
+        Enjoy this final cartoon from contest that features occupational humour!
+         """)
+#
