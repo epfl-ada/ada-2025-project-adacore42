@@ -12,6 +12,7 @@ from _webappp.assets.app_content import PagesData
 from _webappp.assets.app_definitions import *
 from _webappp.assets.app_design import *
 
+from _webappp.assets.app_definitions import AppParams as AP
 
 from _webappp.assets.app_definitions import get_absolute_project_root
 get_absolute_project_root()
@@ -232,7 +233,7 @@ To illustrate this, we will focus on a single contest, the one from May 2022, fe
 #An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
 
 
-with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?"): 
+with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?", expanded=AP.expanders): 
     """
     a redigeeeeer --> toujours besoin avec modif text ?K.
     """

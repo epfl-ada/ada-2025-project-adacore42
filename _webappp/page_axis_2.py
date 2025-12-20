@@ -5,6 +5,7 @@ from _webappp.assets.app_design import *
 from _webappp.assets.app_definitions import *
 import pandas as pd
 import numpy as np
+from _webappp.assets.app_definitions import AppParams as AP
 
 PagesData.AXIS_2.value.description = """
     Humour is something so hard to model, that it is often simpler to look for patterns surrounding certain topics rather than trying to directly model exactly what makes something funny. In this section of our story on humour in  the New Yorker Caption Contest, we focus on occupational references in captions. Why? Our whole lives are oriented around our works and professions, thus it is no suprise that occupations have tunneled their way into our humour. Look at the figure below and decide which caption you find the funniest! 
