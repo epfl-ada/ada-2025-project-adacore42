@@ -83,16 +83,11 @@ def plot_cartoon(contest_id, root):
     img = Image.open(path)
     img.show()
 
-def plot_html(path):
-    """
-    Function to call on the .py for the website to plot treemap graphs
-    :param path: path to the save graph in html
-    """
-    
+def plot_html(path, height=450):
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    st.components.v1.html(html_content, height=700, scrolling=True)
+    st.components.v1.html(html_content, height=height, scrolling=False)
 
 def plot_wordcloud(path, graph_name, word_type, gender):
     with open(path, "rb") as f:

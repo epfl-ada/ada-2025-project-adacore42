@@ -52,6 +52,52 @@ class CaptionTopicClusterer:
                               "color_choice_white_black": [28],
                               "misc": [-1],
                               "chess_life_game" : [5, 6, 31]}
+        
+
+        self.agg_topic_258 = {
+            # Travail, carrière, corporate, bureau
+            "work_corporate": [2, 4, 11, 12, 15, 19, 23, 28],
+
+            # Télétravail, appels, zoom, téléphone, connexion
+            "remote_work_communication": [1, 2, 23, 28, 35],
+
+            # Avocats, juridique, poursuites, assurances
+            "legal_insurance": [0, 5, 8, 20, 21, 37],
+
+            # Finance, économie, banque, impôts
+            "finance_tax_economy": [10, 18, 25, 32, 34],
+
+            # IRS, taxes, gouvernement, politique
+            "government_politics": [17, 30, 38],
+
+            # Randonnée, montagne, nature, sommet
+            "hiking_mountain_nature": [6, 13, 14, 27],
+
+            # Jeux de mots autour de “hike” (take hike / price hike / tax hike)
+            "hike_wordplay": [6, 14, 29, 34],
+
+            # Être suivi, surveillance, parano
+            "being_followed_surveillance": [9, 22, 33],
+
+            # Sécurité, accidents, responsabilité
+            "safety_accidents": [21, 31],
+
+            # Famille, relations personnelles
+            "family_relationships": [36, 8],
+
+            # Logistique, retard, trafic, timing
+            "delay_traffic_timing": [7, 19],
+
+            # Objets / accessoires absurdes
+            "objects_props": [3, 16, 26, 24],
+
+            # Animaux, métaphores animales
+            "animals_metaphors": [18],
+
+            # Divers / humour difficile à regrouper
+            "misc": [-1]
+        }
+
 
         
         self.fun_metric = fun_metric
@@ -704,8 +750,15 @@ class CaptionTopicClusterer:
 
 
     # bubble enrichment
-    def plot_bubble_enrichment(self, merged, top_n=30, save=None):
+    def plot_bubble_enrichment(self, merged, top_n=30, save=None): 
         df_plot = merged.head(top_n).copy()
+
+        # --- Colormap personnalisée : jaune (bas) -> vert (haut)
+        custom_colorscale = [
+            (0.0, "#f1c40f"),  # jaune
+            (0.5, "#a3cb38"),  # jaune-vert
+            (1.0, "#27ae60")   # vert
+        ]
 
         fig = px.scatter(
             df_plot,
@@ -713,12 +766,12 @@ class CaptionTopicClusterer:
             y="enrichment_top_vs_overall",
             size="overall_count",
             color="enrichment_top_vs_overall",
-            color_continuous_scale="tropic",
+            color_continuous_scale=custom_colorscale,
             size_max=40,
             hover_data={
-                "overall_count": ":.0f",                 # entier
+                "overall_count": ":.0f",
                 "top_count": ":.0f",
-                "enrichment_top_vs_overall": ":.2f",     # 2 décimales
+                "enrichment_top_vs_overall": ":.2f",
                 "aggregated_topic": False
             },
             title="Topic enrichment : overrepresentation of topic within top vs global captions"
@@ -731,7 +784,8 @@ class CaptionTopicClusterer:
             yaxis_title="Enrichment (top / global)",
             xaxis_tickangle=-45,
             coloraxis_colorbar=dict(
-                title="Enrichment"
+                title="Enrichment",
+                ticks="outside"
             ),
             showlegend=True,
             legend_title_text="Global number of captions in the topic"
@@ -746,12 +800,16 @@ class CaptionTopicClusterer:
             )
         )
 
-
-        fig.update_yaxes(zeroline=True, zerolinewidth=1, zerolinecolor="gray")
+        fig.update_yaxes(
+            zeroline=True,
+            zerolinewidth=1,
+            zerolinecolor="gray"
+        )
 
         if save: 
             fig.write_html(save)
         fig.show()
+
 
 
     def plot_bubble_enrichment_plt(self, merged, top_n=30):

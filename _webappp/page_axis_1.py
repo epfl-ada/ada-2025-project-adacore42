@@ -1,6 +1,8 @@
 import streamlit as st
 import plotly.graph_objects as go
 import numpy as np
+import pandas as pd
+import random
 from _webappp.assets.app_content import PagesData
 from src.utils.general_utils import plot_html
 from src.utils.general_utils import plot_cartoon
@@ -15,35 +17,45 @@ plots = PWA.load_plots()
 #pageData = PagesData.AXIS_1.value
 
 #pageData.page_firstBlock()
-st.title("Axis 1: What is considered funny?")
-st.write(
+st.title("What is considered funny?")
+st.markdown(
     """
-    Welcome to this section, where we explore some of the mechanisms behind humor.
+    Welcome to this section where we explore some of the mechanisms behind humor !
     """
 )
 st.divider()
 
-st.write(
+st.markdown(
     """
     Let’s take a first glance at the two cartoons and their captions below. Which one do you find funnier?
     Take a moment to trust your first reaction before going any further.
     """
 )
+col1, col2 = st.columns(2)
 
-st.image("data/newyorker_caption_contest_virgin/images/592.jpg", width=700)
-#st.write("'We're not getting Shakespeare, but about every three minutes we get a presidential tweet.'")
-st.markdown(
+with col1:
+    st.markdown("")
+    st.image("data/newyorker_caption_contest_virgin/images/592.jpg", width=650)
+    #st.markdown("'We're not getting Shakespeare, but about every three minutes we get a presidential tweet.'")
+    st.markdown(
     "<h3 style='text-align: center;'>We're not getting Shakespeare, but about every three minutes we get a presidential tweet.</h3>",
     unsafe_allow_html=True)
-st.image("data/newyorker_caption_contest_virgin/images/665.jpg", width=700)
-st.markdown(
+
+with col2:
+    st.markdown("")
+    st.image("data/newyorker_caption_contest_virgin/images/665.jpg", width=650)
+    st.markdown(
     "<h3 style='text-align: center;'>Lunch is on me.</h3>",
     unsafe_allow_html=True)
+
+
+
+
 st.divider()
 
-st.write(
+st.markdown(
     """
-    The two captions you just read are the very best and very worst of all captions combined in 10 years of contests. 
+    The two captions you just read are the very best and very worst of all captions combined in eight years of contests. 
     The first one was unanimously voted not funny with 6 467 votes while the second received 15 232 votes for funny.
     Are you surprised by this large difference?
 
@@ -53,74 +65,204 @@ st.write(
     """
 )
 
+st.divider()
 st.subheader("Let's study what makes captions funny")
 
-st.write(
+st.markdown(
     """
     Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
-    Could it be a general pattern? Let’s find out by comparing the funniest and least funny captions, using the 
-    extreme quantiles of our funny score distribution(0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each. We then 
-    compare several features and the results are shown in the following figures. 
-    Both groups use mostly neutral words, although the least funny captions show more variability.
-    Subjectivity differs significantly: funny captions tend to be more objective. 
-    No clear differences in word count, punctuation.
+    Could it be a general pattern? 
     """
 )
-plot_html(r"_Other/katia_analysis/plotfunny_vs_not_funny.html")
-st.write(
-    """
-    Was our first intuition wrong? well maybe not totally, if we look at our unfunny group we discover that all captions comes from only 4 contest, very close in time, suggesting that image context may strongly influence voting behavior and could affect our analyses.
-    So let's approach the task with another angle : compare best and worth captions for each contest! 
-    And the result indeed changes as presented in the following figure. Subjectivity is no longer significant, but word count and punctuation become important. The funniest captions are indeed shorter, with a median length of around 10 words. 
-    """
-)
+col1, col2 = st.columns([1, 2])
 
-plot_html(r"_Other/katia_analysis/plotbest_vs_worst_captions.html")
+with col1:
+    st.markdown(
+        """
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            Let’s find out by comparing the funniest and least funny captions, using the 
+            extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each.
+            <br><br>
+            We compared several features such as length and punctuation and assessed the statistical significance of the results using a Student’s t-test.
+            <br><br>
+            The results show that only subjectivity is significantly different, with funny captions being more objective.
+            For the other features, the distributions are quite similar, although more variability is found in polarity for the not-funny group.
+            <br><br>
+            Overall, there are no clear differences in word count or punctuation.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
+
+with col2:
+    plot_html(
+        r"_webappp/assets/graph/plotfunny_vs_not_funny_2.html",
+        height=600
+    )
+
+st.markdown(
+    """
+    Was our first intuition wrong? Well maybe not totally, because when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
+    suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends. So let's approach the task with another angle.
+    """
+)
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    st.markdown(
+        """
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            We will now compare the best and worth captions for each contest!
+            This give us a dataset with 384 captions for each group.
+            <br><br>
+            The results now show a significant difference between the two groups in terms of word count and punctuation usage. The least funny captions tend to be longer and contain more punctuation.
+            <br><br>
+            Subjectivity, on the other hand, is no longer significantly different between the groups, and sentiment polarity follows very similar distributions. This suggests that using more positive or negative words does not, by itself, influence the perception of funniness.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
+
+with col2:
+    plot_html(
+        r"_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
+        height=600
+    )
+
+st.markdown(
+    """
+    A first conclusion we can draw here is that it appear there is a difference in the surface features of funnier cpations and not funny captions. Especially in the number of words and number of punctiations.
+    We can now turn to another question : what are these captions actually talking about?
+    """)
+
+
+st.divider()
+
+
+st.subheader("Are there best topics to be funny and win the contest ?")
+st.markdown(
+    """
+    We will now dive into an analysis of caption topics. To do so, we will first cluster captions according to their topics, and then examine where the winning captions stand.
+
+    There are two winning captions: one chosen by the public vote, and the other selected by the New Yorker editorial team. 
+    
+    To illustrate this, we will focus on a single contest, the one from May 2022, featuring the cartoon below. Let’s see what we can discover!
+    """)
+#Now that we have tried to analyse what elements makes a joke funnier, we will dive into caption-topics clustering, to try to see if there is some topics better than other, some that creates more fun.
+#An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
+
+
+with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?"): 
+    """
+    a redigeeeeer --> toujours besoin avec modif text ?K.
+    """
+
+
+st.markdown(
+    """
+    <div style="text-align: center;">
+        <br>
+        <strong>Contest number 801 - Published May 23, 2022.</strong>
+        <br>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+col1, col2, col3 = st.columns([1, 3, 1])
+with col1:
+    st.markdown("")
+
+
+with col2:
+    st.markdown("")
+    st.image("data/newyorker_caption_contest_virgin/images/801.jpg", width=650)
+
+with col3:
+    st.markdown("")
 
 
 
 
 st.divider()
 
+@st.cache_data
+def load_captions():
+    df = pd.read_csv("_webappp/assets/csv/dataA_topics_289.csv")
+    # Exclure misc / -1
+    df = df[df["aggregated_topic"] != "misc"]
+    return df
 
-st.subheader("Are there any topics to best create funniness and win the contest ?")
-st.write(
-    """
-    Now that we have tried to analyse what elements makes a joke funnier, we will dive into caption-topics clustering, to try to see if there is some topics better than other, some that creates more fun.
-    An interesting question is to see if winning captions, according to the crowd-sourced ranking, and accorded to The New Yorker, corresponds to those 'best-winning' topics... See further the answer !
-    We will firstly build the pipeline analysing captions among one contest, and then generalize and perform statistical analysis to finally conclude about this question.
-    """
-)
+df_captions = load_captions()
 
-st.image("data/newyorker_caption_contest_virgin/images/801.jpg", width=700)
+if "random_caption_idx" not in st.session_state:
+    st.session_state.random_caption_idx = random.randint(0, len(df_captions) - 1)
+
+row = df_captions.iloc[st.session_state.random_caption_idx]
+
+
 st.markdown(
-    """
-    <div style="text-align: center;">
-    <\br>**Contest number 801, published May 23, 2022**<\br>
-    <\br>*Top Rated caption*: "What do you mean I don’t have time for another game?"<\br>
-    <\br>*The New Yorker's winner*: "I thought you’d be better at the endgame."<\br>
-    <\br>*Number of votes*: 562,261<\br>
+    f"""
+    <div style="text-align: center; padding: 20px;">
+        <h9>Some proposed captions of this contest</h9>
+        <p style="font-size: 26px;"><i>"{row['caption']}"</i></p>
+        <p style="font-size: 20px; color: gray;">
+            Topic: <b>{row['aggregated_topic']}</b>
+        </p>
     </div>
     """,
     unsafe_allow_html=True
 )
 
-st.divider()
 
-st.write(
+if st.button("See another joke ?"):
+    new_idx = st.session_state.random_caption_idx
+    while new_idx == st.session_state.random_caption_idx:
+        new_idx = random.randint(0, len(df_captions) - 1)
+    st.session_state.random_caption_idx = new_idx
+st.markdown(
     """
-    Some proposed captions of this contest :
-    ICI ON POURRAIT AFFICHER DES CAPTIONS ALEATOIRES, LA PERSONNE PEUT LA FAIRE CHANGER AVEC UN BOUTON 'see an other joke ?'
-    disponibles dans le csv au path : r"ada-2025-project-adacore42/data/newyorker_caption_contest_virgin/data/801.csv" avec le header "caption".
+    <h3 style="text-align:center;">
+        <em style="color: orange;">
+            Crowd Top Rated caption:'What do you mean I don’t have time for another game?'
+        </em>
+    </h3>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
     """
+    <h3 style="text-align:center;">
+        <em style="color: steelblue;">
+            The New Yorker's winner: 'I thought you’d be better at the endgame.'
+        </em>
+    </h3>
+    """,
+    unsafe_allow_html=True
 )
 
 
+
+
 st.divider()
 
 
 
-st.write(
+st.markdown(
     """
     **Identify common topics among all captions**
 
@@ -131,15 +273,39 @@ st.write(
     
     
     Let's see what topic have been identified from this cartoon, and the relative appreciation of people for them !
-    
-    
+    """
+    )
+
+
+
+
+st.divider()
+
+
+st.markdown(
+    """
     **Comparing funny score of all topics**
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_289.html")
 
 
-st.write(
+if "plot_winners1" not in st.session_state:
+    st.session_state.plot_winners1 = False
+
+if st.button(
+    "Show winning captions in topics",
+    key="btn_plot_winners1"
+):
+    st.session_state.plot_winners1 = not st.session_state.plot_winners1
+
+if st.session_state.plot_winners1:
+    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html", height=600)
+else:
+    plot_html("_webappp/assets/graph/boxplot_topics_289.html", height=600)
+    
+
+
+st.markdown(
     """
     Don't you see a problem here ? ... Yes perfectly ! All topics seems to have almost the same median, and furthermore this median is low ! Around 25/100... Are the jokes that bad ??
     NO. This result arises from the fact that we aggregated together ................ This will be addressed in the next section. 
@@ -153,24 +319,9 @@ st.write(
 )
 
 
-st.write(
-    """
-    LA FAUDRAIT METTRE UN BOUTON QUI QUAND ON CLIQUE DESSUS FASSE APPARAITRE LE DEUXIEME GRPAHIQUE A LA PLACE DU PREMIER
-    """
-)
-plot_html(r"_Other\cycy_analysis\saved_plots\boxplot_topics_with_winners_289.html")
 
 
-st.write(
-    """
-    The *The New Yorker* winning caption *"I thought you’d be better at the endgame."* corresponds to the *Time, Clock, and Engame* topic, [TODO : EXPLAIN HUMOUR].
-    The *crowd-sourced ranking* winning caption *"What do you mean I don’t have time for another game?"* corresponds to the *Chess game or Life game* topic, [TODO : EXPLAIN HUMOUR].
-    """
-)
-
-
-
-st.write(
+st.markdown(
     """
     **Long-tail distribution bias**:
     Those boxplots per topic allow us to see the distributions of caption scores within each topic, but as we saw, there is an issue of "smoothing all captions scores" with this simple plot. Indeed, if each topic clustered contains many mediocre captions and a few exellent ones, the average will flatten everything, resulting in a very low average score per topic. Therefore, we need to look beyond the average. We can :
@@ -182,89 +333,80 @@ st.write(
     Let's see how does that changes our topic analysis...
     """
 )
-plot_html(r"_Other\cycy_analysis\saved_plots\enrichment_289.html")
-
-st.write(
-    """
-    LALALA, interpréter le graphique. Taxes sont en moyenne 2.5 fios plus rpz dans le top 10% que dans la masse (40-60%)., emotionnal reactions (with haha!, don't you dare, ....) sont 2 fois plus rpz, les autres sont en moyenne autant treprésentées dans le top 10 que dans le reste des propositions.
-
-    **Concerning the proportion of captions with a score higher than 30/100** :
-    """
-)
-plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_289.html")
 
 
-st.write(
-    """
-    Blablabla commenter le graph ........... Commenter about taxes, about death_grim_reaper_afterlife, faire une remarque sur le topic pop_culture.
-    
-    Were does lie our two winning captions, do they belong to a topic where there is a high percentage of more funny captions ?
-    """
+
+
+choice = st.radio(
+    "Select your method:",
+    ["Enrichment score", "Proportion of caption above 30/100"],
+    horizontal=True
 )
 
-st.write(
-    """
-    LA AUSSI FAUDRAIT METTRE UN BOUTON POUR FAIRE POP LE GRAPHIQUE CI DESSOUS, A LA PLACE DE L'ANCIEN
-    """
-)
-plot_html(r"_Other\cycy_analysis\saved_plots\prop_above_thresh_with_winners_289.html")
+if choice == "Enrichment score":
+
+    plot_html(r"_webappp/assets/graph/enrichment_289.html", height=600)
+
+    st.markdown(
+        """
+        LALALA, interpréter le graphique. Taxes sont en moyenne 2.5 fios plus rpz dans le top 10% que dans la masse (40-60%)., emotionnal reactions (with haha!, don't you dare, ....) sont 2 fois plus rpz, les autres sont en moyenne autant treprésentées dans le top 10 que dans le reste des propositions.
+
+        **Concerning the proportion of captions with a score higher than 30/100** :
+        """
+    )
+
+
+if choice == "Proportion of caption above 30/100":
+    if "plot_winners2" not in st.session_state:
+        st.session_state.plot_winners2 = False
+
+    if st.button(
+        "Show winning captions in topics",
+        key="btn_plot_winners2"
+    ):
+        st.session_state.plot_winners2 = not st.session_state.plot_winners2
+
+    if st.session_state.plot_winners2:
+        plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html", height=600)
+    else:
+        plot_html("_webappp/assets/graph/prop_above_thresh_289.html", height=600)
 
 
 
-st.write(
-    """
-    Is the winning topic also the one that outperforms overall ? In this case not at all ! The topic that generally outperforms is the one refering to Taxes, and to the famous idiom of the american statesman Benjamin Franklin:
-
-    'Our new Constitution is now established, and has an appearance that promises permanency; but in this world nothing can be said to be certain, except death and taxes.'
-
-    Commenter encore sur celaaaa .................
-    """
-)
+    st.markdown(
+        """
+        Blablabla commenter le graph ........... Commenter about taxes, about death_grim_reaper_afterlife, faire une remarque sur le topic pop_culture.
+        
+        Were does lie our two winning captions, do they belong to a topic where there is a high percentage of more funny captions ?
+        """
+    )
 
 
+    st.markdown(
+        """
+        Is the winning topic also the one that outperforms overall ? In this case not at all ! The topic that generally outperforms is the one refering to Taxes, and to the famous idiom of the american statesman Benjamin Franklin:
 
+        'Our new Constitution is now established, and has an appearance that promises permanency; but in this world nothing can be said to be certain, except death and taxes.'
+
+        Commenter encore sur celaaaa .................
+        """
+    )
+
+
+
+st.divider()
+
+
+st.subheader("Conclusion de l'axe 1")
 
 
 
 
 
 st.divider()
-st.write(
+st.markdown(
     """
 
     """
 )
-
-
-
-# Un exemple de coment plotter un plot a l'aide de plotly
-if plots:
-    plot = plots[0]
-
-    # Plotly line figure
-    fig = go.Figure()
-
-    fig.add_trace(
-        go.Scatter(
-            x=plot.Y_data,
-            y=plot.X_data,
-            mode="lines",
-            line=dict(width=1),
-            name=plot.title,
-        )
-    )
-
-    fig.update_layout(
-        title=plot.title,
-        xaxis_title=plot.X_label,
-        yaxis_title=plot.Y_label,
-        template="plotly_white",
-        height=400,
-        margin=dict(l=40, r=40, t=50, b=40),
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-else:
-    st.error("No stored plots found.")
 

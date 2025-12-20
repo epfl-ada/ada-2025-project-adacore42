@@ -59,18 +59,18 @@ class HomePageAxis_C:
         
     def render(self):
 
-        col1, col2 = st.columns([4, 1])
+        col1, col2 = st.columns([4, 3])
         with col1:
-            st.markdown(f"**{self.title}**")
+            # st.markdown(f"**{self.title}**")
+            st.write(self.description)
             
         with col2:
-            if st.button("Go  →", key=self.axisPath, type="primary", width=200):
+            if st.button(self.title, key=self.axisPath, type="primary", width=500):
                 st.switch_page(self.axisPath)
 
-        with st.expander("*more...*", expanded=AppParams.expanders):
-            st.write(
-                self.description
-            )
+
+
+        
 
 
 

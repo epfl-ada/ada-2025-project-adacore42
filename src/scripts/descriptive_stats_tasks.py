@@ -29,14 +29,14 @@ def plot_votes_vs_score(dataA, cartoon_ids=(108, 150, 260, 370)):
 # ====================================
 # 2. HISTOGRAM + KS test : normal distribution ?
 # ====================================
-def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370), boxplot=True):
+def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370), save=None, boxplot=True):
     """
     Histograms of average scores for several cartoons
-    Results of the normality test (KS)s
+    Results of the normality test (KS)
     Comparative box plot + descriptive statistics
     """
     # histogram
-    plt.figure(figsize=(6, 4))
+    fig1 = plt.figure(figsize=(6, 4))
     means_data = {}
 
     for cartoon_id in cartoon_ids:
@@ -55,6 +55,10 @@ def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370), boxplot=True):
     plt.ylabel("Frequency")
     plt.legend()
     plt.grid(True, linestyle="--", alpha=0.5)
+
+    if save:
+        fig1.savefig(save, bbox_inches='tight', dpi=300)
+
     plt.show()
 
     # Descriptive statistics
@@ -87,11 +91,12 @@ def plot_mean_histograms(dataA, cartoon_ids=(108, 150, 260, 370), boxplot=True):
 
     return df_stats
 
+
 # ==========================================
 # 3. Histrograms of 'funny' vote ratios
 # ==========================================
 
-def plot_funny_ratios(dataA, cartoon_ids=(108, 150, 260, 370)):
+def plot_funny_ratios(dataA, cartoon_ids=(108, 150, 260, 370), save=None):
     """
     Display on a single figure (4 subplots side by side)
     the distribution of the ratios of 'funny', 'somewhat_funny' and 'not_funny' votes
@@ -99,31 +104,36 @@ def plot_funny_ratios(dataA, cartoon_ids=(108, 150, 260, 370)):
     """
     cols = ['not_funny', 'somewhat_funny', 'funny']
     n = len(cartoon_ids)
-    
+
     fig, axes = plt.subplots(1, n, figsize=(3 * n, 4), sharey=True)
-    
+
     if n == 1:
         axes = [axes]
-    
+
     for ax, cartoon_id in zip(axes, cartoon_ids):
         df = dataA[cartoon_id].copy()
         df[cols] = df[cols].div(df['votes'], axis=0)
 
         for col in cols:
             ax.hist(df[col], label=col, bins=100, alpha=0.6)
-        
+
         ax.set_xlabel("Vote ratio")
         ax.set_title(f"Cartoon {cartoon_id}")
         ax.grid(True, linestyle='--', alpha=0.6)
         if ax == axes[0]:
             ax.set_ylabel("Number of captions")
-    
+
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='lower center', ncol=3)
-    
+
     fig.suptitle("Distribution of funniness votes (4 cartoons)", fontsize=14)
     fig.tight_layout(rect=[0, 0, 1, 0.95])
+
+    if save:
+        fig.savefig(save, bbox_inches='tight', dpi=300)
+
     plt.show()
+
 
 
 

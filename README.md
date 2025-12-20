@@ -3,7 +3,7 @@
 ## **Abstract**  
 Humor is a universal yet complex form of expression. The more we think about it and the more complexes it becomes! An example of humor purposes could be in the way of dealing with more ‘serious’ matters [1] or easing social  tensions and establishing social bonds [2].
 
-With this in mind, this project aim to investigate how jokes reflect societal traits and values. Our analysis will focus on three major themes: politics and gender. We will begin by examining what is generally perceived as “funny” and “unfunny,” and then explore how humor operates within each of these social domains. Finally, we will synthesize our findings to understand what humor reveals about the norms, power structures, and sensitivities of contemporary society.
+With this in mind, this project aim to investigate how jokes reflect societal traits and values. We will begin by examining what is generally perceived as “funny” and “unfunny,” and then explore how humor operates within two social domains : politics and gender. Finally, we will synthesize our findings to understand what humor reveals about the norms of contemporary society.
 
 
 ## **Research Questions**  
@@ -16,7 +16,8 @@ The project is divided into **3 axes of research directions**:
 
 ### **Axis 2: Professions, Politics, and Power** 
 
-- Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?” What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
+- Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?
+- What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
 - Do captions reflect partisan leanings (Democrat vs. Republican) or mock political figures more broadly? Are the political jokes rated differently?
 
 
@@ -24,9 +25,9 @@ The project is divided into **3 axes of research directions**:
 
 - How are men and women depicted in New Yorker cartoons and captions, and do these depictions reflect traditional gender roles or stereotypes?
 
-- How does audience response (e.g., votes or winning captions) relate to gendered content—do captions about one gender receive more positive attention, and does this reinforce or challenge stereotypes?
+- How does audience response (e.g., votes or winning captions) relate to gendered content : do captions about one gender receive more positive attention, and does this reinforce or challenge stereotypes?
 
-## **Proposed Additional Datasets**  
+## **Additional Datasets**  
 
 1. **Five datasets are used to construct an exhaustive list of occupations**:  
    - [**O*NET**](https://www.onetonline.org/find/all)  
@@ -50,9 +51,10 @@ This part aims to understand which characteristics of a caption explain its perc
 
 Data preparation : Each caption is associated with:
 - Its funniness score (target variable).
-- A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using TextBlob), Semantic alignment with the image.
+- A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using TextBlob).
+take well into account the numbers of votes. The different group of funninness will then be compared in boxplot and their difference in mena will be assesd with a Student't t test. 
 
-To address the first research questions, we will use correlation and non-parametric tests such as Spearman’s ρ, Kruskal–Wallis test and Mann–Whitney U to assess how each feature individually relates to funniness. To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
+The second research questions will be covered through ... ... To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
 
 Finally, to capture multivariate and non-linear relationships, we will train a Random Forest model using all features simultaneously. The features of importance would then be deduce as the higher nodes in the decision trees correspond to features with stronger predictive power.
 
@@ -61,6 +63,7 @@ Finally, to capture multivariate and non-linear relationships, we will train a R
 First, we build a **comprehensive list of occupations**. This is done by merging aforementioned datasets. 
 
 **Analysis**
+
 The **jobs in each caption must be extracted**, allowing us to:  
 - Track the **count of occupations**.
 - Analyse **where and when** they occur.
@@ -71,7 +74,8 @@ Similar approach taken for the **political research**:
 - Treat **ambiguous words** with care (e.g., *left* and *right*).
 - Analyse the **funniness score** of the captions and evolution of volume.
 
-**Visualisations:**  
+**Visualisations**  
+
 - **Bar charts**: frequency of occupations/political topics.
 - **Bar charts**: average funniness scores per category.
 - **Heatmaps**: cross-tabulating professions and sentiments.
@@ -94,10 +98,10 @@ This section investigates how men and women are depicted in cartoons and caption
 - Temporal plots for shifts in depictions and language.
 
 
-### Website **
+### Website 
 URL : MISSING LINK 
 
-### Members contribution**
+### Members contribution
 
  - General Statistical necessities: Cyrielle
  - Axis 1: Katia & Cyrielle
@@ -105,7 +109,6 @@ URL : MISSING LINK
  - Axis 3: Amelie
  - Data preprocessing & website: Dominic
  - Datastory : All members wrote the part of the website that corresponds to their analysis. 
-
 
 ## **Sources**
 

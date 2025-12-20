@@ -6,13 +6,17 @@ from _webappp.assets.app_definitions import PageDataFormat
 class PagesData(Enum):
     HOME       = PageDataFormat("page_home.py",      
                                 "Home")
+    
+    METHODS     = PageDataFormat("page_methods.py",     
+                                "Methods", 
+                                "515.jpg")
 
     AXIS_1     = PageDataFormat("page_axis_1.py",     
-                                "Axis 1: What Is Considered Funny?", 
+                                "What Is Considered Funny?", 
                                 "515.jpg")
 
     AXIS_2     = PageDataFormat("page_axis_2.py",     
-                                "Axis 2: Professions, Politics, and Power", 
+                                "Professions, Politics, and Power", 
                                 "545.jpg")
 
     AXIS_3     = PageDataFormat("page_axis_3.py",     
@@ -26,6 +30,7 @@ class PagesData(Enum):
 myPages = {
     "ADACore42 navigation bar:": [
         PagesData.HOME.value.get_page(),
+        PagesData.METHODS.value.get_page(),
         PagesData.AXIS_1.value.get_page(),
         PagesData.AXIS_2.value.get_page(),
         PagesData.AXIS_3.value.get_page(),
@@ -42,25 +47,28 @@ myPages = {
 # ---------------------------
 
 PagesData.HOME.value.description = """
-Welcome to ADAcore42!  
+Welcome to ADAcore42!
 This page introduces the project, navigation structure, and quick links.
 """.strip()
 
+PagesData.METHODS.value.description = """
+This page present the dataset, ...
+""".strip()
+
 PagesData.AXIS_1.value.description = """
-Axis 1 explores what is considered funny through caption analysis, ..
+**Axis 1**: explores what is considered funny through caption analysis.
 """.strip()
 
 PagesData.AXIS_2.value.description = """
-Axis 2 focuses on political themes, professions, and power dynamics in humor.
+**Axis 2**: focuses on political themes, professions, and power dynamics in humor.
 """.strip()
 
 PagesData.AXIS_3.value.description = """
-Axis 3 study the representation of gender in captions and ... 
+**Axis 3**: study the representation of gender in captions and...
 """.strip()
 
 PagesData.ABOUTUS.value.description = """
-Information about the ADAcore42 team, project goals, methodology, 
-and contributors.
+Information about the ADAcore42 team, project goals, methodology, and contributors.
 """.strip()
 
 
