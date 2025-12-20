@@ -74,7 +74,7 @@ st.subheader("Methods at a Glance")
 
 with st.container():
 
-    col_1, col_2, col_3 = st.columns([1, 1.8, 1])
+    col_1, col_2, col_3 = st.columns([1.5, 1.3, 1.5])
     with col_1:
         "**Processing of the data**"
         st.info("We centralized data paths, performed cleaning and consistency checks, constructed a robust funny score, tokenized and lemmatized captions, and applied models for similarity, clustering, and gender analysis.")
