@@ -47,7 +47,7 @@ myPages = {
 # ---------------------------
 
 PagesData.HOME.value.description = """
-Welcome to ADAcore42!  
+Welcome to ADAcore42!
 This page introduces the project, navigation structure, and quick links.
 """.strip()
 
@@ -56,20 +56,19 @@ This page present the dataset, ...
 """.strip()
 
 PagesData.AXIS_1.value.description = """
-Axis 1 explores what is considered funny through caption analysis, ..
+**Axis 1**: explores what is considered funny through caption analysis.
 """.strip()
 
 PagesData.AXIS_2.value.description = """
-Axis 2 focuses on political themes, professions, and power dynamics in humor.
+**Axis 2**: focuses on political themes, professions, and power dynamics in humor.
 """.strip()
 
 PagesData.AXIS_3.value.description = """
-Axis 3 study the representation of gender in captions and ... 
+**Axis 3**: study the representation of gender in captions and...
 """.strip()
 
 PagesData.ABOUTUS.value.description = """
-Information about the ADAcore42 team, project goals, methodology, 
-and contributors.
+Information about the ADAcore42 team, project goals, methodology, and contributors.
 """.strip()
 
 

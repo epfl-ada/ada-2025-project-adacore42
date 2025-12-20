@@ -2,71 +2,47 @@ import streamlit as st
 from _webappp.assets.app_definitions import HomePageAxis_C
 from _webappp.assets.app_content import PagesData as PD
 from _webappp.assets.app_definitions import AppParams as AP
-
+from _webappp.assets.app_design import *
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Definition style button page 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
-st.markdown(
-    """
-    <style>
-    div.stButton > button {
-        background-color: #4CAF50;   /* vert */
-        color: white;
-        font-size: 20px;
-        padding: 12px 28px;
-        border-radius: 10px;
-        border: none;
-        width: 100%;
-    }
-    div.stButton > button:hover {
-        background-color: #45a049;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown("""
-<style>
-div[data-testid="stAlert"] {
-    background-color: rgba(76, 175, 80, 0.12);  /* vert clair transparent */
-    border-left: 6px solid #4CAF50;            /* bande verte */
-    color: #333333;                            /* texte gris foncé */
-}
-
-div[data-testid="stAlert"] svg {
-    color: #333333;                            /* icône verte */
-}
-</style>
-""", unsafe_allow_html=True)
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Title and Header 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
+with st.container():
+    st.markdown(
+        """
+        <div style="text-align:center;">
+            <h1>Humor as a Mirror</h1>
+            <h3>A reflection of Society, Politics, and Stereotypes</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-#st.title("Humor as a Mirror")
-st.markdown(
-    "<h1 style='text-align: center;'>Humor as a Mirror</h1>",
-    unsafe_allow_html=True
-)
-#"The New Yorker Captions as Reflections of Society, Politics, and Stereotypes"
-#"A reflection of society through comedy
-st.markdown(
-    "<h3 style='text-align: center;'>A reflection of Society, Politics, and Stereotypes</h3>",
-    unsafe_allow_html=True
-)
 
-col1, col2, col3 = st.columns([1, 3, 1]) # pour centrer 
-with col2:
-    st.image("data/newyorker_caption_contest_virgin/images/733.jpg", width=700)
+    col_l, col_c, col_r = st.columns([1, 2, 1])
+    with col_c:
+        st.image(
+            "data/newyorker_caption_contest_virgin/images/733.jpg",
+            use_container_width=True
+        )
 
-#"They don't hate us because we're wolves; they hate us because we're lawyers."
-st.markdown(
-    "<h5 style='text-align: center;'>They don't hate us because we're wolves; they hate us because we're lawyers.</h5>",
-    unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="text-align:center; margin-top: 0.75rem;">
+            <h5>
+            They don't hate us because we're wolves; they hate us because we're lawyers.
+            </h5>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 st.divider()
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -92,32 +68,27 @@ st.divider()
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
+st.subheader("Methods at a Glance")
+with st.container():
 
-#dataNpipeline_c = st.container ()
-methodsNglance_c = st.container ()
-axisContent_c = st.container()
+    col_1, col_2, col_3 = st.columns([1, 1.8, 1])
+    with col_1:
+        "**Funny Score**"  
+        st.info("We built a metric that captures what most people find funny and not funny.")
 
-# ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+    with col_2:
+        "**Semantic Similarity & Clustering** "
+        st.info("SBERT embeddings (all-MiniLM-L6-v2), K-means clusters, UMAP projections, and cluster quality evaluation via intra- vs inter-cluster similarity.")
+    
+    with col_3:
+        "**Occupation & Gender Lexicons**"
+        st.info("Built to detect job references and gender indicators in captions and metadata.")
+        
 
-with methodsNglance_c:
-    st.subheader("Methods at a Glance")
-
-    "**Funny Score**"  
-    st.info("We built a metric that captures what most people find funny and not funny.")
-
-    "**Semantic Similarity & Clustering** "
-    st.info("SBERT embeddings (all-MiniLM-L6-v2), K-means clusters, UMAP projections, and cluster quality evaluation via intra- vs inter-cluster similarity.")
-
-    "**Occupation & Gender Lexicons**"
-    st.info("Built to detect job references and gender indicators in captions and metadata.")
+    "*If you are interested by learning more about the dataset, the processing pipeline and methods used, please check the sections below.*"
 
 
-    st.write(
-    """
-    If you are interested by learning more about the dataset, the processing pipeline and methods used, please check the sections below.
-    """
-    )
-    ### PLEASE FIX :
+
     if st.button("Go to Methods →"):
         st.switch_page(PD.METHODS.value.path)
 
@@ -126,7 +97,7 @@ with methodsNglance_c:
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
-with axisContent_c:
+with st.container():
 
     st.subheader("Axes of analysis")
 
@@ -145,6 +116,7 @@ with axisContent_c:
     
 
 
+st.divider()
 
 
 
@@ -155,24 +127,47 @@ with axisContent_c:
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
-st.divider()
-st.subheader("Conclusion")
-st.write(
-    """
-    Conclusion : ...
-        - This app shows not just which captions win — "
-        - but what our jokes reveal about culture, bias, and how society laughs."
-
-    We hope you enjoyed exploring societal reflections through humour with us! Now it's time to travel back home for hollidays. Merry christmas and don't forget your towel !
-    """
-)
-col1, col2, col3 = st.columns([1, 3, 1]) # pour centrer 
-with col2:
-    st.image("data/newyorker_caption_contest_virgin/images/606.jpg", width=600)
-#"They don't hate us because we're wolves; they hate us because we're lawyers."
+with st.container():
     st.markdown(
-    "<h5 style='text-align: center;'>Is this Part 2 of Hitchhikers Guide to The Galaxy?</h5>",
-    unsafe_allow_html=True)
+        """
+        <div style="text-align:center;">
+            <h2>Conclusion</h2>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
+    st.markdown(
+        """
+        <div style="text-align:center; max-width: 2000px; margin: 0 auto;">
+            <p>
+                This app shows not just which captions win —
+                but what our jokes reveal about culture, bias, and how society laughs.
+            </p>
+            <p>
+                We hope you enjoyed exploring societal reflections through humour with us.
+                Now it's time to travel back home for holidays.
+                Merry Christmas — and don’t forget your towel!
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
+    col_l, col_c, col_r = st.columns([1, 1, 1])
+    with col_c:
+        st.image(
+            "data/newyorker_caption_contest_virgin/images/606.jpg",
+            use_container_width=True
+        )
 
+    st.markdown(
+        """
+        <div style="text-align:center; margin-top: 0.75rem;">
+            <h5>Is this Part 2 of The Hitchhiker’s Guide to the Galaxy?</h5>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+st.divider()
