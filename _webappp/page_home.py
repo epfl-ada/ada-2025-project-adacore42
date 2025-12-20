@@ -69,6 +69,9 @@ st.divider()
 
 
 st.subheader("Methods at a Glance")
+
+
+
 with st.container():
 
     col_1, col_2, col_3 = st.columns([1, 1.8, 1])

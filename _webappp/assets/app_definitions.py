@@ -1,5 +1,6 @@
 from enum import Enum
 import streamlit as st
+from src.utils.general_utils import plot_html
 
 
 
@@ -88,3 +89,127 @@ def get_absolute_project_root():
     if str(root) not in sys.path: sys.path.insert(0, str(root))
     
     return root
+
+
+
+
+
+
+
+
+
+
+
+
+class ImageCaptionCenter_C:
+    def __init__(self, image_path, caption, center_ratio=2):
+        """
+        center_ratio: relative width of the middle column
+        """
+        self.center_ratio = center_ratio
+        self.image_path = image_path
+        self.caption = caption
+        self.render()
+
+
+    def render(self):
+        col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
+
+        with col_c:
+            st.image(
+                self.image_path,
+                use_container_width=True
+            )
+
+            st.markdown(
+                f"""
+                <div style="text-align:center; margin-top: 0.75rem;">
+                    <h5>{self.caption}</h5>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class TwoTabGraph_C:
+    def __init__(
+        self,
+        label_1,
+        path_1,
+        label_2,
+        path_2,
+        center_ratio=3,
+        height=450,
+        isImage=False,
+        additionalComponent_1=None,
+        additionalComponent_2=None,
+    ):
+        self.label_1 = label_1
+        self.path_1 = path_1
+        self.label_2 = label_2
+        self.path_2 = path_2
+        self.center_ratio = center_ratio
+        self.height = height
+        self.isImage = isImage
+        self.additionalComponent_1 = additionalComponent_1
+        self.additionalComponent_2 = additionalComponent_2
+
+        self.render()
+
+    def render(self):
+        st.markdown(
+            """
+            <style>
+            div[data-testid="stTabs"] div[data-baseweb="tab-list"]{
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            div[data-testid="stTabs"] {
+                width: 100% !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+        tab1, tab2 = st.tabs([self.label_1, self.label_2])
+
+        with tab1:
+            col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
+            with col_c:
+                if self.isImage:
+                    st.image(self.path_1, width=1000)
+                else:
+                    plot_html(self.path_1, height=self.height)
+
+                if callable(self.additionalComponent_1):
+                    self.additionalComponent_1()
+
+        with tab2:
+            col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
+            with col_c:
+                if self.isImage:
+                    st.image(self.path_2, width=1000)
+                else:
+                    plot_html(self.path_2, height=self.height)
+
+                if callable(self.additionalComponent_2):
+                    self.additionalComponent_2()
