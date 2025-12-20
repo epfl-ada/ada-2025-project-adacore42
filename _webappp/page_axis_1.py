@@ -409,17 +409,6 @@ st.markdown(
 
 
 
-st.divider()
-
-
-st.subheader("Can we predict fun?")
-st.markdown(
-    """
-    As we learned about features of captions and their relativity to funny metric we tried to create a model that would captures the fun. This part of the work was actually very unconcluant
-    with variance explained ... There is a lot of variability in the data and simple feature that have been shown to be differnet in different groups are not actually enough to predict fun and more 
-    advance feature could be taken into account such as .. as they have done it ....
-    """
-)
 
 st.divider()
 st.markdown(

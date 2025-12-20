@@ -48,3 +48,34 @@ with st.container ():
             )
 
     st.divider()
+
+with st.container ():
+    st.subheader("Dataset and Pipeline Overview")
+
+
+    with st.expander("**Data sources**", expanded=AP.expanders):
+        st.write(
+            """
+            - 380+ caption contests  
+            - CSV caption tables, metadata JSON  
+            - Occupation list (≈33k curated roles)  
+            - Gendered lexicon from *Jailbreak the Patriarchy*  
+            """
+        )
+
+
+    with st.expander("**Processing pipeline**", expanded=AP.expanders):
+        st.write(
+            """
+            1. Centralised path + loading utilities  
+            2. Data cleaning and consistency checks 
+                2.1 Concatenate all 385 CSV in a list of CSV
+                2.2 Remove redundant columns (index and rank)
+                2.3 Consistency verification 
+            3. Construction of a robust *funny score*  
+            4. Tokenisation and lemmatisation 
+            5. Models for similarity, clustering and gender analysis  
+            """
+        )
+
+    st.divider()
