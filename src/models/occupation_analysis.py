@@ -1169,7 +1169,7 @@ class OccupationAnalysis:
             # Prepare data for boxplot
             data = [df.loc[df["category"] == cat, "funniness_score"].values for cat in ordered_categories]
 
-            fig, ax = plt.subplots(figsize=(max(10, len(ordered_categories) * 0.35), 6))
+            fig, ax = plt.subplots(figsize=(max(20, len(ordered_categories) * 0.35), 12))
 
             boxprops = dict(linewidth=1.2)
             medianprops = dict(color="black", linewidth=1.5)
@@ -1227,7 +1227,8 @@ class OccupationAnalysis:
                 f"{len(ordered_categories)} categories • "
                 f"{len(df)} caption-category matches • "
                 f"Global median: {df['funniness_score'].median():.2f}",
-                fontsize=12
+                fontsize=15,
+                pad = 30
             )
 
             # Improve layout
@@ -1354,7 +1355,7 @@ class OccupationAnalysis:
         
         return counts_per_contest
 
-    def plot_temporal_trends(self, occupations, title = None, cumulative = False, save_path=None, color='crimson'):
+    def plot_temporal_trends(self, occupations, title = None, cumulative = False, save_path=None, color='crimson', plot_method='plotly'):
         '''
         Plots temporal trends for a list of occupations.
         '''
@@ -1369,47 +1370,89 @@ class OccupationAnalysis:
         else:
             y = counts_per_contest
         
-        fig = px.line(x = list(y.keys()), y = list(y.values()), markers = True, labels = {'x':'Contest ID', 'y':'Cumulative Count' if cumulative else 'Count'},
-                      title = title or f'Temporal Trend for Occupations: {", ".join(occupations)}')
-        fig.update_traces(line=dict(color=color))
-        
-        fig.update_layout(template = 'plotly_white', height = 500, hovermode = 'closest', title = dict(x = 0.5, xanchor = 'center', text = title or f'Temporal Trend for Occupations: {", ".join(occupations)}'))
+        if plot_method == 'plotly':
+            fig = px.line(x = list(y.keys()), y = list(y.values()), markers = True, labels = {'x':'Contest ID', 'y':'Cumulative Count' if cumulative else 'Count'},
+                        title = title or f'Temporal Trend for Occupations: {", ".join(occupations)}')
+            fig.update_traces(line=dict(color=color))
+            
+            fig.update_layout(template = 'plotly_white', height = 500, hovermode = 'closest', title = dict(x = 0.5, xanchor = 'center', text = title or f'Temporal Trend for Selected Occupations'),
+                            xaxis_title = 'Contest ID',
+                            yaxis_title = 'Cumulative Count' if cumulative else 'Count')
 
-        if save_path:
-            fig.write_html(save_path)
-        fig.show()
+            if save_path:
+                fig.write_html(save_path)
+            fig.show()
+        elif plot_method == 'plt':
+            plt.figure(figsize=(10,6))
+            plt.plot(list(y.keys()), list(y.values()), marker='o', color=color)
+            plt.title(title or f'Temporal Trend for Selected Occupations')
+            plt.xlabel('Contest ID')
+            plt.ylabel('Cumulative Count' if cumulative else 'Count')
+            plt.grid(axis='y', linestyle='--', alpha=0.4)
+            plt.tight_layout()
+
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+            plt.show()
 
 
-    def plot_group_temporal_trends(self, group_dict, cumulative = False, min_total = 5, save_path=None):
+    def plot_group_temporal_trends(self, group_dict, cumulative = False, min_total = 5, save_path=None, plot_method='plotly'):
         '''
         Plots temporal trends for multiple occupation groups.
         group_dict : dict mapping group names to lists of occupations
         '''
+        if plot_method == 'plotly':
+            fig = px.line()
 
-        fig = px.line()
+            for group_name, occupations in group_dict.items():
+                series = self.temporal_counting(occupations)
 
-        for group_name, occupations in group_dict.items():
-            series = self.temporal_counting(occupations)
+                if sum(series.values()) < min_total:
+                    continue
 
-            if sum(series.values()) < min_total:
-                continue
+                if cumulative:
+                    y = pd.Series(series).sort_index().cumsum()
+                else:
+                    y = pd.Series(series).sort_index()
 
-            if cumulative:
-                y = pd.Series(series).sort_index().cumsum()
-            else:
-                y = pd.Series(series).sort_index()
+                fig.add_scatter(x = y.index, y = y.values, mode = 'lines+markers', name = group_name)
 
-            fig.add_scatter(x = y.index, y = y.values, mode = 'lines+markers', name = group_name)
+            fig.update_layout(template = 'plotly_white', height = 600, hovermode = 'closest',
+                            title = dict(x = 0.5, xanchor = 'center', text = 'Temporal Trends for Occupation Groups ({cumulative} counts)'.format(cumulative = 'Cumulative' if cumulative else 'Non-cumulative')),
+                            xaxis_title = 'Contest ID',
+                            yaxis_title = 'Cumulative Count' if cumulative else 'Count')
 
-        fig.update_layout(template = 'plotly_white', height = 600, hovermode = 'closest',
-                          title = dict(x = 0.5, xanchor = 'center', text = 'Temporal Trends for Occupation Groups ({cumulative} counts)'.format(cumulative = 'Cumulative' if cumulative else 'Non-cumulative')),
-                          xaxis_title = 'Contest ID',
-                          yaxis_title = 'Cumulative Count' if cumulative else 'Count')
+            if save_path:
+                fig.write_html(save_path)
+            fig.show() 
+        elif plot_method == 'plt':
+            plt.figure(figsize=(10,6))
 
-        if save_path:
-            fig.write_html(save_path)
-        fig.show() 
+            for group_name, occupations in group_dict.items():
+                series = self.temporal_counting(occupations)
 
+                if sum(series.values()) < min_total:
+                    continue
+
+                if cumulative:
+                    y = pd.Series(series).sort_index().cumsum()
+                else:
+                    y = pd.Series(series).sort_index()
+
+                plt.plot(y.index, y.values, marker='o', label=group_name)
+
+            plt.title('Temporal Trends for Occupation Groups ({cumulative} counts)'.format(cumulative = 'Cumulative' if cumulative else 'Non-cumulative'))
+            plt.xlabel('Contest ID')
+            plt.ylabel('Cumulative Count' if cumulative else 'Count')
+            plt.legend()
+            plt.grid(axis='y', linestyle='--', alpha=0.4)
+            plt.tight_layout()
+
+            if save_path:
+                plt.savefig(save_path, dpi=300, bbox_inches="tight")
+
+            plt.show()
 
     #--------------------------------------------------------#
     # Topic modelling
