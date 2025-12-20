@@ -3,6 +3,37 @@ import streamlit as st
 st.markdown(
     """
     <style>
+    p {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    """
+    <style>
+    li {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
+        
+
+
+
+
+st.markdown(
+    """
+    <style>
     div.stButton > button[kind="primary"] {
         background-color: #4CAF50;
         color: white;
@@ -37,3 +68,36 @@ div[data-testid="stAlert"] svg {
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+
+
+
+# st.markdown(
+#     """
+#     <style>
+#     .titleButton button {
+#         background: linear-gradient(135deg, #4CAF50, #2e7d32);
+#         color: white;
+#         font-size: 28px;
+#         font-weight: 700;
+#         padding: 18px 36px;
+#         border-radius: 14px;
+#         border: none;
+#         width: 100%;
+#         letter-spacing: 0.5px;
+#     }
+
+#     .titleButton button:hover {
+#         background: linear-gradient(135deg, #45a049, #256628);
+#         transform: scale(1.02);
+#     }
+
+#     .titleButton button:active {
+#         transform: scale(0.98);
+#     }
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )

@@ -1,5 +1,6 @@
 from enum import Enum
 import streamlit as st
+from src.utils.general_utils import plot_html
 
 
 
@@ -19,7 +20,7 @@ class Tovarisch:
 
 class PageDataFormat:
     TITLE_IMG_DIR = "_webappp/assets/title_img/"
-    TitleImageWidth = 400
+    TitleImageWidth = 200
 
     def __init__(self, path: str, title: str, pathTitleImg: str = "", description: str = ""):
         self.path = path
@@ -29,8 +30,8 @@ class PageDataFormat:
 
     def get_page(self):
         return st.Page(self.path, title=self.title)
-    
-    def get_titleImage(self, width: int = 400):
+
+    def get_titleImage(self, width: int = 200):
         return st.image(self.titleImagePath, width=width)
     
     def get_title(self):
@@ -40,7 +41,7 @@ class PageDataFormat:
 
     def page_firstBlock(self):
         st.title(self.title)
-        col1, col2 = st.columns([1, 3], vertical_alignment="center")
+        col1, col2 = st.columns([2, 5], vertical_alignment="center")
         with col1:
             st.image(self.titleImagePath, self.TitleImageWidth)
         with col2:
@@ -88,3 +89,139 @@ def get_absolute_project_root():
     if str(root) not in sys.path: sys.path.insert(0, str(root))
     
     return root
+
+
+
+
+
+
+
+
+
+
+
+
+class ImageCaptionCenter_C:
+    def __init__(self, image_path, caption, center_ratio=2):
+        """
+        image_path : str
+        caption   : str | list[str]
+        center_ratio: relative width of the middle column
+        """
+        self.image_path = image_path
+        self.center_ratio = center_ratio
+
+        # Normalize caption to list
+        if isinstance(caption, str):
+            self.caption = [caption]
+        else:
+            self.caption = caption
+
+        self.render()
+
+    def render(self):
+        col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
+
+        with col_c:
+            st.image(
+                self.image_path,
+                use_container_width=True
+            )
+
+            captions_html = "".join(
+                f"<p style='text-align:center; margin: 0.6rem 0; font-style: italic;'>{c}</p>"
+                for c in self.caption
+            )
+
+            st.markdown(
+                f"""
+                <div style="margin-top: 1rem;">
+                    {captions_html}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class TwoTabGraph_C:
+    def __init__(
+        self,
+        label_1,
+        path_1,
+        label_2,
+        path_2,
+        center_ratio=3,
+        height=450,
+        isImage=False,
+        additionalComponent_1=None,
+        additionalComponent_2=None,
+    ):
+        self.label_1 = label_1
+        self.path_1 = path_1
+        self.label_2 = label_2
+        self.path_2 = path_2
+        self.center_ratio = center_ratio
+        self.height = height
+        self.isImage = isImage
+        self.additionalComponent_1 = additionalComponent_1
+        self.additionalComponent_2 = additionalComponent_2
+
+        self.render()
+
+    def render(self):
+        st.markdown(
+            """
+            <style>
+            div[data-testid="stTabs"] div[data-baseweb="tab-list"]{
+                display: flex !important;
+                justify-content: center !important;
+                width: 100% !important;
+            }
+            div[data-testid="stTabs"] {
+                width: 100% !important;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+        tab1, tab2 = st.tabs([self.label_1, self.label_2])
+
+        with tab1:
+            col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
+            with col_c:
+                if self.isImage:
+                    st.image(self.path_1, width=1000)
+                else:
+                    plot_html(self.path_1, height=self.height)
+
+                if callable(self.additionalComponent_1):
+                    self.additionalComponent_1()
+
+        with tab2:
+            col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
+            with col_c:
+                if self.isImage:
+                    st.image(self.path_2, width=1000)
+                else:
+                    plot_html(self.path_2, height=self.height)
+
+                if callable(self.additionalComponent_2):
+                    self.additionalComponent_2()
