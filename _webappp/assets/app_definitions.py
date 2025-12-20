@@ -3,6 +3,9 @@ import streamlit as st
 from src.utils.general_utils import plot_html
 
 
+CENTER_RATIO = 5
+CENTER_RATIO_FULL = 5
+
 
 class AppParams:
     expanders = True

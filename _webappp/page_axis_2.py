@@ -5,6 +5,7 @@ from _webappp.assets.app_design import *
 from _webappp.assets.app_definitions import *
 import pandas as pd
 import numpy as np
+from _webappp.assets.app_definitions import AppParams as AP
 
 PagesData.AXIS_2.value.description = """
     Humour is something so hard to model, that it is often simpler to look for patterns surrounding certain topics rather than trying to directly model exactly what makes something funny. In this section of our story on humour in  the New Yorker Caption Contest, we focus on occupational references in captions. Why? Our whole lives are oriented around our works and professions, thus it is no suprise that occupations have tunneled their way into our humour. Look at the figure below and decide which caption you find the funniest! 
@@ -31,8 +32,8 @@ st.write("""
 st.subheader("Where do occupations appear and how frequent are they?")
 
 st.write("""
-        When we split all the captions in the New York Caption Contest dataset into two groups, those that reference occupations and those that do not, we can see that only a small fraction of captions actually talk about occupations. Specifically, out of the total number of captions, only about 6.14% contain direct references to job titles from our curated list. While this seems like a small value, it must be kept in mind that we are looking at direct references only, so all occupational humour might go up to a much larger percentage.
-
+       If we split the captions into two simple groups, those that mention an occupation and those that do not, one thing becomes clear straight away. Only a small share of captions talk about jobs at all. Specifically, out of the total number of captions, only about 6.14% contain direct references to job titles from our curated list. That may sound low, but it is worth remembering what this number does and does not mean. We are only counting explicit job titles, so any occupational humour that works through hints or stereotypes without naming the role will not be captured here.
+         
         Interestingly, a simple t-test reveals that captions with occupational references are on average rated less funny than those without (p-value < 0.05). While this might seem counterintuitive at first, it could be explained by the fact that occupational humour often relies on stereotypes or clichés that might not resonate with all audiences. Additionally, people might have different experiences and perceptions of certain occupations, which could influence their appreciation of jokes related to them. In any case, we shoul not lose hope in occupational humour just yet! There could be many confounding factors at play here and the sheer difference in group sizes (6.04% vs 93.96%) makes it hard to draw definitive conclusions. We should dig deeper and look at distributions, patterns, and other factors before making any strong claims about the role of occupations in humour.
          
         After all this text, I am sure you will enjoy a cartoon break! Here is a cartoon from contest #661 that features some occupational humour!   

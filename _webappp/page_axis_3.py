@@ -4,6 +4,7 @@ from _webappp.assets.app_content import PagesData
 from _webappp.assets.app_definitions import *
 from src.utils.general_utils import plot_html
 from _webappp.assets.app_design import *
+from _webappp.assets.app_definitions import AppParams as AP
 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Containered structure 
@@ -268,7 +269,7 @@ with behind_the_scene_2:
         look at our beautiful graph that shows our findings. If you don't, well we made you a simple explanation next. 
         """)
 
-    with st.expander("The magic of BERTopic"):  
+    with st.expander("The magic of BERTopic", expanded=AP.expanders):  
         st.write("""       
             BERTopic is a topic modeling method that groups captions based on meaning, not just word frequency. Instead 
             of counting how often words appear, it first turns each caption into a 
@@ -303,21 +304,21 @@ with behind_the_scene_2:
 
     def additionalComponent_1():
         
-        with st.expander("Men eat… a lot."):
+        with st.expander("Men eat… a lot.", expanded=AP.expanders):
             st.write(
                 """ 
                 Food-related theme take up a surprisingly large share of male-labeled captions, but not the wholesome kind. 
                 Think alcohol, junk food, dinner menus, and indulgent eating. The humor paints men as enthusiastic consumers, 
                 always one drink or snack away from the punchline."""
         )
-        with st.expander("Politics, but it is in fact Trump."):
+        with st.expander("Politics, but it is in fact Trump.", expanded=AP.expanders):
             st.write("""
                 Political humor does appear in male captions, but with no diversity: it’s Trump, Trump, and… Trump again. 
                 Apparently, when men enter politics in New Yorker cartoons, they do so wearing a red tie and making headlines.
             """
             )
         
-        with st.expander("Only men get the full life arc."):
+        with st.expander("Only men get the full life arc.", expanded=AP.expanders):
             st.write("""    
             Certain themes appear exclusively in male-labeled captions: transportation, death, arts & music, and pop culture. 
             According to these cartoons, only men take the subway, play guitars, play some baseball, watch Edward Scissorhands, contemplate mortality 
@@ -328,7 +329,7 @@ with behind_the_scene_2:
 
 
     def additionalComponent_2():
-        with st.expander("Karen is… just a name. Or is it?"):
+        with st.expander("Karen is… just a name. Or is it?", expanded=AP.expanders):
             st.write("""
             If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
             it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
@@ -336,7 +337,7 @@ with behind_the_scene_2:
             full personality without the need of a backstory.
             """
         )
-        with st.expander("Women in politics: meet Hillary. That’s it."):
+        with st.expander("Women in politics: meet Hillary. That’s it.", expanded=AP.expanders):
 
             st.write("""
             Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
@@ -350,7 +351,7 @@ with behind_the_scene_2:
     path_1="_webappp/assets/graph/topic_male.html",
     label_2="Women",
     path_2="_webappp/assets/graph/topic_female.html",
-    center_ratio=3,
+    center_ratio=CENTER_RATIO,
     isImage=False,
     height=450,
     additionalComponent_1=additionalComponent_1,
@@ -462,7 +463,7 @@ with gender_crowd_3:
         path_1="_webappp/assets/graph/funniness_distrib_by_gender.html",
         label_2="Evolution",
         path_2="_webappp/assets/graph/evolution_funny_score.html",
-        center_ratio=3,
+        center_ratio=CENTER_RATIO,
         height=450
     )
 
@@ -477,7 +478,7 @@ with gender_crowd_3:
         Together, they answer two different questions: Is there a difference? and Does that difference actually matter?
         If you don't know any of these tests, don't worry we included explanations for both of them.""")
 
-    with st.expander("Mann–Whitney U Test or *“Are these scores different at all”*?"):
+    with st.expander("Mann–Whitney U Test or *“Are these scores different at all”*?", expanded=AP.expanders):
 
         st.write(
             """
@@ -492,7 +493,7 @@ with gender_crowd_3:
             In practice, a significant result indicates a systematic shift between the distributions (e.g., one group tends to receive higher scores), 
             but it does not specify the magnitude of this shift.""")
         
-    with st.expander("Cliff’s delta or *“How big is the difference, really?”*"):
+    with st.expander("Cliff’s delta or *“How big is the difference, really?”*", expanded=AP.expanders):
         st.write(
             """
             Because our dataset contains many more men-labeled captions than women-labeled ones, we rely on 

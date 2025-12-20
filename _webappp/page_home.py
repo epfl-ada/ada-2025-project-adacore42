@@ -74,19 +74,19 @@ st.subheader("Methods at a Glance")
 
 with st.container():
 
-    col_1, col_2, col_3 = st.columns([1, 1.8, 1])
+    col_1, col_2, col_3 = st.columns([1.5, 1.3, 1.5])
     with col_1:
+        "**Processing of the data**"
+        st.info("We centralized data paths, performed cleaning and consistency checks, constructed a robust funny score, tokenized and lemmatized captions, and applied models for similarity, clustering, and gender analysis.")
+        
+    with col_2:
         "**Funny Score**"  
         st.info("We built a metric that captures what most people find funny and not funny.")
 
-    with col_2:
+    with col_3:
         "**Semantic Similarity & Clustering** "
         st.info("SBERT embeddings (all-MiniLM-L6-v2), K-means clusters, UMAP projections, and cluster quality evaluation via intra- vs inter-cluster similarity.")
     
-    with col_3:
-        "**Occupation & Gender Lexicons**"
-        st.info("Built to detect job references and gender indicators in captions and metadata.")
-        
 
     "*If you are interested by learning more about the dataset, the processing pipeline and methods used, please check the sections below.*"
 

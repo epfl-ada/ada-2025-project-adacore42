@@ -25,7 +25,17 @@ st.markdown(
 )
 
 
-
+st.markdown(
+    """
+    <style>
+    iframe {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
         
 
 
@@ -101,3 +111,6 @@ div[data-testid="stAlert"] svg {
 #     """,
 #     unsafe_allow_html=True
 # )
+
+
+
