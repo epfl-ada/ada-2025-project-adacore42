@@ -84,8 +84,8 @@ with st.container():
         st.info("We built a metric that captures what most people find funny and not funny.")
 
     with col_3:
-        "**Semantic Similarity & Clustering** "
-        st.info("SBERT embeddings (all-MiniLM-L6-v2), K-means clusters, UMAP projections, and cluster quality evaluation via intra- vs inter-cluster similarity.")
+        "**Semantic embedding & Topic Clustering with BERTtopic** "
+        st.info("SBERT embeddings (all-MiniLM-L6-v2), UMAP projection, and HDBSCAN clustering.")
     
 
     "*If you are interested by learning more about the dataset, the processing pipeline and methods used, please check the sections below.*"
