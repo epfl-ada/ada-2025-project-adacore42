@@ -11,6 +11,7 @@ from itertools import combinations
 from sentence_transformers import SentenceTransformer
 from bertopic import BERTopic
 from sklearn.metrics import silhouette_score
+from scipy.stats import skewtest
 
 from gensim.corpora import Dictionary
 from gensim.models.coherencemodel import CoherenceModel
@@ -360,7 +361,106 @@ class CaptionTopicClusterer:
     # Visualisations
     # ---------------------------------------------------------
 
-    #plot topic scor
+    def plot_funny_score_distributions_by_topic_subplots(self, data_m, top_n_topics=6, bins=50, save=None):
+        """
+        One subplot per topic, density-normalized histogram + KDE
+        Colors are consistent with the overlay plot
+        """
+
+        # 🔹 Topics les plus fréquents
+        top_topics = (
+            data_m["aggregated_topic"]
+            .value_counts()
+            .head(top_n_topics)
+            .index
+        )
+
+        n_topics = len(top_topics)
+        n_cols = 3
+        n_rows = math.ceil(n_topics / n_cols)
+
+        fig, axes = plt.subplots(
+            n_rows,
+            n_cols,
+            figsize=(5 * n_cols, 4 * n_rows),
+            sharex=True,
+            sharey=True
+        )
+
+        axes = axes.flatten()
+
+        for ax, topic in zip(axes, top_topics):
+            values = (
+                data_m
+                .loc[data_m["aggregated_topic"] == topic, "funny_score_scaled"]
+                .dropna()
+                .values
+            )
+
+            if len(values) < 5:
+                ax.set_visible(False)
+                continue
+
+            # Histogramme normalisé
+            ax.hist(
+                values,
+                bins=bins,
+                density=True,
+                alpha=0.35,
+                color="#97cee4",
+                edgecolor="black"
+            )
+
+            # KDE
+            kde = stats.gaussian_kde(values)
+            x_kde = np.linspace(values.min(), values.max(), 300)
+            ax.plot(
+                x_kde,
+                kde(x_kde),
+                color="#32657a",
+                linewidth=2
+            )
+
+            # Skew test
+            skew, pval = skewtest(values, alternative='two-sided')
+            skew_signif = "significative" if pval < 0.05 else "not significative"
+            skew_text = f"Skew: {skew:.2f}\np={pval:.2e}\n({skew_signif})"
+
+            # Médiane de la distribution
+            median = np.median(values)
+            ax.axvline(median, color="#064661", linestyle="--", linewidth=1.5, label=f"Median: {median:.2f}")
+
+            # Légende
+            ax.legend(
+                handles=[
+                    plt.Line2D([0], [0], color="#064661", linestyle="--", linewidth=1.5, label=f"Median: {median:.2f}"),
+                    plt.Line2D([0], [0], color="none", label=skew_text)
+                ],
+                loc="upper right"
+            )
+
+            ax.set_title(f"""Topic "{topic}" """)
+            ax.grid(True, linestyle="--", alpha=0.4)
+
+        # Supprimer les axes vides
+        for ax in axes[len(top_topics):]:
+            ax.set_visible(False)
+
+        fig.suptitle("Distribution of funny_score_scaled by topic", fontsize=14)
+        fig.supxlabel("Funny score (scaled)")
+        fig.supylabel("Density")
+        plt.tight_layout(rect=[0, 0, 1, 0.95])
+
+        if save:
+            plt.savefig(save, dpi=500, bbox_inches="tight")
+
+        plt.show()
+
+
+
+
+
+    #plot topic score
     def plot_topic_scores_plt(self, df_data, df_scores, save=None):
         fig = plt.figure(figsize=(10, 6))
         sns.boxplot(data=df_data.sort_values(by=self.fun_metric, ascending=False), x="aggregated_topic", y=self.fun_metric)
