@@ -154,7 +154,7 @@ with setting_the_scene_1:
         label_2="Captions",
         path_2="_webappp/assets/graph/counts_captions.html",
         center_ratio=8,
-        height=800)
+        height=450)
     st.divider()
 
 
@@ -387,7 +387,7 @@ with behind_the_scene_2:
     path_2="_webappp/assets/graph/topic_female.html",
     center_ratio=40,
     isImage=False,
-    height=1000,
+    height=450,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2
     )
@@ -498,7 +498,7 @@ with gender_crowd_3:
         label_2="Evolution",
         path_2="_webappp/assets/graph/evolution_funny_score.html",
         center_ratio=8,
-        height=800
+        height=450
     )
 
 
@@ -584,7 +584,7 @@ with gender_crowd_3:
         you can click on the legend to select the gender you want to see. 
         """)
 
-    plot_html("_webappp/assets/graph/funny_score_distrib_5.html",height=800)
+    plot_html("_webappp/assets/graph/funny_score_distrib_5.html",height=450)
 
     st.write("""
         And the conclusion: even among the funniest and least funny captions, the distributions remain similar. 
