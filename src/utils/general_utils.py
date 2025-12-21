@@ -102,7 +102,7 @@ def plot_html_3(path, height=450, width=900):
 
 
 def plot_jpg(path, width=600):
-    st.image(path, width=width)
+    st.image(path, use_container_width=True)
 
 
 def plot_wordcloud(path, graph_name, word_type, gender):
