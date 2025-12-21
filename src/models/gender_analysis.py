@@ -1820,7 +1820,7 @@ class GenderAnalysis:
         fig.show()
 
     @staticmethod
-    def plot_5_percent_distrib_plotly(men_bottom, men_top, women_bottom, women_top):
+    def plot_5_percent_distrib_plotly(men_bottom, men_top, women_bottom, women_top, q):
         
         # Colorblind-friendly colors
         MEN_COLOR = "#0072B2"

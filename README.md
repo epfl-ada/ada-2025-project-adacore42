@@ -78,16 +78,16 @@ This section investigates how men and women are depicted in cartoons and caption
 
 **Data Preparation**
 - Gender annotation: Identify men, women, or gender-neutral characters in cartoons and captions using a gendered dictionary.
-- Feature extraction: Capture lexical features (word frequency, co-occurrences, role categories), sentiment (polarity, subjectivity), and audience metrics (votes, winning captions).
 
 **Analysis**
-- Language Patterns: Analyze word usage and co-occurrences, generate word clouds, and track changes over time.
-- Audience Response: Compare sentiment and success of captions mentioning men vs women, and assess whether stereotypical portrayals are rewarded.
+- Language Patterns: Analyze word usage by generating word clouds, look at topics using BERTopic
+- Audience Response: Compare the funny score of each gender of the whole dataset, then only at the top and worst captions. Use statistical testing to support our hypothesis.
 
 **Visualizations**
 - Bar charts for gender frequencies and mentions.
-- Word clouds and co-occurrence heatmaps.
-- Temporal plots for shifts in depictions and language.
+- Word clouds for words occurences
+- Treemap for topics
+- Histogram for distribution of funny score
 
 
 ### Website 
