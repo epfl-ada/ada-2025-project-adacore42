@@ -94,7 +94,7 @@ def plot_html_version2(path, height=600):
         html_content = f.read()
 
     st.components.v1.html(html_content,height=height/2,scrolling=True,)
-def plot_html_3(path, height=450, width=800):
+def plot_html_3(path, height=450, width=900):
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
