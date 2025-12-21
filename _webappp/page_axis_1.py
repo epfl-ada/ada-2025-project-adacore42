@@ -21,8 +21,7 @@ PWA.set_root_path()
 plots = PWA.load_plots()
 
 
-SPACE_FOR_P_1 = 30
-SPACE_FOR_P_2 = 60
+
 
 
 
@@ -182,40 +181,44 @@ st.header("Let's study what makes captions funny")
 
 
 #––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
-# Version Katia
+# Version Tabs
 #––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
-"""
-Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
-Could it be a general pattern? 
-"""
 
+
+st.markdown(
+    """
+    Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
+    Could it be a general pattern? 
+    """
+)
 col1, col2 = st.columns([1, 2])
 
 with col1:
-        
-        st.space(SPACE_FOR_P_1)
+    st.markdown(
         """
-        Let’s find out by comparing the funniest and least funny captions, using the 
-        extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each.
-        """
-        st.space(SPACE_FOR_P_1)
-        """
-        We compared several features such as length and punctuation and assessed the statistical significance of the results using a Student’s t-test.
-        """
-        st.space(SPACE_FOR_P_1)
-        """
-        The results show that only subjectivity is significantly different, with funny captions being more objective.
-        For the other features, the distributions are quite similar, although more variability is found in polarity for the not-funny group.
-        """
-        st.space(SPACE_FOR_P_1)
-        """
-        Overall, there are no clear differences in word count or punctuation.
-        """
-
-
-    
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            Let’s find out by comparing the funniest and least funny captions, using the 
+            extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each.
+            <br><br>
+            We compared several features such as length and punctuation and assessed the statistical significance of the results using a Student’s t-test.
+            <br><br>
+            The results show that only subjectivity is significantly different, with funny captions being more objective.
+            For the other features, the distributions are quite similar, although more variability is found in polarity for the not-funny group.
+            <br><br>
+            Overall, there are no clear differences in word count or punctuation.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
 
 with col2:
     plot_html(
@@ -223,30 +226,35 @@ with col2:
         height=600
     )
 
-
-"""
-Was our first intuition wrong? Well maybe not totally, because when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
-suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends. So let's approach the task with another angle.
-"""
-
+st.markdown(
+    """
+    Was our first intuition wrong? Well maybe not totally, because when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
+    suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends. So let's approach the task with another angle.
+    """
+)
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.space(SPACE_FOR_P_2)
-    """
-    We will now compare the best and worth captions for each contest!
-    This give us a dataset with 384 captions for each group.
-    """
-    st.space(SPACE_FOR_P_2)
-    """
-    The results now show a significant difference between the two groups in terms of word count and punctuation usage. The least funny captions tend to be longer and contain more punctuation.
-    """
-    st.space(SPACE_FOR_P_2)
-    """
-    Subjectivity, on the other hand, is no longer significantly different between the groups, and sentiment polarity follows very similar distributions. This suggests that using more positive or negative words does not, by itself, influence the perception of funniness.
-    """
-
-
+    st.markdown(
+        """
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            We will now compare the best and worth captions for each contest!
+            This give us a dataset with 384 captions for each group.
+            <br><br>
+            The results now show a significant difference between the two groups in terms of word count and punctuation usage. The least funny captions tend to be longer and contain more punctuation.
+            <br><br>
+            Subjectivity, on the other hand, is no longer significantly different between the groups, and sentiment polarity follows very similar distributions. This suggests that using more positive or negative words does not, by itself, influence the perception of funniness.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
 
 with col2:
     plot_html(
@@ -254,11 +262,11 @@ with col2:
         height=600
     )
 
-
-"""
-A first conclusion we can draw here is that it appear there is a difference in the surface features of funnier cpations and not funny captions. Especially in the number of words and number of punctiations.
-We can now turn to another question : what are these captions actually talking about?
-"""
+st.markdown(
+    """
+    A first conclusion we can draw here is that it appear there is a difference in the surface features of funnier cpations and not funny captions. Especially in the number of words and number of punctiations.
+    We can now turn to another question : what are these captions actually talking about?
+    """)
 
 
 
