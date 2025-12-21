@@ -380,17 +380,19 @@ with behind_the_scene_2:
 
     TwoTabGraph_C(  
     label_1="Men",  
-    path_1="_webappp/assets/graph/topic_male_2.html",
+    path_1=r"_webappp/assets/graph/topic_male copy.html",
     label_2="Women",
-    path_2="_webappp/assets/graph/topic_female_2.html",
-    center_ratio=30,
+    path_2=r"_webappp/assets/graph/topic_female copy.html",
+    center_ratio=10,
     isImage=False,
     height=400,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2
     )
 
+    # plot_html(r"_webappp/assets/graph/topic_female copy.html")
 
+ 
 
 
 
