@@ -52,18 +52,14 @@ with behind_the_punchline_0:
     st.write(
         """
         What if your understanding of gender came from a single source: 
-        The New Yorker Caption Contest?
-
-        No textbooks. No surveys. Just cartoons, captions, and punchlines.
+        The New Yorker Caption Contest? No textbooks. No surveys. Just cartoons, captions, and punchlines.
         Would men and women appear equal? Different? Stereotyped? Modern?
 
-        In this section, we treat the contest as a cultural lens and ask what kind of
-        gendered world it quietly sketches. Humor often looks harmless — but jokes rely
+        In this section, we treat the contest as a cultural lens and investigate on what kind of
+        gendered world it quietly sketches. Humor often looks harmless, but jokes rely
         on shared assumptions. And those assumptions can tell us a lot. 
         """
         )
-
-    st.divider()
 
     st.write(
         """
@@ -89,7 +85,7 @@ with behind_the_punchline_0:
         center_ratio=1
         )
 
-
+st.divider()
 
 
 
@@ -143,7 +139,6 @@ with setting_the_scene_1:
         path_2="_webappp/assets/graph/counts_captions.html",
         center_ratio=8,
         height=450)
-    st.divider()
 
     st.subheader("The results")
 
@@ -203,19 +198,19 @@ with setting_the_scene_1:
 
 
 
-
+st.divider()
 
 with behind_the_scene_2:
     st.header("2. Behind the Scene: How Gender Is Depicted")
 
     st.write(
         """
-        Presence, however, is only part of the story. Now we have to investigate how
-        are men and women are portrayed once they appear.
+        Presence, however, is only part of the story. Now we investigate how
+        are men and women are portrayed once they appear. To do this, we first look at which words are most 
+        associated with each gender. Then, we look at the most reccuring topics. 
         """)
     
-    
-    st.divider()
+
     st.subheader("Words Matter")
     
     
@@ -268,24 +263,21 @@ with behind_the_scene_2:
     # )
 
 
-
-
     st.write(
         """
-        On the men’s side, the vocabulary leans toward power, systems, and abstraction. Words like stocks, reinvent, president, employee, diversity, and cop dominate. 
+        On the men’s side, the most frequent words lean toward power and money. Words like stocks, reinvent, president, employee, king, and cop dominate. 
         Men appear embedded in institutions: finance, work, authority, and public life. Even when humor turns negative (abominable, fired), it often frames men as actors 
         within larger structures: bosses who fail, leaders who disappoint, systems that collapse. Men are doing things, running things or breaking things.
 
-        The women’s word cloud, by contrast, pulls the reader closer to the body, appearance, and relationships. Words like mom, lipstick, lips, ruffled, collar, wedding, 
-        divorce, and served suggest women are framed through how they look, who they belong to, or what role they play for others. Even neutral words like she or papers feel 
-        contextualized by domestic or relational settings. Humor here leans less toward institutions and more toward personal identity and social expectation.
+        The women’s word cloud, by contrast, pulls the reader closer to the appearance and relationships. Words like lipstick, divorce, ruffled, marry, beautiful, 
+        and even 'monsieur' suggest women are framed through how they look, who they belong to, or what role they play for others. Even neutral word papers feel 
+        contextualized by domestic or relational settings. There is even an insult, which was not the case for men. 
+        Humor here leans less toward institutions and more toward personal identity and social expectation.
 
         So if this contest were our only window into gender, we might conclude this:
         men inhabit the world, while women inhabit the frame.
         """
         )
-
-    st.divider()
 
     st.subheader("Themes we keep coming back to")
 
@@ -380,9 +372,9 @@ with behind_the_scene_2:
 
     TwoTabGraph_C(  
     label_1="Men",  
-    path_1=r"_webappp/assets/graph/topic_male copy.html",
+    path_1=r"_webappp/assets/graph/topic_male.html",
     label_2="Women",
-    path_2=r"_webappp/assets/graph/topic_female copy.html",
+    path_2=r"_webappp/assets/graph/topic_female.html",
     center_ratio=10,
     isImage=False,
     height=400,
@@ -390,14 +382,7 @@ with behind_the_scene_2:
     additionalComponent_2=additionalComponent_2
     )
 
-    # plot_html(r"_webappp/assets/graph/topic_female copy.html")
-
- 
-
-
-
-
-    st.divider()  
+    # plot_html(r"_webappp/assets/graph/topic_female copy.html") 
 
     st.subheader("So what did we learn?")
 
@@ -510,52 +495,57 @@ with gender_crowd_3:
 
         To compare how the audience responds to gendered captions, we relied on two complementary statistical tools: the Mann–Whitney U test and Cliff’s delta. 
         Together, they answer two different questions: Is there a difference? and Does that difference actually matter?
-        If you don't know any of these tests, don't worry we included explanations for both of them.""")
+        If you don't know any of these tests, don't worry we included explanations for both of them in the methods. This button will redirect you.""")
+    
+    with st.container():
+        if st.button("Go to Methods →", key= 1):
+            st.switch_page(PD.METHODS.value.path)
 
-    with st.expander("Mann–Whitney U Test or *“Are these scores different at all”*?", expanded=AP.expanders):
 
-        st.write(
-            """
-            The Mann–Whitney U test is a non-parametric statistical test used to compare two independent samples.
-            It evaluates whether observations from one group tend to have larger or smaller values than observations from another group.
+    # with st.expander("Mann–Whitney U Test or *“Are these scores different at all”*?", expanded=AP.expanders):
 
-            Unlike a t-test, it does not assume normality or equal variances. Instead of comparing means directly, it operates on the rank ordering of all 
-            observations across both groups. The test statistic U reflects how often values from one group precede values from the other in this ranking.
+    #     st.write(
+    #         """
+    #         The Mann–Whitney U test is a non-parametric statistical test used to compare two independent samples.
+    #         It evaluates whether observations from one group tend to have larger or smaller values than observations from another group.
 
-            Formally, the null hypothesis is: The two groups are drawn from the same distribution.
+    #         Unlike a t-test, it does not assume normality or equal variances. Instead of comparing means directly, it operates on the rank ordering of all 
+    #         observations across both groups. The test statistic U reflects how often values from one group precede values from the other in this ranking.
 
-            In practice, a significant result indicates a systematic shift between the distributions (e.g., one group tends to receive higher scores), 
-            but it does not specify the magnitude of this shift.""")
+    #         Formally, the null hypothesis is: The two groups are drawn from the same distribution.
+
+    #         In practice, a significant result indicates a systematic shift between the distributions (e.g., one group tends to receive higher scores), 
+    #         but it does not specify the magnitude of this shift.""")
         
-    with st.expander("Cliff’s delta or *“How big is the difference, really?”*", expanded=AP.expanders):
-        st.write(
-            """
-            Because our dataset contains many more men-labeled captions than women-labeled ones, we rely on 
-            non-parametric, rank-based methods that are robust to both skewed distributions and sample-size imbalance.
+    # with st.expander("Cliff’s delta or *“How big is the difference, really?”*", expanded=AP.expanders):
+    #     st.write(
+    #         """
+    #         Because our dataset contains many more men-labeled captions than women-labeled ones, we rely on 
+    #         non-parametric, rank-based methods that are robust to both skewed distributions and sample-size imbalance.
 
-            **Cliff’s delta** is an effect-size measure that tells us how large a difference is, independently of how many data points we have. 
-            Unlike p-values, it is not inflated by large datasets and therefore helps distinguish *statistical significance* from 
-            *practical relevance*.
+    #         **Cliff’s delta** is an effect-size measure that tells us how large a difference is, independently of how many data points we have. 
+    #         Unlike p-values, it is not inflated by large datasets and therefore helps distinguish *statistical significance* from 
+    #         *practical relevance*.
 
-            **How it works**
+    #         **How it works**
 
-            Cliff’s delta measures the probability that a randomly chosen caption from one group (e.g., men-labeled) has a higher score 
-            than a randomly chosen caption from the other group (e.g., women-labeled). It answers the question: 
-            *If we randomly pick one caption from each gender, how often does one outperform the other?*
+    #         Cliff’s delta measures the probability that a randomly chosen caption from one group (e.g., men-labeled) has a higher score 
+    #         than a randomly chosen caption from the other group (e.g., women-labeled). It answers the question: 
+    #         *If we randomly pick one caption from each gender, how often does one outperform the other?*
 
-            It ranges from **–1 to +1**:
-            - **0** → complete overlap between groups  
-            - **Positive values** → higher scores tend to come from the first group  
-            - **Negative values** → higher scores tend to come from the second group  
+    #         It ranges from **–1 to +1**:
+    #         - **0** → complete overlap between groups  
+    #         - **Positive values** → higher scores tend to come from the first group  
+    #         - **Negative values** → higher scores tend to come from the second group  
 
-            **Interpretation guide**
+    #         **Interpretation guide**
 
-            - |δ| < 0.147 → Negligible effect
-            - 0.147 ≤ |δ| < 0.33 → Small effect 
-            - 0.33 ≤ |δ| < 0.47 → Medium effect 
-            - |δ| ≥ 0.47 → Large effect 
+    #         - |δ| < 0.147 → Negligible effect
+    #         - 0.147 ≤ |δ| < 0.33 → Small effect 
+    #         - 0.33 ≤ |δ| < 0.47 → Medium effect 
+    #         - |δ| ≥ 0.47 → Large effect 
             
-            """)
+    #         """)
 
     st.write("""
         We test the following hypothesis:
