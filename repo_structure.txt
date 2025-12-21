@@ -1,0 +1,76 @@
+ADA-2025-PROJECT-ADACORE42/
+│
+├── README.md
+├── pip_requirements.txt
+├── results.ipynb
+├── results_MS2.ipynb
+├── structure.txt
+│
+├── .vscode/
+│   └── VS Code configuration files
+│
+├── data/
+│   ├── README.md
+│   ├── Prepared datasets (pkl, npz)
+│   ├── Topic modeling outputs (csv)
+│   └── newyorker_caption_contest_virgin/
+│       ├── contests.json
+│       ├── data/
+│       └── images/
+│
+├── src/
+│   ├── data/
+│   │   ├── Data preparation and tokenization scripts
+│   │   ├── gender_roles_data/        # Gender-based caption/topic datasets
+│   │   └── gender_roles_plots/       # Associated figures
+│   │
+│   ├── models/
+│   │   ├── Core analysis modules (gender, occupation, similarity, topics)
+│   │   └── README.md
+│   │
+│   ├── scripts/
+│   │   ├── Analysis notebooks and scripts (axes, descriptive statistics)
+│   │   └── README.md
+│   │
+│   ├── utils/
+│   │   ├── Utility functions (TF-IDF, paths, analysis helpers)
+│   │   ├── gui/                      # Compiled GUI utilities
+│   │   ├── gui (unused)/             # Deprecated GUI code
+│   │   └── web_app_plots/            # Plots used by the web application
+│   │
+│   └── __pycache__/
+│
+├── _ChangeLog/
+│   └── Individual contribution logs
+│
+├── _LatexRepports/
+│   └── P1_Milestone/
+│       ├── LaTeX report files
+│       └── TitlePage/
+│
+├── _Other/
+│   ├── Individual exploratory analyses for MS1, MS2, MS3
+│   │   ├── amelie_analysis/
+│   │   ├── andras_analysis/
+│   │   ├── cycy_analysis/
+│   │   ├── dom_analysis/
+│   │   └── katia_analysis/
+│   │
+│   ├── Installation/
+│   │   └── Setup documentation and screenshots
+│   │
+│   └── Additional resources (figures, LaTeX drafts)
+│
+└── _webappp/
+    ├── app.py                        # Main application entry point
+    ├── Streamlit pages (home, axes, methods, about)
+    ├── sidebar.py
+    │
+    ├── assets/
+    │   ├── Application content and design
+    │   ├── csv/                      # Data used by the app
+    │   ├── graph(s)/                 # HTML and image visualizations
+    │   ├── profile_img/
+    │   └── title_img/
+    │
+    └── __pycache__/
