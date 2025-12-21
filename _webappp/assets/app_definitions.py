@@ -162,7 +162,6 @@ class ImageCaptionCenter_C:
 
 
 
-
 class TwoTabGraph_C:
     def __init__(
         self,
@@ -172,9 +171,14 @@ class TwoTabGraph_C:
         path_2,
         center_ratio=3,
         height=450,
+        width=1000,
         isImage=False,
         additionalComponent_1=None,
         additionalComponent_2=None,
+        # NEW:
+        toggle_btn_label=None,
+        toggle_path_2=None,
+        toggle_state_key="plot_winners_tab2",
     ):
         self.label_1 = label_1
         self.path_1 = path_1
@@ -182,12 +186,18 @@ class TwoTabGraph_C:
         self.path_2 = path_2
         self.center_ratio = center_ratio
         self.height = height
+        self.width = width
         self.isImage = isImage
         self.additionalComponent_1 = additionalComponent_1
         self.additionalComponent_2 = additionalComponent_2
 
+        # NEW:
+        self.toggle_btn_label = toggle_btn_label
+        self.toggle_path_2 = toggle_path_2
+        self.toggle_state_key = toggle_state_key
+
         self.render()
-    
+
     def render(self):
         st.markdown(
             """
@@ -211,7 +221,7 @@ class TwoTabGraph_C:
             col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
             with col_c:
                 if self.isImage:
-                    st.image(self.path_1, width=1000)
+                    st.image(self.path_1, width=self.width)
                 else:
                     plot_html(self.path_1, height=self.height)
 
@@ -221,10 +231,25 @@ class TwoTabGraph_C:
         with tab2:
             col_l, col_c, col_r = st.columns([1, self.center_ratio, 1])
             with col_c:
+
+                # --- NEW: toggle button (only if toggle_path_2 is provided) ---
+                selected_path_2 = self.path_2
+
+                if self.toggle_path_2 and self.toggle_btn_label:
+                    if self.toggle_state_key not in st.session_state:
+                        st.session_state[self.toggle_state_key] = False
+
+                    if st.button(self.toggle_btn_label, key=f"btn_{self.toggle_state_key}"):
+                        st.session_state[self.toggle_state_key] = not st.session_state[self.toggle_state_key]
+
+                    if st.session_state[self.toggle_state_key]:
+                        selected_path_2 = self.toggle_path_2
+
+                # Render selected graph
                 if self.isImage:
-                    st.image(self.path_2, width=1000)
+                    st.image(selected_path_2, width=self.width)
                 else:
-                    plot_html(self.path_2, height=self.height)
+                    plot_html(selected_path_2, height=self.height)
 
                 if callable(self.additionalComponent_2):
                     self.additionalComponent_2()

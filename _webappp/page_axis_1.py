@@ -11,6 +11,7 @@ from _webappp.assets.app_definitions import *
 from _webappp.assets.app_design import *
 
 from _webappp.assets.app_definitions import AppParams as AP
+from _webappp.assets.app_content import PagesData as PD
 
 from _webappp.assets.app_definitions import get_absolute_project_root
 get_absolute_project_root()
@@ -166,7 +167,7 @@ TwoTabGraph_C(
     path_2="_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
     center_ratio=CENTER_RATIO,
     isImage=False,
-    height=450,
+    height=1150,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2
 )
@@ -242,8 +243,11 @@ with st.expander("The magic of BERTopic", expanded=AP.expanders):
         In short: BERTopic doesn’t ask “Which words appear together?” but rather “Which captions are saying roughly the same thing?”
         
         For more technical details about this model, see the Methods.
-        """)
-
+        """
+        )
+    if st.button("Go to Methods →"):
+        st.switch_page(PD.METHODS.value.path)
+        
 
 
 ImageCaptionCenter_C(
@@ -388,9 +392,9 @@ if st.button(
     st.session_state.plot_winners1 = not st.session_state.plot_winners1
 
 if st.session_state.plot_winners1:
-    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html", height=600)
+    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html", height=1250)
 else:
-    plot_html("_webappp/assets/graph/boxplot_topics_289.html", height=600)
+    plot_html("_webappp/assets/graph/boxplot_topics_289.html", height=1250)
     
 
 
@@ -468,14 +472,17 @@ TwoTabGraph_C(
     label_1="Enrichment score",
     path_1="_webappp/assets/graph/enrichment_289.html",
     label_2="Proportion of captions above 30/100",
-    # path_2="_webappp/assets/graph/prop_above_thresh_with_winners_289.htm",
     path_2="_webappp/assets/graph/prop_above_thresh_289.html",
+    toggle_btn_label="Show winning captions in topics",
+    toggle_path_2="_webappp/assets/graph/prop_above_thresh_with_winners_289.html",  # <- ton fichier
     center_ratio=CENTER_RATIO,
     isImage=False,
-    height=450,
+    height=1150,
+    width=1500,
     additionalComponent_1=additionalComponent_1,
-    additionalComponent_2=additionalComponent_2
+    additionalComponent_2=additionalComponent_2,
 )
+
 
 
 st.divider()
