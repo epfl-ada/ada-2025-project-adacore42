@@ -167,7 +167,7 @@ TwoTabGraph_C(
     path_2="_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
     center_ratio=CENTER_RATIO+50,
     isImage=False,
-    height=1150,
+    height=600,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2
 )
@@ -215,7 +215,7 @@ st.divider()
 
 
 
-st.header("Are there best topics to be funny and win the contest ?")
+st.header("Are some topics inherently funnier than others, and do they increase your chances of winning?")
 
 
 
@@ -365,16 +365,82 @@ st.divider()
 st.subheader("Identify common topics among all captions")
 
 """
-Using the BERTtopic embeddings and HDBSCAN clustering algorithm, we identify common topics of differents captions within a contest.
-This gives a dozen of different clusters, we manually analyse them and aggregated into a few meaningful ones.
+We start by grouping captions together according to what they talk about.
+Using the BERTtopic embeddings and HDBSCAN clustering algorithm, we detect common themes across all submitted captions for this cartoon.
+The algorithm initially produces dozens of clusters, we manually analyse them and aggregated into a few meaningful ones.
 Human inspections allows us to control the results, where humoristics captions are really hard to clusterize automatically, because of all things that makes humour so particular, almost indescribable...
-
-
-Let's see what topic have been identified from this cartoon, and the relative appreciation of people for them !
 """
 
 
 
+"""
+We can meaningfully talk about “topics” in this contest, let's see what topic have been identified from this cartoon !
+
+"""
+
+
+topics = [
+    ("checkmate_win_lose", "🏁", "Winning, losing, and the final “it’s over” moment."),
+    ("chess_mechanics_pieces", "♟️", "Nerdy chess stuff: pieces, moves, and tiny tactics."),
+    ("death_grim_reaper_afterlife", "💀", "Dark humor: death and endlife humor."),
+    ("time_endgame_clock", "⏳", "Time pressure, endgame panic, and ticking clocks."),
+    ("pop_culture", "🎬", "References to movies, politics, trends."),
+    ("bureaucracy_taxes_insurance", "📄", "taxes & death, insurance."),
+    ("deals_bets_rematches", "🤝", "Side deals, bets, rematches... negotiation mode on."),
+    ("body_parts", "🖐️", "Hands, faces, bodies, bones... physical comedy and weird details."),
+    ("emotional_reactions", "😳", "Big reactions: ‘haha’, ‘oh no’, ‘don’t you dare’."),
+    ("color_choice_white_black", "⚪⚫", "White vs black: choices, sides, and subtle symbolism."),
+    ("chess_life_game", "🎲", "Chess as life: fate, strategy, and existential metaphors."),
+    ("misc", "🌀", "Unclassifiable outliers (a.k.a. the creative chaos)."),
+]
+cols = st.columns(3, gap="small")
+
+for i, (key, emoji, desc) in enumerate(topics):
+    with cols[i % 3]:
+        st.markdown(
+            f"""
+            <div style="
+                border: 1px solid rgba(255,255,255,0.10);
+                border-radius: 10px;
+                padding: 8px 10px;
+                background: rgba(255,255,255,0.025);
+                box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+                min-height: 78px;
+            ">
+              <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px;">
+                {emoji}
+                <span style="
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                ">
+                {key}
+                </span>
+              </div>
+              <div style="opacity: 0.85; font-size: 12px; line-height: 1.25;">
+                {desc}
+              </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+
+
+with st.expander("Clustering quality assessment"):
+    data = {
+    "min_topic_size": [30],
+    "coherence": [0.49],
+    "diversity": [0.72],
+    "silhouette": [0.079],
+    "outlier_rate": [0.25],
+    "n_topics": [37],
+}
+    df = pd.DataFrame(data)
+    st.dataframe(df, use_container_width=True)
+
+    """This clustering shows an acceptable coherence and diversity, with a moderate outlier rate (expected for creative humorous text)."""
+
+with st.expander("Why separating bureaucracy, taxes, and insurance from pop culture"):
+    "Although this topic appear to belong to pop culture, the results obtained were significantly different from other pop culture references. Keeping it separate helps highlight its strong performance, which would otherwise be diluted within the broader pop-culture category."
 
 
 
@@ -382,6 +448,42 @@ Let's see what topic have been identified from this cartoon, and the relative ap
 
 st.subheader("Comparing funny score of all topics""")
 
+
+"""
+Now that we have topics, we compare how funny captions are perceived within each one.
+
+
+
+
+**Visualizing humor distributions by topic :**
+
+This graph shows distribution of standardized humor scores for each topic identified in the cartoon of May 23, 2022. Each theme is represented in a sub-graph, with two elements:
+- Histogram: illustrates the relative frequency of scores.
+- KDE (Kernel Density Estimation) curve: indicates the relative probability that a score will take a certain value. The higher the curve, the more likely it is that the scores will fall within that range. KDE allows us to see the overall shape of the distribution, regardless of the exact number of measurements.
+"""
+
+plot_jpg("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
+
+
+"""   
+All topic distributions observed (except for one) show significant positive asymmetry (statistically significant skewness, p < 0.05), which means that scores tend to be concentrated at lower values with awith a long right tail of very funny captions. This results in a medians relatively similar across topics, and escpecially low (around 25/100). This distribution arises from the fact that we aggregated together all topics from the cartoon, and there is a lot with low funny score values, with only a few of outstanding funny ones.
+
+Statistical tests confirm this:
+- Skewness is significant for all topics (p < 0.05)
+- Pairwise Mann–Whitney tests (with Bonferroni correction) reveal several significant differences
+
+
+
+One topic stands out clearly: Bureaucracy, Taxes & Insurance.
+This topic’s humor-score distribution differs significantly from most others. A smaller but notable effect is also observed for Time, Endgame & Clocks.
+"""
+
+
+
+"""
+**A Synthetic View with Boxplots :** 
+To summarize these distributions, we use boxplots per topic. Outliers correspond to captions that have received very high ratings.
+"""
 
 if "plot_winners1" not in st.session_state:
     st.session_state.plot_winners1 = False
@@ -393,35 +495,31 @@ if st.button(
     st.session_state.plot_winners1 = not st.session_state.plot_winners1
 
 if st.session_state.plot_winners1:
-    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html", height=1250)
+    plot_html("_webappp/assets/graph/boxplot_topics_with_winners_289.html", height=600)
 else:
-    plot_html("_webappp/assets/graph/boxplot_topics_289.html", height=1250)
+    plot_html("_webappp/assets/graph/boxplot_topics_289.html", height=600)
     
 
-
+st.caption(
+    "Interactive detail: By hovering over outliers, we can read the actual captions of the outliers"
+)
 
 """
-Don't you see a problem here ? ... Yes perfectly ! All topics seems to have almost the same median, and furthermore this median is low ! Around 25/100... Are the jokes that bad ??
-NO. This result arises from the fact that we aggregated together ................ This will be addressed in the next section. 
+What we observe : 
+- Very close medians between topics: No theme clearly dominates on average.
 
-Now, let's talk about the distribution of caption's scores within each topics. Some have more elements than others, some have more variance than others, some have more outliers than others (you can pass your mouse on the outliers to see the corresponding caption, have fun with it !)................
+- Strong right-hand asymmetry for all topics: visual confirmation of the long-tail distribution already discussed.
 
-Another unexpected thing arised from this topic detection : Bureaucracy ? Taxes ? Insurrance ? We investigated here and ..............
+- Very different variability depending on the topic: some have few outliers but a compact box, others (notably bureaucracy/taxes/insurance) show many very high outliers.
 
-Were does lie our two winning captions in those topics ?
+- Overrepresentation of certain topics, with a topic size varying from 39 to 1086 captions (excluding misc. topic) : some themes simply generate more proposals than others. There is a preponderant type of jokes done by people.
+
+Being able to hover over outliers to read the captions is crucial: we can immediately see that the best captions are not “best on average,” but radically different.
+
+This graph perfectly illustrates why the question “Which topic is the funniest?” is poorly phrased. The median obscures the important information: a topic's ability to produce brilliant exceptions. This box plot confirms that humorous performance is not determined by the average, but by the right tail of the distribution.
 """
 
 
-with st.expander("See more about the distribution of our topics", expanded=AP.expanders):
-    plot_jpg("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
-    """
-    This graph shows how standardized humor scores (funny_score_scaled) are distributed across different themes. Each theme is represented in a sub-graph, with two elements:
-    - Histogram: illustrates the relative frequency of scores.
-    - KDE (Kernel Density Estimation) curve: indicates the relative probability that a score will take a certain value. The higher the curve, the more likely it is that the scores will fall within that range. KDE allows us to see the overall shape of the distribution, regardless of the exact number of measurements.
-    
-    
-    All distributions observed show significant positive asymmetry (statistically significant skewness, p < 0.05), which means that scores tend to be concentrated at lower values with a tail extending towards higher values.
-    """
 
 
 
@@ -430,12 +528,19 @@ with st.expander("See more about the distribution of our topics", expanded=AP.ex
 
 
 """
-**Long-tail distribution bias**:
-Those boxplots per topic allow us to see the distributions of caption scores within each topic, but as we saw, there is an issue of "smoothing all captions scores" with this simple plot. Indeed, if each topic clustered contains many mediocre captions and a few exellent ones, the average will flatten everything, resulting in a very low average score per topic. Therefore, we need to look beyond the average. We can :
+**Long-tail distribution bias of humour**:
 
-*1. Isolates the top X% and the average range (40–60) and compare whether certain topics are over-represented in the top rankings versus the average. To do this, we calculate the 'enrichment per topic' (=top proportion vs. overall proportion). This allows us to answer the question "Which topics produce the most excellent captions?" without using the average. This will be called the 'enrichment score'.*
+We saw that humor scores follow a long-tail distribution. Indeed, if each topic clustered contains many mediocre captions and a few exellent ones, the average will flatten everything, resulting in a very low average score per topic. Therefore, we need to look beyond the average.
 
-*2. Instead of looking at "which topic is the funniest on average", we look at: "which topics produce the most excellent captions?" by calculating the success rate (defined a score above the average score : 1.5/3 for the mean score, 50/100 for the funny_score_scaled) rather than the average score.*
+**So instead of asking: “Which topic is funniest on average?” we ask ourselves this question: “Which topics produce the most excellent captions?”**
+
+We can use two differetn point of view to answer this question:
+
+*Method 1. Isolate the top 10% and the baseline average range (40–60%). We then compute an enrichment score: How much more represented is a topic in the top captions compared to the average pool? This shows if whether certain topics are over-represented in the top rankings versus the average baseline (=top proportion vs. overall baseline proportion).*
+
+*Method 2. Calculate the success rate (defined a score above a score threshold : 30/100 for the funny_score_scaled*
+
+
 
 Let's see how does that changes our topic analysis...
 """
@@ -447,9 +552,19 @@ Let's see how does that changes our topic analysis...
 def additionalComponent_1():
     st.write(
         """
-        LALALA, interpréter le graphique. Taxes sont en moyenne 2.5 fios plus rpz dans le top 10% que dans la masse (40-60%)., emotionnal reactions (with haha!, don't you dare, ....) sont 2 fois plus rpz, les autres sont en moyenne autant treprésentées dans le top 10 que dans le reste des propositions.
+        This scatterplot directly answers the question: “Which topics are over-represented among the very best captions?”
 
-        **Concerning the proportion of captions with a score higher than 30/100** :
+        The vertical axis represents the enrichment score:
+        the ratio between the presence of a topic in the top 10% of captions and its presence in the middle range (40–60%).
+        A score > 1 indicates qualitative overperformance.
+
+        Results :
+        
+        - The theme of bureaucracy/taxes/insurance is about 2.5 times more prevalent in the top 10%, making it by far the topic that “produces excellence” the most.
+        - Emotional reactions show about 2 times enrichment; these are often powerful captions that surely have more potential to create humor.
+        - The majority of other topics have an enrichment score close to 1: they are neither over- nor under-represented in the top 10%.
+        
+        This graph specifically addresses the bias identified earlier: it ignores the mass of mediocre captions and focuses solely on a topic's ability to generate hits. Hits win less often than some others, but when they do, they win big. This is a key distinction for understanding competitive humor.
         """
     )
 
@@ -457,38 +572,68 @@ def additionalComponent_1():
 def additionalComponent_2():
     st.write(
         """
-        Blablabla commenter le graph ........... Commenter about taxes, about death_grim_reaper_afterlife, faire une remarque sur le topic pop_culture.
+        Here, we change perspective again. We no longer look at the top 10%, but at the probability that a caption will exceed the average score. The threshold corresponds to: 30/100 for funny_score_scaled for this cartoon from May 23, 2022.
+
+        Results:
+        - Bureaucracy / Taxes / Insurance : This topic stands out, with the highest proportion of “successful” captions, reaching around 20% above the success threshold (30/100). It is not only capable of producing a few exceptional captions, but also a relatively high number of consistently funny ones.
+        - Death / Grim Reaper / Afterlife : This topic also shows a solid success rate, which makes sense given the cartoon itself. The theme fits very well with the image, making it easier for captions to connect with the audience. About 8% of captions exceed the success threshold.
+        - Pop culture: In this contest, pop culture performs quite poorly overall. While some references work very well (like the “death and taxes” idea), many others do not. References to topics such as the Supreme Court, COVID, or specific movies lead to a lot of low-scoring captions.
+        - The rest of the topics are below 7% of caption score above 30/100.
+
+        This graph helps clarify the previous results: a topic can produce a few very strong captions (high enrichment score), but still be risky overall.
         
-        Were does lie our two winning captions, do they belong to a topic where there is a high percentage of more funny captions ?
-
-        Is the winning topic also the one that outperforms overall ? In this case not at all ! The topic that generally outperforms is the one refering to Taxes, and to the famous idiom of the american statesman Benjamin Franklin:
-
-        'Our new Constitution is now established, and has an appearance that promises permanency; but in this world nothing can be said to be certain, except death and taxes.'
-
-        Commenter encore sur celaaaa .................
+        
         """
     )
 
 TwoTabGraph_C(
-    label_1="Enrichment score",
+    label_1="Method 1 - Enrichment score",
     path_1="_webappp/assets/graph/enrichment_289.html",
-    label_2="Proportion of captions above 30/100",
+    label_2="Method 2 - Proportion of captions above 30/100",
     path_2="_webappp/assets/graph/prop_above_thresh_289.html",
     toggle_btn_label="Show winning captions in topics",
-    toggle_path_2="_webappp/assets/graph/prop_above_thresh_with_winners_289.html",  # <- ton fichier
+    toggle_path_2="_webappp/assets/graph/prop_above_thresh_with_winners_289.html",
     center_ratio=CENTER_RATIO,
     isImage=False,
-    height=1150,
+    height=600,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2,
 )
 
 
 
-st.divider()
+st.subheader("Discussion about above 2 results")
 
+"""
+Is the winning topic also the one that outperforms overall ? In this case not at all ! The most successful topic is not necessarily the one that wins.
+
+Why ? Because contests reward captions according to many non-statisticall arguments: originality within a topic, subtle timing and phrasing, ... Not just statistical dominance.
+
+
+
+The topic that generally outperforms is about Bureaucracy, Taxes & Insurance. It is a direct echo of the american statesman Benjamin Franklin's idiom :
+*'Our new Constitution is now established, and has an appearance that promises permanency; but in this world nothing can be said to be certain, except death and taxes.'*
+Taxes are a very familiar cultural reference, often linked to frustration, unfairness, and a sense of inevitability — a bit like a losing chess game, or even death itself. This idea fits the cartoon really well, while also adding a slightly uncanny and darker twist compared to the image alone. Because this reference is so deeply rooted in American culture, most people immediately get it, which likely explains why captions using this theme tend to work better and be appreciated by a wider audience.
+
+Pop culture references, on the other hand, are much more unpredictable. When people get the reference, they can be very funny, but when they do not, the caption often falls flat. This makes pop culture a much riskier choice in a contest where humor is judged by a broad audience.
+
+
+Limitations of our analysis : The topic assignment is imperfect, the humor perception is subjective and cultural references don’t resonate equally.
+A promising next step would be to analyze outliers, and what makes the top 1-2 captions within a topic radically different from the rest ? That’s where the real secret of humor may lie.
+"""
+
+
+
+
+
+
+st.divider()
 
 st.subheader("Conclusion de l'axe 1")
 
+"""
+Yes, some topics are statistically better at producing excellent captions. But winning is less about choosing the “best” topic, and the best sentence length - and more about finding a singular, surprising idea inside it.
+“High-performing” topics increase the chances of producing a good caption, but they do not guarantee success in the The New Yorker Caption Contest.
+"""
 
 
