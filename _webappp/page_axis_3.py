@@ -312,6 +312,8 @@ with behind_the_scene_2:
 
             In short: BERTopic doesn’t ask “Which words appear together?” but rather “Which captions are saying roughly 
             the same thing?”
+                 
+            For more detailled explanation, see Methods.
             """
     )
 
