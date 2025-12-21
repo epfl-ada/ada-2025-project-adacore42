@@ -153,7 +153,31 @@ with statistics_c:
             - Hypothesis testing to determine if there are significant differences between groups in our dataset. We relied mainly on Whitney U tests when the normality assumption was not met, and t-tests when it was. We also looked a Cliff's delta to quantify the effect size of our observations.
             """)
 
+    with st.expander("**Whitney U Test**", expanded=AP.expanders):
+        st.write(
+            """
+            The Mann-Whitney U test is a non-parametric statistical test used to determine whether there is a significant difference between the distributions of two independent groups. It is particularly useful when the data does not meet the assumptions required for parametric tests, such as the t-test, including normality and homogeneity of variance.
+
+            The test works by ranking all the observations from both groups together, then comparing the sum of ranks between the two groups. The U statistic is calculated based on these rank sums, and it reflects the number of times observations from one group precede observations from the other group in the ranked list. Importantly, we need to ensure that the two groups being compared are independent and that there is some ordinal or continuous measurement scale.
+
+            The null hypothesis of the Mann-Whitney U test states that there is no difference in the distributions of the two groups. If the observed U statistic is unlikely under this assumption, we reject the null hypothesis and conclude that there is a statistically significant difference between the groups. A significant result indicates that one group tends to receive higher or lower values than the other, but it does not indicate how large or practically meaningful that difference is.
+            """)
         
+    with st.expander("**Cliff's Delta**", expanded=AP.expanders):
+        st.write(
+            """
+            Cliff's Delta is a non-parametric effect size measure that quantifies the degree of overlap between two independent groups. It is calculated by considering all possible pairs of observations from the two groups and determining the proportion of pairs where one group's observation is greater than, less than, or equal to the other group's observation. The formula for Cliff's Delta (d) is given by:
+            $$
+            d = \frac{(n_{greater} - n_{less})}{n_{total}}
+            $$
+
+            The value of Cliff's Delta ranges from -1 to 1, where:
+            - A value of 1 indicates that all observations in group A are greater than those in group B.
+            - A value of -1 indicates that all observations in group A are less than those in group B.
+            - A value of 0 indicates complete overlap between the two groups, meaning there is no difference in their distributions.
+
+            Cliff's Delta provides a straightforward interpretation of effect size, with commonly used benchmarks for small (|d| $$< 0.147), medium (0.147 $\leq$ |d| $<$ 0.33), and large (|d| $\geq$ 0.33) effects. This measure proves particularly useful when assessing the practical significance of findings from non-parametric tests, such as the Mann-Whitney U test.
+            """)
 
 
 
