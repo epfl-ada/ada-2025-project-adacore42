@@ -1,31 +1,25 @@
-# Humor as a Mirror: The New Yorker Captions as Reflections of Society, Politics, and Stereotypes 
+# Humor as a Mirror: The New Yorker Captions as Reflections of Society and Stereotypes 
 
 ## **Abstract**  
 Humor is a universal yet complex form of expression. The more we think about it and the more complexes it becomes! An example of humor purposes could be in the way of dealing with more ‘serious’ matters [1] or easing social  tensions and establishing social bonds [2].
 
-With this in mind, this project aim to investigate how jokes reflect societal traits and values. We will begin by examining what is generally perceived as “funny” and “unfunny,” and then explore how humor operates within two social domains : politics and gender. Finally, we will synthesize our findings to understand what humor reveals about the norms of contemporary society.
+With this in mind, this project aim to investigate how jokes reflect societal traits and values. We will begin by examining what is generally perceived as “funny” and “unfunny,” and then explore how humor operates within two social domains : professions and gender. Finally, we will synthesize our findings to understand what humor reveals about the norms of contemporary society.
 
 
-## **Research Questions**  
-The project is divided into **3 axes of research directions**:
+## **Research Questions**
+   - **Axis 1 – What Is Considered Funny**\
+         - 1.1 : What makes captions funny ?\
+         - 1.2 : Are some topics inherently funnier than others and do they increase your chances of winning ?
 
-### **Axis 1: What Is Considered Funny**  
-- How do linguistic features (caption length, punctuation, lexical diversity, unexpected words, sentiment polarity) affect perceived funniness?
-- What are the funniest themes?
-- Which of the above attributes contribute most to making a caption funny?
+   - **Axis 2 – How professions are laughed about**\
+         - 2.1 : Where do occupations appear and how frequent are they ?\
+         - 2.2 : Are some categories of occupation funnier than others ?\
+         - 2.3 : Do we appreciate work of other people ? Temporal & topic analysis.
 
-### **Axis 2: Professions, Politics, and Power** 
-
-- Which occupations appear most frequently, and how are they portrayed (ridiculed, admired)?
-- What stereotypes are recurrent (e.g., doctors are heroes, politicians are corrupt)?  
-- Do captions reflect partisan leanings (Democrat vs. Republican) or mock political figures more broadly? Are the political jokes rated differently?
-
-
-### **Axis 3: Gender Roles**  
-
-- How are men and women depicted in New Yorker cartoons and captions, and do these depictions reflect traditional gender roles or stereotypes?
-
-- How does audience response (e.g., votes or winning captions) relate to gendered content : do captions about one gender receive more positive attention, and does this reinforce or challenge stereotypes?
+   - **Axis 3 – Gender Roles and stereotypes**\
+         - 3.1 : How are men and women depicted in cartoons and captions, and do these depictions reflect traditional gender roles or stereotypes?\
+         - 3.2 : How does audience response relate to gendered content - do captions about one gender receive more positive attention than the other?
+        
 
 ## **Additional Datasets**  
 
