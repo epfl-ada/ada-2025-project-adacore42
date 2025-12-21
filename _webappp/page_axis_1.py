@@ -225,17 +225,16 @@ To illustrate this, we will focus on a single contest, the one from May 23, 2022
 """
 
 
-with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?"): 
-    st.markdown(
+with st.expander("What is the difference between crowd-sourced top-rated caption and The New Yorker's winner ?", expanded=AP.expanders): 
+    st.write(
         """
         There are two winning captions: one chosen by the public vote (referenced in <span style="color: orange;">orange</span>), and the other selected by the The New Yorker editorial team (referenced in <span style="color: blue;">blue</span>).
-        """,
-        unsafe_allow_html=True
+        """
     )
 
 
-with st.expander("The magic of BERTopic"): 
-    st.markdown("""       
+with st.expander("The magic of BERTopic", expanded=AP.expanders): 
+    st.write("""       
         BERTopic is a topic modeling method that groups captions based on meaning, not just word frequency. Instead of counting how often words appear, it first turns each caption into a numerical representation, called an embedding, using a language model trained to understand context.
             
         Captions with similar meanings end up close to each other in this embedding space. BERTopic then clusters these captions and assigns each cluster a topic label based on the most representative words.
@@ -243,8 +242,7 @@ with st.expander("The magic of BERTopic"):
         In short: BERTopic doesn’t ask “Which words appear together?” but rather “Which captions are saying roughly the same thing?”
         
         For more technical details about this model, see the Methods.
-        """,
-    text_alignment= 'justify')
+        """)
 
 
 
@@ -409,7 +407,7 @@ Were does lie our two winning captions in those topics ?
 """
 
 
-with st.expander("See more about the distribution of our topics"):
+with st.expander("See more about the distribution of our topics", expanded=AP.expanders):
     plot_jpg("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
     """
     This graph shows how standardized humor scores (funny_score_scaled) are distributed across different themes. Each theme is represented in a sub-graph, with two elements:
@@ -478,21 +476,6 @@ TwoTabGraph_C(
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2
 )
-
-# IL EST PASSE OU CE BOUTTON ?
-#    if "plot_winners2" not in st.session_state:
-#        st.session_state.plot_winners2 = False
-#
-#    if st.button(
-#        "Show winning captions in topics",
-#        key="btn_plot_winners2"
-#    ):
-#        st.session_state.plot_winners2 = not st.session_state.plot_winners2
-#
-#    if st.session_state.plot_winners2:
-#        plot_html("_webappp/assets/graph/prop_above_thresh_with_winners_289.html", height=600)
-#    else:
-#        plot_html("_webappp/assets/graph/prop_above_thresh_289.html", height=600)
 
 
 st.divider()

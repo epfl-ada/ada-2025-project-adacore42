@@ -78,7 +78,7 @@ with behind_the_punchline_0:
 
 
 
-    st.divider()
+
 
 
 
@@ -132,8 +132,6 @@ with setting_the_scene_1:
         gendered words.
         """
         )
-    st.divider()
-
 
 
 

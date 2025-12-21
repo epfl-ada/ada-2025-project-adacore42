@@ -29,7 +29,7 @@ with st.container():
     with col_c:
         st.image(
             "data/newyorker_caption_contest_virgin/images/733.jpg",
-            use_container_width=True
+            width='stretch',
         )
 
     st.markdown(
@@ -167,8 +167,7 @@ with st.container():
     with col_c:
         st.image(
             "data/newyorker_caption_contest_virgin/images/606.jpg",
-            use_container_width=True
-        )
+            width='stretch',        )
 
     st.markdown(
         """

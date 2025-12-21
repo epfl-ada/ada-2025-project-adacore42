@@ -3,8 +3,8 @@ import streamlit as st
 from src.utils.general_utils import plot_html
 
 
-CENTER_RATIO = 5
-CENTER_RATIO_FULL = 5
+CENTER_RATIO = 10
+CENTER_RATIO_FULL = 100
 
 
 class AppParams:
@@ -128,7 +128,7 @@ class ImageCaptionCenter_C:
         with col_c:
             st.image(
                 self.image_path,
-                use_container_width=True
+                width='stretch',
             )
 
             captions_html = "".join(
@@ -187,7 +187,7 @@ class TwoTabGraph_C:
         self.additionalComponent_2 = additionalComponent_2
 
         self.render()
-
+    
     def render(self):
         st.markdown(
             """
