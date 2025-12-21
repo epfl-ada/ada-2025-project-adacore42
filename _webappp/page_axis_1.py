@@ -22,6 +22,21 @@ plots = PWA.load_plots()
 
 
 
+st.markdown(
+    """
+    <style>
+    /* Justify ALL markdown text in Streamlit */
+    div[data-testid="stMarkdown"] p,
+    div[data-testid="stMarkdown"] li {
+        text-align: justify !important;
+        text-justify: inter-word !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 
 
 
