@@ -1697,8 +1697,6 @@ class OccupationAnalysis:
         Plots a kde distribution of sentiment scores for multiple occupation categories.
         sentiment_dfs : list of sentiment dataframes for different categories
         '''
-
-    
         if plot_method == 'plotly':
             fig = go.Figure()
             for i, df in enumerate(sentiment_dfs):
@@ -1735,7 +1733,7 @@ class OccupationAnalysis:
             plt.figure(figsize=(10,6))
             for i, sentiment_df in enumerate(sentiment_dfs):
                 sns.kdeplot(sentiment_df[type_of_sentiment], fill=True, alpha=0.5, label=sentiment_df['category'].iloc[0], color=colors[i])
-            plt.title(f"Sentiment Score Distribution ({type_of_sentiment}) for Category: {sentiment_df['category'].iloc[0]}")
+            #plt.title(f"Sentiment Score Distribution ({type_of_sentiment}) for Occupation Categories")
             plt.xlabel("Sentiment Score")
             plt.ylabel("Density")
             plt.grid(axis='y', linestyle='--', alpha=0.4)
