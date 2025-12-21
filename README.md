@@ -98,7 +98,7 @@ URL : https://adacore42-website2025.streamlit.app/
  - General Statistical necessities: Cyrielle
  - Axis 1: Katia & Cyrielle
  - Axis 2: Andras
- - Axis 3: Amelie
+ - Axis 3: Amélie
  - Data preprocessing & website: Dominic & Katia
  - Datastory : All members wrote the part of the website that corresponds to their analysis. 
 
