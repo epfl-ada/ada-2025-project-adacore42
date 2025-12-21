@@ -44,13 +44,12 @@ This dictionary was constructed based on Danielle Sucher's "Jailbreak the Patria
 This part aims to understand which characteristics of a caption explain its perceived funniness.
 
 Data preparation : Each caption is associated with:
-- Its funniness score (target variable).
+- definition of a new funny score : Built a new funniness metric combining (i) vote-type proportions (funny / somewhat_funny / not_funny) and (ii) caption popularity (number of votes), then scaled scores for comparability across contests.
 - A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using TextBlob).
-take well into account the numbers of votes. The different group of funninness will then be compared in boxplot and their difference in mena will be assesd with a Student't t test. 
+take well into account the numbers of votes. The different group of funninness will then be compared in boxplot and their difference in mena will be assesd with a Student't t test.
 
-The second research questions will be covered through ... ... To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
 
-Finally, to capture multivariate and non-linear relationships, we will train a Random Forest model using all features simultaneously. The features of importance would then be deduce as the higher nodes in the decision trees correspond to features with stronger predictive power.
+Topic modelling : Applied BERTopic to captions; selected a suitable min_topic_size using quality criteria (e.g., coherence/diversity/silhouette/outlier-rate trade-offs), then compared humor-score distributions across topics (density/boxplot views + distribution tests). Long-tail distribution effect: Quantified whether topics were over-represented among top captions using a percentile stratification + enrichment score approach.
 
 ### **Axis 2: Professions in Jokes - Dynamics of Humour and Work** 
 
