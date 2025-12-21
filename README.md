@@ -66,7 +66,6 @@ This section looks at frequency, distribution of funniness scores of occupations
 - Performed sentiment analysis with VADER on captions with different categories of occupations and compared them.
 
 **Visualisations**  
-
 - Bar charts for frequency of occupations topics, median funniness scores.
 - Box plots for category distributions.
 - treemaps topics co-occuring with occupations
