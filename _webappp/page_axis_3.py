@@ -388,9 +388,9 @@ with behind_the_scene_2:
     path_1=r"_webappp/assets/graph/topic_male.html",
     label_2="Women",
     path_2=r"_webappp/assets/graph/topic_female.html",
-    center_ratio=10,
+    center_ratio=CENTER_RATIO_FULL,
     isImage=False,
-    height=400,
+    height=500,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2
     )
@@ -496,7 +496,7 @@ with gender_crowd_3:
         label_2="Evolution",
         path_2="_webappp/assets/graph/evolution_funny_score.html",
         center_ratio=8,
-        height=450
+        height=500
     )
 
 
