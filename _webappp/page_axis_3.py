@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from _webappp.assets.app_content import PagesData
+from _webappp.assets.app_content import PagesData as PD
 from _webappp.assets.app_definitions import *
 from src.utils.general_utils import plot_html
 from _webappp.assets.app_design import *
@@ -315,7 +316,9 @@ with behind_the_scene_2:
                  
             For more detailled explanation, see Methods.
             """
-    )
+        )
+        if st.button("Go to Methods →"):
+            st.switch_page(PD.METHODS.value.path)
 
     st.write("""
         Using this approach, we identified recurring topics and aggregated them into broader,
