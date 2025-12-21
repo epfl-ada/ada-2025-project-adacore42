@@ -143,6 +143,17 @@ with funisco_c:
             within the cluster and distinctive relative to other clusters. These terms are used to characterize and interpret each topic.
             """
             )
+
+    with st.expander("**Vader's Sentiment Analysis**", expanded=AP.expanders):
+        st.write(
+            """
+            VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based sentiment analysis tool specifically designed to analyze sentiments expressed in social media contexts. It is particularly effective for short texts, such as tweets, comments, and captions, where traditional sentiment analysis methods may struggle due to the informal language and use of slang, emojis, and acronyms.
+
+            VADER operates on a pre-compiled lexicon of words and phrases that are associated with specific sentiment scores. Each word in the lexicon is assigned a valence score. The tool also incorporates rules to account for the intensity of sentiment based on factors such as capitalization, punctuation, degree modifiers (e.g., "very", "extremely"), and the presence of negations.
+
+            When analyzing a piece of text, VADER tokenizes the input into individual words and phrases, looks up their corresponding sentiment scores in the lexicon, and applies the defined rules to adjust these scores based on context. The final output includes four sentiment metrics: positive, negative, neutral, and compound scores. The compound score is a normalized value ranging from -1 (most extreme negative) to +1 (most extreme positive), providing an overall sentiment assessment of the text.
+            """
+            )
         
 with statistics_c:
     with st.expander("**Statistics and Visualisations**", expanded=AP.expanders):
@@ -156,9 +167,9 @@ with statistics_c:
     with st.expander("**Whitney U Test**", expanded=AP.expanders):
         st.write(
             """
-            The Mann-Whitney U test is a non-parametric statistical test used to determine whether there is a significant difference between the distributions of two independent groups. It is particularly useful when the data does not meet the assumptions required for parametric tests, such as the t-test, including normality and homogeneity of variance.
+            The Mann-Whitney U test is a non-parametric statistical test used to determine whether there is a significant difference between the distributions of two independent groups. It is useful when the data does not meet the assumptions required for parametric tests like the t-test (for example normality of data). Importantly, we need that the two groups being compared are independent and that there is some ordinal or continuous measurement scale.
 
-            The test works by ranking all the observations from both groups together, then comparing the sum of ranks between the two groups. The U statistic is calculated based on these rank sums, and it reflects the number of times observations from one group precede observations from the other group in the ranked list. Importantly, we need to ensure that the two groups being compared are independent and that there is some ordinal or continuous measurement scale.
+            The test works by ranking all the observations from both groups together, then comparing the sum of ranks between the two groups. The U statistic is calculated based on these rank sums, and it reflects the number of times observations from one group are larger than observations from the other group in the ranked list. 
 
             The null hypothesis of the Mann-Whitney U test states that there is no difference in the distributions of the two groups. If the observed U statistic is unlikely under this assumption, we reject the null hypothesis and conclude that there is a statistically significant difference between the groups. A significant result indicates that one group tends to receive higher or lower values than the other, but it does not indicate how large or practically meaningful that difference is.
             """)

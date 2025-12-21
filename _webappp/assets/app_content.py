@@ -16,7 +16,7 @@ class PagesData(Enum):
                                 "515.jpg")
 
     AXIS_2     = PageDataFormat("page_axis_2.py",     
-                                "Professions, Politics, and Power", 
+                                "Professions in Jokes: Dynamics of Humour and Work", 
                                 "545.jpg")
 
     AXIS_3     = PageDataFormat("page_axis_3.py",     
