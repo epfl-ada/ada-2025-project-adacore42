@@ -70,9 +70,11 @@ The **jobs in each caption must be extracted**, allowing us to:
 
 **Visualisations**  
 
-- **Bar charts**: frequency of occupations/political topics.
-- **Bar charts**: average funniness scores per category.
-- **Heatmaps**: cross-tabulating professions and sentiments.
+- **Bar charts**: frequency of occupations topics, median funniness scores.
+- **Box plot**: Category distributions.
+- **treemaps**: topics surrounding occupations.
+- **Histogram**: sentiment distribution. Funniness score distribution
+- **Heatmaps**: statistical test results.
 
 ### **Axis 3: Gender Roles**
 
