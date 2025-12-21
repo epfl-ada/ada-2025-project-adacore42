@@ -65,11 +65,16 @@ with behind_the_punchline_0:
         """
         What if your understanding of gender came from a single source: 
         The New Yorker Caption Contest? No textbooks. No surveys. Just cartoons, captions, and punchlines.
-        Would men and women appear equal? Different? Stereotyped? Modern?
-
-        In this section, we treat the contest as a cultural lens and investigate on what kind of
+        Would men and women appear equal? Different? Stereotyped? Modern? In this section, we treat the contest as a cultural lens and investigate on what kind of
         gendered world it quietly sketches. Humor often looks harmless, but jokes rely
         on shared assumptions. And those assumptions can tell us a lot. 
+
+        Why does this matter? Because humor is one of the quiet places where norms survive.
+        The New Yorker is not fringe comedy: it is an elite cultural institution, widely read,
+        widely imitated, and often taken as a barometer of “smart” humor. If gender stereotypes
+        persist here, they are not accidents — they are assumptions shared between cartoonists,
+        caption writers, editors, and readers. Studying these jokes is not about policing humor. It is about understanding which
+        representations feel natural enough to be laughed at without explanation.
         """
         )
 
@@ -140,17 +145,35 @@ with setting_the_scene_1:
         and captions, and annotate it as 'men', 'women', 'both' or 'neutral' depending on the presence of 
         gendered words. 
 
+        A note of caution before going further. Our gender detection relies on word-based
+        dictionaries: names, pronouns, and gendered roles. This approach captures broad trends,
+        but it cannot account for irony, ambiguous names, visual cues in cartoons, or
+        non-binary identities. Some captions will inevitably be misclassified. Rather than precise individual labeling, this method is designed to surface large-scale
+        patterns. The results should be read as tendencies, not absolutes.
+
         We applied this simple method and got these plots, and guess what? We already found something intersting!
         """
         )
+    
+    graph_choice = st.radio(
+        "",
+        ["Cartoons", "Captions"],
+        horizontal=True,
+        label_visibility='collapsed'
+        )
+    
+    if graph_choice == 'Cartoons':
+        plot_html(r"_webappp/assets/graph/counts_cartoons.html")
+    else: 
+        plot_html(r"_webappp/assets/graph/counts_captions.html")
 
-    TwoTabGraph_C(
-        label_1="Cartoons",
-        path_1="_webappp/assets/graph/counts_cartoons.html",
-        label_2="Captions",
-        path_2="_webappp/assets/graph/counts_captions.html",
-        center_ratio=8,
-        height=450)
+    # TwoTabGraph_C(
+    #     label_1="Cartoons",
+    #     path_1="_webappp/assets/graph/counts_cartoons.html",
+    #     label_2="Captions",
+    #     path_2="_webappp/assets/graph/counts_captions.html",
+    #     center_ratio=8,
+    #     height=450)
 
     st.subheader("The results")
 
@@ -339,8 +362,78 @@ with behind_the_scene_2:
 
 
 
-    def additionalComponent_1():
+    # def additionalComponent_1():
         
+    #     with st.expander("Men eat… a lot.", expanded=AP.expanders):
+    #         st.write(
+    #             """ 
+    #             Food-related theme take up a surprisingly large share of male-labeled captions, but not the wholesome kind. 
+    #             Think alcohol, junk food, dinner menus, and indulgent eating. The humor paints men as enthusiastic consumers, 
+    #             always one drink or snack away from the punchline."""
+    #     )
+    #     with st.expander("Politics, but it is in fact Trump.", expanded=AP.expanders):
+    #         st.write("""
+    #             Political humor does appear in male captions, but with no diversity: it’s Trump, Trump, and… Trump again. 
+    #             Apparently, when men enter politics in New Yorker cartoons, they do so wearing a red tie and making headlines.
+    #         """
+    #         )
+        
+    #     with st.expander("Only men get the full life arc.", expanded=AP.expanders):
+    #         st.write("""    
+    #         Certain themes appear exclusively in male-labeled captions: transportation, death, arts & music, and pop culture. 
+    #         According to these cartoons, only men take the subway, play guitars, play some baseball, watch Edward Scissorhands, contemplate mortality 
+    #         and... eventually die. A complete journey, really.
+    #         ...
+    #         """)
+
+
+
+    # def additionalComponent_2():
+    #     with st.expander("Karen is… just a name. Or is it?", expanded=AP.expanders):
+    #         st.write("""
+    #         If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
+    #         it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
+    #         complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
+    #         full personality without the need of a backstory.
+    #         """
+    #     )
+    #     with st.expander("Women in politics: meet Hillary. That’s it.", expanded=AP.expanders):
+
+    #         st.write("""
+    #         Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
+    #         only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
+    #         The absence of other female political figures is striking... and telling...
+    #         """
+    #         )
+
+    gender_choice = st.radio(
+    "",
+    ["Men", "Women"],
+    horizontal=True,
+    label_visibility='collapsed'
+    )
+    
+
+    if gender_choice == "Women":
+        plot_html(r"_webappp/assets/graph/topic_female.html")
+        with st.expander("Karen is… just a name. Or is it?", expanded=AP.expanders):
+            st.write("""
+            If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
+            it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
+            complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
+            full personality without the need of a backstory.
+            """
+        )
+        with st.expander("Women in politics: meet Hillary. That’s it.", expanded=AP.expanders):
+
+            st.write("""
+            Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
+            only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
+            The absence of other female political figures is striking... and telling...
+            """
+            )
+    else:
+        plot_html(r"_webappp/assets/graph/topic_male.html")
         with st.expander("Men eat… a lot.", expanded=AP.expanders):
             st.write(
                 """ 
@@ -364,36 +457,17 @@ with behind_the_scene_2:
             """)
 
 
-
-    def additionalComponent_2():
-        with st.expander("Karen is… just a name. Or is it?", expanded=AP.expanders):
-            st.write("""
-            If you knew gender only through these captions, you might think Karen is simply a very popular female name. In reality, 
-            it’s doing a lot of cultural heavy lifting. “Karen” has become shorthand for a specific stereotype: demanding, entitled, 
-            complaining, often middle-aged, and usually unhappy with the manager. What looks like a neutral name quietly carries a 
-            full personality without the need of a backstory.
-            """
-        )
-        with st.expander("Women in politics: meet Hillary. That’s it.", expanded=AP.expanders):
-
-            st.write("""
-            Political themes do appear for women, but almost exclusively through Hillary Clinton. If New Yorker captions were your 
-            only source of information, you might reasonably conclude that American politics briefly included a woman once, and then moved on. 
-            The absence of other female political figures is striking... and telling...
-            """
-            )
-
-    TwoTabGraph_C(  
-    label_1="Men",  
-    path_1=r"_webappp/assets/graph/topic_male.html",
-    label_2="Women",
-    path_2=r"_webappp/assets/graph/topic_female.html",
-    center_ratio=CENTER_RATIO_FULL,
-    isImage=False,
-    height=500,
-    additionalComponent_1=additionalComponent_1,
-    additionalComponent_2=additionalComponent_2
-    )
+    # TwoTabGraph_C(  
+    # label_1="Men",  
+    # path_1=r"_webappp/assets/graph/topic_male.html",
+    # label_2="Women",
+    # path_2=r"_webappp/assets/graph/topic_female.html",
+    # center_ratio=CENTER_RATIO_FULL,
+    # isImage=False,
+    # height=500,
+    # additionalComponent_1=additionalComponent_1,
+    # additionalComponent_2=additionalComponent_2
+    # )
 
     # plot_html(r"_webappp/assets/graph/topic_female copy.html") 
 
@@ -490,14 +564,26 @@ with gender_crowd_3:
         You can select which plot you want to see with the following buttons. Also, if you want to see the results
         better, you can select which gender you want to see by clicking on the legend of the plots.
         """)
-    TwoTabGraph_C(
-        label_1="Distribution",
-        path_1="_webappp/assets/graph/funniness_distrib_by_gender.html",
-        label_2="Evolution",
-        path_2="_webappp/assets/graph/evolution_funny_score.html",
-        center_ratio=8,
-        height=500
+    
+    funny_choice = st.radio(
+    "",
+    ["Distribution", "Evolution over time"],
+    horizontal=True,
+    label_visibility='collapsed'
     )
+
+    if funny_choice == 'Distribution':
+        plot_html(r"_webappp/assets/graph/funniness_distrib_by_gender.html", height= 500)
+    else:
+        plot_html(r"_webappp/assets/graph/evolution_funny_score.html", height = 500)
+    # TwoTabGraph_C(
+    #     label_1="Distribution",
+    #     path_1="_webappp/assets/graph/funniness_distrib_by_gender.html",
+    #     label_2="Evolution",
+    #     path_2="_webappp/assets/graph/evolution_funny_score.html",
+    #     center_ratio=8,
+    #     height=600
+    # )
 
 
     st.write(
@@ -572,7 +658,14 @@ with gender_crowd_3:
         -> include the hypothesis, the results and analyse them.
         
         This means that, in practice, the audience does not meaningfully prefer captions about one
-        gender over the other.
+        gender over the other. This apparent neutrality invites interpretation. One possibility is that the audience
+        evaluates captions primarily on linguistic cleverness rather than subject matter.
+        Another is that long-standing gender stereotypes have become so normalized that they no
+        longer register as distinctive — they are simply part of the expected background of       humor.
+
+        In this sense, the absence of audience preference does not imply the absence of bias.
+        Instead, it may signal that these representations are culturally settled: familiar enough
+        to amuse, unremarkable enough to go unquestioned.
         """)
 
     st.subheader("What about the top and worst captions?")
@@ -659,7 +752,12 @@ with what_we_learned_4:
     st.header("4. So... What did we learn about gender?")
 
     st.markdown("""
-        Gender in the New Yorker Caption Contest is highly visible, strongly patterned, but weakly consequential. Men and women are not 
-        depicted in the same ways — stereotypes persist, roles differ, archetypes dominate — yet these differences rarely translate into measurable 
-        differences in audience approval. Gender shapes how the joke is told, but not necessarily how well it lands.
+    Gender in the New Yorker Caption Contest is highly visible, strongly patterned, but weakly
+    consequential. Men and women are not depicted in the same ways — stereotypes persist,
+    roles differ, archetypes dominate — yet these differences rarely translate into measurable
+    differences in audience approval.
+
+    The imbalance, then, is not enforced by the crowd but embedded in the stories themselves.
+    Gender shapes who gets to act, who gets to be observed, and which lives feel rich enough
+    to joke about — even when everyone laughs the same.
         """)
