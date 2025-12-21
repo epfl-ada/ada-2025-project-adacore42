@@ -573,6 +573,7 @@ class OccupationAnalysis:
             template = 'plotly_white',
             xaxis_tickangle = -45,
             height = 650,
+            title_x = 0.5
         )
         if save_path:
             fig.write_html(save_path)
@@ -880,7 +881,8 @@ class OccupationAnalysis:
             yaxis_title='Count',
             template = 'plotly_white',
             height = 500,
-            title = f"Distribution of Funniness Scores for \"{terms[0]}\""
+            title = f"Distribution of Funniness Scores for \"{terms[0]}\"",
+            title_x = 0.5
         )
         
         if save_path:
