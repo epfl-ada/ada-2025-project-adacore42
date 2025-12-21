@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from _webappp.assets.app_content import PagesData
+from _webappp.assets.app_content import PagesData as PD
 from _webappp.assets.app_definitions import *
 from src.utils.general_utils import plot_html
 from _webappp.assets.app_design import *
@@ -225,27 +226,55 @@ with behind_the_scene_2:
         One way to examine depiction is to look at language itself.
         Which words tend to surround men? Which describe women?
 
-        **TO ADD**: METHOD
+        To do this, we analyse the words most strongly associated with each gender category. We computed word frequencies
+        separately for men and women labeled captions. But directly comparing these frequencies would not be meaningful since
+        we have six times for men labeled captions. So we computed a normalised score and associated it with each word.
+        Below, you can find how we computed this score.
+    
         """)
+    
+    with st.expander("The normalised score", expanded=AP.expanders):  
 
-    TwoTabGraph_C(
-        label_1="Verbs",
-        path_1="_webappp/assets/graph/wordclouds_verbs.png",
-        label_2="Adjectives",
-        path_2="_webappp/assets/graph/wordclouds_adjs.png",
-        center_ratio=3,
-        isImage=True,
-        height=450
-    )
+        st.write("Here is how we calculated it for the men related words. For the women, it's just one minus the men's score.")
+        st.latex(
+            r"""
+            S_{w}^{\text{male}} =
+            \frac{\tfrac{c_{w,m}}{N_m}}
+            {\tfrac{c_{w,m}}{N_m} + \tfrac{c_{w,f}}{N_f}}
+            """
+        )
+
+        st.markdown(
+            """
+            where:
+            - $c_{w,m}$ is the count of word *w* in male-labeled captions  
+            - $c_{w,f}$ is the count of word *w* in female-labeled captions  
+            - $N_m$ and $N_f$ are the total number of tokens in male- and female-labeled captions, respectively  
+        """)
+        
+    st.write("""
+        With those frequencies computed, we can now show you the top 50 words associated words to each gender in the following
+        wordcloud.
+        """)
+    
+    st.image(r"_webappp\assets\graph\wordcloud_gender.png")
+
+    # TwoTabGraph_C(
+    #     label_1="Verbs",
+    #     path_1="_webappp/assets/graph/wordclouds_verbs.png",
+    #     label_2="Adjectives",
+    #     path_2="_webappp/assets/graph/wordclouds_adjs.png",
+    #     center_ratio=3,
+    #     isImage=True,
+    #     height=450
+    # )
 
 
 
 
     st.write(
         """
-        At first glance, both word clouds look busy, colorful, and playfulm just like the contest itself. But if we imagine learning about gender only through these captions, 
-        a pattern quickly emerges.
-
+        **Not the best, still in the process**
         On the men’s side, the vocabulary leans toward power, systems, and abstraction. Words like stocks, reinvent, president, employee, diversity, and cop dominate. 
         Men appear embedded in institutions: finance, work, authority, and public life. Even when humor turns negative (abominable, fired), it often frames men as actors 
         within larger structures: bosses who fail, leaders who disappoint, systems that collapse. Men are doing things, running things or breaking things.
@@ -282,8 +311,12 @@ with behind_the_scene_2:
 
             In short: BERTopic doesn’t ask “Which words appear together?” but rather “Which captions are saying roughly 
             the same thing?”
+                 
+            For more detailled explanation, see Methods.
             """
-    )
+        )
+        if st.button("Go to Methods →"):
+            st.switch_page(PD.METHODS.value.path)
 
     st.write("""
         Using this approach, we identified recurring topics and aggregated them into broader,
@@ -353,7 +386,7 @@ with behind_the_scene_2:
     path_1="_webappp/assets/graph/topic_male.html",
     label_2="Women",
     path_2="_webappp/assets/graph/topic_female.html",
-    center_ratio=CENTER_RATIO,
+    # center_ratio=CENTER_RATIO,
     isImage=False,
     height=450,
     additionalComponent_1=additionalComponent_1,
