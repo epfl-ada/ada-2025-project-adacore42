@@ -58,7 +58,7 @@ The second research questions will be covered through ... ... To minimize confou
 
 Finally, to capture multivariate and non-linear relationships, we will train a Random Forest model using all features simultaneously. The features of importance would then be deduce as the higher nodes in the decision trees correspond to features with stronger predictive power.
 
-### **Axis 2: Professions, Politics, and Power** 
+### **Axis 2: Professions in Jokes - Dynamics of Humour and Work** 
 
 First, we build a **comprehensive list of occupations**. This is done by merging aforementioned datasets. 
 
@@ -67,12 +67,12 @@ First, we build a **comprehensive list of occupations**. This is done by merging
 The **jobs in each caption must be extracted**, allowing us to:  
 - Track the **count of occupations**.
 - Analyse **where and when** they occur.
-- Identify **co-occurring words** to label **recurrent stereotypes, ridicule, and mockery** of jobs.
+- Categorise occupations under broader **themes**
+- Analyse the **distribution** of funniness scores concerning categories
+- Identify **co-occurring topics** to label **recurrent stereotypes, ridicule, and mockery** of jobs.
+- Identify the **sentiment** related to captions with ocupations
+- Perform mann-whitney U tests to see if distributions are the same for funniness/sentiment distributions
 
-Similar approach taken for the **political research**:
-- Create a **list of political words**.
-- Treat **ambiguous words** with care (e.g., *left* and *right*).
-- Analyse the **funniness score** of the captions and evolution of volume.
 
 **Visualisations**  
 
