@@ -165,7 +165,7 @@ TwoTabGraph_C(
     path_1="_webappp/assets/graph/plotfunny_vs_not_funny_2.html",
     label_2="An other angle",
     path_2="_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
-    center_ratio=CENTER_RATIO,
+    center_ratio=CENTER_RATIO+50,
     isImage=False,
     height=1150,
     additionalComponent_1=additionalComponent_1,
@@ -230,7 +230,8 @@ with st.expander("What is the difference between crowd-sourced top-rated caption
     st.write(
         """
         There are two winning captions: one chosen by the public vote (referenced in <span style="color: orange;">orange</span>), and the other selected by the The New Yorker editorial team (referenced in <span style="color: blue;">blue</span>).
-        """
+        """,
+        unsafe_allow_html=True
     )
 
 
@@ -478,7 +479,6 @@ TwoTabGraph_C(
     center_ratio=CENTER_RATIO,
     isImage=False,
     height=1150,
-    width=1500,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2,
 )

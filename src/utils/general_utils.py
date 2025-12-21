@@ -87,13 +87,13 @@ def plot_html(path, height=450):
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    st.components.v1.html(html_content, height=height/2, scrolling=False)
+    st.components.v1.html(html_content, height=height, scrolling=False)
 
 def plot_html_version2(path, height=600):
     with open(path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    st.components.v1.html(html_content,height=height,scrolling=True,)
+    st.components.v1.html(html_content,height=height/2,scrolling=True,)
 
 
 def plot_jpg(path, width=600):

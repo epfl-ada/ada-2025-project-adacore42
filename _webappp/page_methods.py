@@ -175,20 +175,34 @@ with statistics_c:
             """)
         
     with st.expander("**Cliff's Delta**", expanded=AP.expanders):
-        st.write(
+        st.markdown(
+            r"""
+            Cliff's Delta is a non-parametric effect size measure that quantifies the degree of overlap
+            between two independent groups. It is calculated by considering all possible pairs of
+            observations from the two groups and determining the proportion of pairs where one group's
+            observation is greater than, less than, or equal to the other group's observation.
+
+            The formula for Cliff's Delta ($d$) is given by:
+
+            $$
+            d = \frac{n_{\text{greater}} - n_{\text{less}}}{n_{\text{total}}}
+            $$
+
+            The value of Cliff's Delta ranges from $-1$ to $1$, where:
+            - $d = 1$ indicates that all observations in group A are greater than those in group B.
+            - $d = -1$ indicates that all observations in group A are less than those in group B.
+            - $d = 0$ indicates complete overlap between the two groups.
+
+            Common benchmarks for interpretation are:
+            - Small effect: $|d| < 0.147$
+            - Medium effect: $0.147 \le |d| < 0.33$
+            - Large effect: $|d| \ge 0.33$
+
+            Cliff's Delta is particularly useful for assessing practical significance in non-parametric
+            tests such as the Mann–Whitney U test.
             """
-            Cliff's Delta is a non-parametric effect size measure that quantifies the degree of overlap between two independent groups. It is calculated by considering all possible pairs of observations from the two groups and determining the proportion of pairs where one group's observation is greater than, less than, or equal to the other group's observation. The formula for Cliff's Delta (d) is given by:
-            $$
-            d = \frac{(n_{greater} - n_{less})}{n_{total}}
-            $$
+        )
 
-            The value of Cliff's Delta ranges from -1 to 1, where:
-            - A value of 1 indicates that all observations in group A are greater than those in group B.
-            - A value of -1 indicates that all observations in group A are less than those in group B.
-            - A value of 0 indicates complete overlap between the two groups, meaning there is no difference in their distributions.
-
-            Cliff's Delta provides a straightforward interpretation of effect size, with commonly used benchmarks for small (|d| $$< 0.147), medium (0.147 $\leq$ |d| $<$ 0.33), and large (|d| $\geq$ 0.33) effects. This measure proves particularly useful when assessing the practical significance of findings from non-parametric tests, such as the Mann-Whitney U test.
-            """)
 
 
 
