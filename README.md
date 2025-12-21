@@ -53,27 +53,25 @@ Topic modelling : Applied BERTopic to captions; selected a suitable min_topic_si
 
 ### **Axis 2: Professions in Jokes - Dynamics of Humour and Work** 
 
-First, we build a **comprehensive list of occupations**. This is done by merging aforementioned datasets. 
+This section looks at frequency, distribution of funniness scores of occupations and occupational categories, performs topic and sentiment analysis of captions with occupations. 
+
+**Data Preparation**
+- Created comprehensive occupations list
+- Built TF-IDF matrix
+- Extracted occupation mentions from the dataset with attributes like number of occurences, contest ids, funniness scores. 
 
 **Analysis**
-
-The **jobs in each caption must be extracted**, allowing us to:  
-- Track the **count of occupations**.
-- Analyse **where and when** they occur.
-- Categorise occupations under broader **themes**
-- Analyse the **distribution** of funniness scores concerning categories
-- Identify **co-occurring topics** to label **recurrent stereotypes, ridicule, and mockery** of jobs.
-- Identify the **sentiment** related to captions with ocupations
-- Perform mann-whitney U tests to see if distributions are the same for funniness/sentiment distributions
-
+- Identified where occupations/categories appear, their frequency, and compared difference in funniness scores (statistical tests)
+- Performed topic modelling with BERTopic on captions with occupations.
+- Performed sentiment analysis with VADER on captions with different categories of occupations and compared them.
 
 **Visualisations**  
 
-- **Bar charts**: frequency of occupations topics, median funniness scores.
-- **Box plot**: Category distributions.
-- **treemaps**: topics surrounding occupations.
-- **Histogram**: sentiment distribution. Funniness score distribution
-- **Heatmaps**: statistical test results.
+- Bar charts for frequency of occupations topics, median funniness scores.
+- Box plots for category distributions.
+- treemaps topics co-occuring with occupations
+- Histograms for funniness score/sentiment distribution
+- Heatmaps for statistical test results.
 
 ### **Axis 3: Gender Roles**
 
