@@ -94,6 +94,11 @@ def plot_html_version2(path, height=600):
         html_content = f.read()
 
     st.components.v1.html(html_content,height=height/2,scrolling=True,)
+def plot_html_3(path, height=450, width=800):
+    with open(path, "r", encoding="utf-8") as f:
+        html_content = f.read()
+
+    st.components.v1.html(html_content, height=height, width = width, scrolling=False)
 
 
 def plot_jpg(path, width=600):

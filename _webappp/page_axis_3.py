@@ -130,21 +130,9 @@ with setting_the_scene_1:
         women labeled word and one for men. It contains common english names, occupations, pronouns...
         With these dictionnaries, we can do some simple gender detection: iterate through the image descriptions 
         and captions, and annotate it as 'men', 'women', 'both' or 'neutral' depending on the presence of 
-        gendered words.
-        """
-        )
+        gendered words. 
 
-
-
-    st.subheader("The results")
-
-    st.write(
-        """
         We applied this simple method and got these plots, and guess what? We already found something intersting!
-        Almost 50% of the cartoons are related only to men. Also women are present alone only in 8% of the cartoons
-        and are more often mentioned alongside men. And, as expected, this imbalance is translated to the captions,
-        where men references clearly dominates. If captions were our only window into the world, we would already
-        conclude that men occupy far more narrative space.
         """
         )
 
@@ -156,6 +144,17 @@ with setting_the_scene_1:
         center_ratio=8,
         height=450)
     st.divider()
+
+    st.subheader("The results")
+
+    st.write(
+        """
+        Almost 50% of the cartoons are related only to men. Also women are present alone only in 8% of the cartoons
+        and are more often mentioned alongside men. And, as expected, this imbalance is translated to the captions,
+        where men references clearly dominates. If captions were our only window into the world, we would already
+        conclude that men occupy far more narrative space.
+        """
+        )
 
 
 
@@ -273,7 +272,6 @@ with behind_the_scene_2:
 
     st.write(
         """
-        **Not the best, still in the process**
         On the men’s side, the vocabulary leans toward power, systems, and abstraction. Words like stocks, reinvent, president, employee, diversity, and cop dominate. 
         Men appear embedded in institutions: finance, work, authority, and public life. Even when humor turns negative (abominable, fired), it often frames men as actors 
         within larger structures: bosses who fail, leaders who disappoint, systems that collapse. Men are doing things, running things or breaking things.
@@ -382,12 +380,12 @@ with behind_the_scene_2:
 
     TwoTabGraph_C(  
     label_1="Men",  
-    path_1="_webappp/assets/graph/topic_male.html",
+    path_1="_webappp/assets/graph/topic_male_2.html",
     label_2="Women",
-    path_2="_webappp/assets/graph/topic_female.html",
-    center_ratio=40,
+    path_2="_webappp/assets/graph/topic_female_2.html",
+    center_ratio=30,
     isImage=False,
-    height=450,
+    height=400,
     additionalComponent_1=additionalComponent_1,
     additionalComponent_2=additionalComponent_2
     )
