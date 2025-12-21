@@ -147,31 +147,23 @@ with funisco_c:
     with st.expander("**Vader's Sentiment Analysis**", expanded=AP.expanders):
         st.write(
             """
-            VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based sentiment analysis tool specifically designed to analyze sentiments expressed in social media contexts. It is particularly effective for short texts, such as tweets, comments, and captions, where traditional sentiment analysis methods may struggle due to the informal language and use of slang, emojis, and acronyms.
+            VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based sentiment analysis tool designed to analyse sentiments in social media contexts. It is very effective for short texts, such as tweets, comments, and captions,as it looks for informal language, punctuation and emojis if any. While we have removed emojis and punctuation in our preprocessing steps, VADER remains a robust choice for sentiment analysis due to its ability with spoken language and short texts.
 
-            VADER operates on a pre-compiled lexicon of words and phrases that are associated with specific sentiment scores. Each word in the lexicon is assigned a valence score. The tool also incorporates rules to account for the intensity of sentiment based on factors such as capitalization, punctuation, degree modifiers (e.g., "very", "extremely"), and the presence of negations.
+            VADER operates on a pre-compiled lexicon of words and phrases that are associated with specific sentiment scores. Each word in the lexicon is assigned a valence score. The tool also incorporates rules to account for the intensity of sentiment based on factors such as capitalised words, punctuation, modifiers (e.g., "very", "extremely"), and negations.
 
-            When analyzing a piece of text, VADER tokenizes the input into individual words and phrases, looks up their corresponding sentiment scores in the lexicon, and applies the defined rules to adjust these scores based on context. The final output includes four sentiment metrics: positive, negative, neutral, and compound scores. The compound score is a normalized value ranging from -1 (most extreme negative) to +1 (most extreme positive), providing an overall sentiment assessment of the text.
+            When analysing a piece of text, VADER tokenizes the input into individual words and phrases, looks up their corresponding sentiment scores in the lexicon, and applies the defined rules to adjust these scores based on context. The final output includes four sentiment metrics: positive, negative, neutral, and compound scores. The compound score is a normalised value ranging from -1 (most extreme negative) to +1 (most extreme positive).
             """
             )
         
 with statistics_c:
-    with st.expander("**Statistics and Visualisations**", expanded=AP.expanders):
-        st.write(
-            """
-            In this section, we present some of the key startistical methods in our analysis and highlight why they were chosen.
-            - Descriptive statistics to summarise the main features of the dataset. These include simple visualisation and numerical summaries like means, medians, and standard deviations.
-            - Hypothesis testing to determine if there are significant differences between groups in our dataset. We relied mainly on Whitney U tests when the normality assumption was not met, and t-tests when it was. We also looked a Cliff's delta to quantify the effect size of our observations.
-            """)
-
     with st.expander("**Whitney U Test**", expanded=AP.expanders):
         st.write(
             """
-            The Mann-Whitney U test is a non-parametric statistical test used to determine whether there is a significant difference between the distributions of two independent groups. It is useful when the data does not meet the assumptions required for parametric tests like the t-test (for example normality of data). Importantly, we need that the two groups being compared are independent and that there is some ordinal or continuous measurement scale.
+            The Mann-Whitney U test is a non-parametric statistical test used to determine whether there is a significant difference between the distributions of two independent groups. It is useful when the data does not meet the assumptions required for parametric tests like a t-test (for example normality of data). Importantly, we need that the two groups being compared are independent and that there is some ordinal or continuous measurement scale.
 
             The test works by ranking all the observations from both groups together, then comparing the sum of ranks between the two groups. The U statistic is calculated based on these rank sums, and it reflects the number of times observations from one group are larger than observations from the other group in the ranked list. 
 
-            The null hypothesis of the Mann-Whitney U test states that there is no difference in the distributions of the two groups. If the observed U statistic is unlikely under this assumption, we reject the null hypothesis and conclude that there is a statistically significant difference between the groups. A significant result indicates that one group tends to receive higher or lower values than the other, but it does not indicate how large or practically meaningful that difference is.
+            The null hypothesis of the Mann-Whitney U test states that there is no difference in the distributions of the two groups. If the observed U statistic is unlikely under this assumption, we reject the null hypothesis and conclude that there is a statistically significant difference between the groups. A significant result indicates that one group tends to receive higher or lower values (no known direction, for that we need another measure) than the other, but it does not indicate how large or practically meaningful that difference is.
             """)
         
     with st.expander("**Cliff's Delta**", expanded=AP.expanders):
