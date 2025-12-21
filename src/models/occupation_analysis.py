@@ -31,8 +31,8 @@ class OccupationAnalysis:
     """
     A class for performing all analysis related to occupations in text data.
     """
-#--------------------------------------------------------#
-#Initialization
+
+#Initialise 
     def __init__(self, tf_idf_matrix, feature_names, term_indices, term_counts, documents, scores, contest_ids,occupations_mapping, occupation_to_category = None, occupation_df_path = None, category_caption_df_path =None, force_rebuild = False):
         self.tf_idf_matrix = tf_idf_matrix
         self.feature_names = np.array(feature_names)
@@ -152,7 +152,6 @@ class OccupationAnalysis:
         # category: list of canonical occupations
         self.occupation_categories = occupation_categories
 
-        
 
         if occupation_to_category is None:
             # building reverse mapping: occupation to category
@@ -173,6 +172,8 @@ class OccupationAnalysis:
     #--------------------------------------------------------#
     # Load or build dataframes
     #--------------------------------------------------------#
+
+    #create occupation analysis, or load from path
     def _load_or_build_occupation_dataframe(self):
         if (self.occupation_df_path is not None and not self.force_recompute and os.path.exists(self.occupation_df_path)):
             print("Loading cached occupation dataframe...")
@@ -185,6 +186,7 @@ class OccupationAnalysis:
 
         return df
 
+    # create occupation analysis, or load it from path
     def _load_or_build_category_caption_dataframe(self):
         
         if (self.category_caption_df_path is not None and not self.force_recompute and os.path.exists(self.category_caption_df_path)):
@@ -312,7 +314,9 @@ class OccupationAnalysis:
     #---------------------------------------------------------#
     # Exploratory analysis functions
     # --------------------------------------------------------#   
-    def exploratory_occupation_analysis(self, alpha=0.05, print_results=True):
+
+    #unused in the end
+    def exploratory_occupation_analysis(self, alpha=0.05, print_results=True, create_df = False):
         """
         Some exploratory statistics on occupations in the TF-IDF matrix.
         """
@@ -328,8 +332,10 @@ class OccupationAnalysis:
         scores_with_term = self.scores[mask_docs_with_term]
         scores_without_term = self.scores[~mask_docs_with_term]
         
+        # scores made normal on scale 1-100, so this is ok
         t_stat, p_value = ttest_ind(scores_with_term, scores_without_term, equal_var=False)
 
+        #printing
         if print_results:
             print(f"T-test results: t-statistic = {t_stat:.4f}, p-value = {p_value:.4f}")
 
@@ -338,34 +344,37 @@ class OccupationAnalysis:
             else:
                 print(f"The difference in funniness scores is not statistically significant (alpha = {alpha}).")
 
-        #average and std of funniness scores
-        avg_funniness_per_term = []
-        std_funniness_per_term = []
-
-        for idx in self.term_indices:
-            mask_term = np.array(self.tf_idf_matrix[:, idx].toarray().flatten() > 0)
-            
-            if mask_term.any():
-                avg_funniness_per_term.append(self.scores[mask_term].mean())
-                std_funniness_per_term.append(self.scores[mask_term].std())
-            else:
-                avg_funniness_per_term.append(0.0)
-                std_funniness_per_term.append(0.0)
-        
-        term_analysis_df = pd.DataFrame({
-            'term': self.feature_names[self.term_indices],
-            'term_count': self.term_counts,
-            'avg_funniness': avg_funniness_per_term,
-            'std_funniness': std_funniness_per_term
-        }).sort_values(by='term_count', ascending=False).reset_index(drop=True)
-
         results = {
-            'num_docs_with_term': int(num_with_term),
-            'total_docs': int(total_docs),
-            't_statistic': t_stat,
-            'p_value': p_value
-        }
-        return term_analysis_df, results
+                'num_docs_with_term': int(num_with_term),
+                'total_docs': int(total_docs),
+                't_statistic': t_stat,
+                'p_value': p_value
+            }
+
+        if create_df == True:
+            #average and std of funniness scores
+            avg_funniness_per_term = []
+            std_funniness_per_term = []
+
+            for idx in self.term_indices:
+                mask_term = np.array(self.tf_idf_matrix[:, idx].toarray().flatten() > 0)
+                
+                if mask_term.any():
+                    avg_funniness_per_term.append(self.scores[mask_term].mean())
+                    std_funniness_per_term.append(self.scores[mask_term].std())
+                else:
+                    avg_funniness_per_term.append(0.0)
+                    std_funniness_per_term.append(0.0)
+            
+            term_analysis_df = pd.DataFrame({
+                'term': self.feature_names[self.term_indices],
+                'term_count': self.term_counts,
+                'avg_funniness': avg_funniness_per_term,
+                'std_funniness': std_funniness_per_term
+            }).sort_values(by='term_count', ascending=False).reset_index(drop=True)
+            return term_analysis_df, results
+        
+        return results
 
     # building a detailed occupation dataframe for further analyses
     def build_occupation_dataframe(self):
@@ -381,11 +390,13 @@ class OccupationAnalysis:
         occupation_temporal = {occ: {} for occ in occupations}
         occupation_term_counts = {occ: 0 for occ in occupations}
 
+        # loop through all captions
         for idx, doc in enumerate(self.documents):
             doc_lower = doc.lower()
             contest_id = self.contest_ids[idx]
             score = self.scores[idx]
 
+            # loop through all occupations
             for syn, occ in self.syn_to_occ.items():
                 if syn in doc_lower:
                     occupation_term_counts[occ] += 1
@@ -445,36 +456,9 @@ class OccupationAnalysis:
 
         return pd.DataFrame(rows)
     
-    #--------------------------------------------------------#
-    # adding a scores column to the occupation dataframe, without rebuilding everything
-    def add_scores_to_occupation_dataframe(self, overwrite=True):
-        '''
-        Adds a funniness scores column to the occupation dataframe.
-        '''
-        funniness_by_occ = {occ: [] for occ in self._occupation_df['term']}
-
-        #get the scores
-        for idx, doc in enumerate(self.documents):
-            if (idx+1) % 1000 == 0:
-                print(f"Processing document {idx+1}/{len(self.documents)}")
-            
-            doc_lower = doc.lower()
-            score = self.scores[idx]
-
-            for syn, occ in self.syn_to_occ.items():
-                if syn in doc_lower and occ in funniness_by_occ:
-                    funniness_by_occ[occ].append(score)
-
-        self._occupation_df['funniness_scores'] = self._occupation_df['term'].map(funniness_by_occ)
-
-        #save
-        if overwrite and self.occupation_df_path is not None:
-            self._occupation_df.to_pickle(self.occupation_df_path)
-
-        return self._occupation_df
     
     #--------------------------------------------------------#
-    #Plotting functions in html format for initial exploration
+    #Plotting functions in html format for initial exploration, and matplotlib for notebook
     #--------------------------------------------------------#
 
     #plotting top occupations by count
@@ -524,7 +508,7 @@ class OccupationAnalysis:
             plt.show()
 
 
-    # plotting with dropdown menu
+    # plotting with dropdown menu (only plotly)
     def plot_occupation_dropdown(self, page_size=10, save_path=None, color = 'blugrn'):
         """
         Plots an interactive dropdown to explore occupation statistics.
@@ -579,7 +563,7 @@ class OccupationAnalysis:
             fig.write_html(save_path)
         fig.show()
 
-    #plotting top occupations by average or median funniness
+    #plotting top occupations by average or median funniness (plotly or matplotlib)
     def plot_top_occupations_by_funniness(self, top_n=20, threshold = 50, save_path=None, measure='avg', ascending=False, plot_method = 'plotly', color = 'blugrn'):
         """
         Plots the top N occupation terms by average funniness score.
@@ -604,6 +588,7 @@ class OccupationAnalysis:
             if save_path:
                 fig.write_html(save_path)
             fig.show()
+
         elif plot_method == 'plt':
             terms = df_plot["term"].values
             scores = df_plot[f"{measure}_funniness"].values
@@ -611,23 +596,14 @@ class OccupationAnalysis:
 
             fig, ax = plt.subplots(figsize=(max(10, len(terms) * 0.4), 6))
 
-            ax.bar(
-                terms,
-                scores,
-                color= color,   # Plotly default blue
-                edgecolor="black",
-                linewidth=1
-            )
+            ax.bar(terms,scores, color= color, edgecolor="black", linewidth=1)
 
             ax.set_xlabel("Occupation Term")
             ax.set_ylabel(f"{title} Funniness Score")
 
             plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
 
-            ax.set_title(
-                f"Top {top_n} Occupation Terms by {title} Funniness Score",
-                fontsize=12
-            )
+            ax.set_title(f"Top {top_n} Occupation Terms by {title} Funniness Score", fontsize=12)
 
             ax.grid(axis="y", linestyle="--", alpha=0.4)
 
@@ -639,52 +615,34 @@ class OccupationAnalysis:
             plt.show()
             
 
-
-    def plot_best_worst_occupations_by_median(
-        self,
-        top_n=20,
-        threshold=50,
-        color="blugrn",
-        height=600,
-        save_path=None,
-    ):
+    #only for webpage plotly
+    def plot_best_worst_occupations_by_median(self, top_n=20, threshold=50, color="blugrn", height=600, save_path=None):
         df = self._occupation_df[self._occupation_df["term_count"] >= threshold].copy()
 
         # Best (highest median)
-        df_best = (
-            df.sort_values(by="median_funniness", ascending=False)
-            .head(top_n)
-            .copy()
-        )
+        df_best = df.sort_values(by="median_funniness", ascending=False).head(top_n).copy()
 
         # Worst (lowest median)
-        df_worst = (
-            df.sort_values(by="median_funniness", ascending=True)
-            .head(top_n)
-            .copy()
-        )
+        df_worst = df.sort_values(by="median_funniness", ascending=True).head(top_n).copy()
 
         hover_data = {
             "term_count": True,
             "std_funniness": ":.2f",
             "avg_funniness": ":.2f",
             "median_funniness": ":.2f",
-            "term": False,
-        }
+            "term": False,}
 
         fig_best = px.bar(
             df_best,
             x="term",
             y="median_funniness",
-            hover_data=hover_data,
-        )
+            hover_data=hover_data)
 
         fig_worst = px.bar(
             df_worst,
             x="term",
             y="median_funniness",
-            hover_data=hover_data,
-        )
+            hover_data=hover_data)
 
         fig = go.Figure(data=fig_best.data + fig_worst.data)
 
@@ -697,23 +655,29 @@ class OccupationAnalysis:
             marker=dict(
                 color=df_best["term_count"],
                 colorscale=color,
-                line=dict(color="rgba(0,0,0,0.7)", width=1),
-            )
-        )
+                line=dict(color="rgba(0,0,0,0.7)", width=1),))
+        
         fig.data[1].update(
             marker=dict(
                 color=df_worst["term_count"],
                 colorscale=color,
-                line=dict(color="rgba(0,0,0,0.7)", width=1),
-            )
-        )
+                line=dict(color="rgba(0,0,0,0.7)", width=1),))
 
+        buttons_highest = dict(label="Best (Highest Median)",
+                            method="update",
+                            args=[{"visible": [True, False]},
+                                {"title.text": f"Top {top_n} Occupations by Median Funniness"},],)
+        buttons_lowest =  dict(
+                            label="Worst (Lowest Median)",
+                            method="update",
+                            args=[{"visible": [False, True]},
+                                {"title.text": f"Bottom {top_n} Occupations by Median Funniness"},],),
         fig.update_layout(
             title=dict(
                 text=f"Top {top_n} Occupations by Median Funniness",
                 x=0.5,
-                xanchor="center",
-            ),
+                xanchor="center",),
+            
             xaxis_title="Occupation Term",
             yaxis_title="Median Funniness Score",
             template="plotly_white",
@@ -722,39 +686,13 @@ class OccupationAnalysis:
             hovermode="closest",
             showlegend=False,
             margin=dict(t=120),
-            updatemenus=[
-                dict(
-                    type="buttons",
+            updatemenus=[dict(type="buttons",
                     direction="right",
                     x=0.5,
                     y=1.08,
                     xanchor="center",
                     yanchor="top",
-                    buttons=[
-                        dict(
-                            label="Best (Highest Median)",
-                            method="update",
-                            args=[
-                                {"visible": [True, False]},
-                                {
-                                    "title.text": f"Top {top_n} Occupations by Median Funniness"
-                                },
-                            ],
-                        ),
-                        dict(
-                            label="Worst (Lowest Median)",
-                            method="update",
-                            args=[
-                                {"visible": [False, True]},
-                                {
-                                    "title.text": f"Bottom {top_n} Occupations by Median Funniness"
-                                },
-                            ],
-                        ),
-                    ],
-                )
-            ],
-        )
+                    buttons=[ buttons_highest, buttons_lowest])],)
 
         if save_path:
             fig.write_html(save_path)
@@ -767,6 +705,7 @@ class OccupationAnalysis:
         """
         Plots the distribution of funniness scores for a given occupation term.
         """
+
         df_plot = self.get_occupation_dataframe()
 
         row = df_plot[df_plot['term'].str.lower() == occupation_term.lower()]
@@ -790,48 +729,32 @@ class OccupationAnalysis:
             fig.show()
 
         elif plot_method == 'plt':
-            scores = df_plot["funniness_score"].values
 
-            # Layout with boxplot on top and histogram below
+            scores = df_plot["funniness_score"].values
             fig = plt.figure(figsize=(8, 6))
             gs = fig.add_gridspec(2, 1, height_ratios=[1, 4], hspace=0.05)
 
             ax_box = fig.add_subplot(gs[0])
             ax_hist = fig.add_subplot(gs[1], sharex=ax_box)
 
-            # Boxplot (marginal)
+            # Boxplot on top
             ax_box.boxplot(scores,vert=False,patch_artist=True,showfliers=True)
 
             ax_box.set_yticks([])
             ax_box.set_ylabel("")
             ax_box.grid(False)
 
-            # Color box (Plotly default blue)
+            # Color setting
             for patch in ax_box.artists:
                 patch.set_facecolor(color)
                 patch.set_alpha(0.8)
 
-            # Histogram
-            ax_hist.hist(
-                scores,
-                bins=nbins,
-                color= color,
-                alpha=0.8,
-                edgecolor="black"
-            )
-
+            ax_hist.hist(scores, bins=nbins, color= color, alpha=0.8, edgecolor="black")
             ax_hist.set_xlabel("Funniness Score")
             ax_hist.set_ylabel("Count")
-
-            # Clean up layout to mimic plotly_white
             ax_hist.grid(axis="y", linestyle="--", alpha=0.4)
-
-            # Remove x labels from boxplot
             plt.setp(ax_box.get_xticklabels(), visible=False)
-
-            # Centered title
-            fig.suptitle(
-                f'Distribution of Funniness Scores for "{occupation_term}"',fontsize=12,y=0.97)
+            fig.suptitle(f'Distribution of Funniness Scores for "{occupation_term}"',fontsize=12,y=0.97)
 
             plt.tight_layout(rect=[0, 0, 1, 0.95])
 
@@ -842,13 +765,17 @@ class OccupationAnalysis:
 
         return df_plot
     
+    # button version 
     def plot_occupation_distribution_multiple(self, occupation_terms, nbins = 30, save_path=None, color = 'cornflowerblue'):
         """
         This is the same as above, but with a button to change occupation terms.
         """
+
         df = self.get_occupation_dataframe()
         occupation_terms_lower = [term.lower() for term in occupation_terms]
         sub_df = df[df['term'].str.lower().isin(occupation_terms_lower)]
+
+        #safety check
         if sub_df.empty:
             raise ValueError("None of the specified occupation terms were found in the occupation dataframe.")
         
@@ -862,9 +789,9 @@ class OccupationAnalysis:
                 name=row['term'],
                 visible=(i == 0),
                 marker=dict(color=color, line=dict(color="rgba(0,0,0,0.7)", width=1)),
-                hovertemplate='Funniness Score: %{x:.2f}<br>Count: %{y}<extra></extra>'
-            )
+                hovertemplate='Funniness Score: %{x:.2f}<br>Count: %{y}<extra></extra>')
             fig.add_trace(hist)
+
         buttons = []
         for i, term in enumerate(terms):
             visibility = [False] * len(terms)
@@ -873,8 +800,8 @@ class OccupationAnalysis:
                 label=term,
                 method="update",
                 args=[{"visible": visibility},
-                    {"title": f'Distribution of Funniness Scores for "{term}"'}]
-            ))
+                    {"title": f'Distribution of Funniness Scores for "{term}"'}]))
+            
         fig.update_layout(
             updatemenus = [dict(active=0, buttons=buttons, x = 0.5, xanchor = 'center', y = 1.15, yanchor = 'top')],
             xaxis_title='Funniness Score',
@@ -882,14 +809,14 @@ class OccupationAnalysis:
             template = 'plotly_white',
             height = 500,
             title = f"Distribution of Funniness Scores for \"{terms[0]}\"",
-            title_x = 0.5
-        )
+            title_x = 0.5)
         
         if save_path:
             fig.write_html(save_path)
         fig.show()
 
 
+    #box plot of occupaions next to each other
     def plot_occupation_box_plot(self, occupation_terms, save_path = None, plot_method = 'plotly', color = 'cornflowerblue'):
         """
         Plotting the box plot of the funniness score of multiple occupations on the same plot close to each other. 
@@ -910,30 +837,22 @@ class OccupationAnalysis:
             fig = px.box(df_plot,x="term",y="funniness_scores",points="outliers", title="Funniness score distribution by occupation", hover_data = {'funniness_scores': ':.2f', 'term': False})
 
             fig.update_layout(xaxis_title="Occupation", yaxis_title="Funniness score", template="plotly_white", height=600, xaxis_tickangle=-45, hovermode="closest", title=dict(x=0.5, xanchor="center"))
-
             fig.update_traces(marker=dict(color=color, line=dict(color="rgba(0,0,0,0.7)", width=1)), selector =dict(type="box"), )
 
             if save_path:
                 fig.write_html(save_path)
 
             fig.show()
+
+        #for notebook
         elif plot_method == 'plt':
+            
             terms = df_plot["term"].unique()
-
-            data = [
-                df_plot.loc[df_plot["term"] == term, "funniness_scores"].values
-                for term in terms]
-
+            data = [df_plot.loc[df_plot["term"] == term, "funniness_scores"].values for term in terms]
             fig, ax = plt.subplots(figsize=(max(8, len(terms) * 0.5), 6))
+            bp = ax.boxplot(data, labels=terms, patch_artist=True, showfliers=True)
 
-            bp = ax.boxplot(
-                data,
-                labels=terms,
-                patch_artist=True,
-                showfliers=True
-            )
-
-            # Match Plotly default blue
+            # set color
             for box in bp["boxes"]:
                 box.set_facecolor(color)
                 box.set_alpha(0.8)
@@ -945,14 +864,10 @@ class OccupationAnalysis:
             # Rotate x-axis labels
             plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
 
-            # Centered title
-            ax.set_title(
-                "Funniness score distribution by occupation",
-                loc="center",
-                fontsize=12
-            )
+            # title
+            ax.set_title("Funniness score distribution by occupation", loc="center", fontsize=12)
 
-            # Light grid like plotly_white
+            # Light grid
             ax.grid(axis="y", linestyle="--", alpha=0.4)
 
             plt.tight_layout()
@@ -962,12 +877,11 @@ class OccupationAnalysis:
 
             plt.show()
                     
-
-
-
     #--------------------------------------------------------#
     # Tests to compare specific occupations
     #--------------------------------------------------------#
+
+    #Kruskal for multiple distribution
     def compare_set_of_occupations(self, occupation_list, interpret = False, alpha = 0.05):
         '''
         Compares funniness score distributions among a set of occupation terms using Kruskal-Wallis H-test.
@@ -975,13 +889,16 @@ class OccupationAnalysis:
         df = self.get_occupation_dataframe()
         occupation_list_lower = [occ.lower() for occ in occupation_list]
 
-        sub_df = df[df['term'].isin(occupation_list)]
+        #Safety checks
+        sub_df = df[df['term'].isin(occupation_list_lower)]
         if sub_df.shape[0] < 2:
             raise ValueError("At least two of the specified occupation terms must be found in the occupation dataframe.")
         
+        #Safety checks
         score_groups = [scores for scores in sub_df['funniness_scores'] if len(scores) > 0]
         if len(score_groups) < 2:
             raise ValueError("At least two occupation terms must have associated funniness scores.")
+        
         
         stat, p_value = stats.kruskal(*score_groups)
 
@@ -995,6 +912,7 @@ class OccupationAnalysis:
         return stat, p_value
 
 
+    #Pairwise for jobs
     def compare_occupations(self, occupation1, occupation2, interpret = False, alpha = 0.05, alternative = 'two-sided'):
         '''
         Compares funniness score distributions between two occupation terms using Mann-Whitney U test.
@@ -1023,10 +941,12 @@ class OccupationAnalysis:
                 print(f"The difference in funniness scores between '{occupation1}' and '{occupation2}' is not statistically significant (alpha = {alpha}).")
         return stat, p_value
     
+    #delta for occupations (same as for categories...)
     def cliffs_delta_occupations(self, occupation1, occupation2, interpret = False, alpha = 0.05):
         '''
         Computes Cliff's Delta effect size between two occupation terms.
         '''
+
         df = self.get_occupation_dataframe()
         occupation_1_lower = occupation1.lower()
         occupation_2_lower = occupation2.lower()
@@ -1039,11 +959,13 @@ class OccupationAnalysis:
         rows_occ2 = sub_df[sub_df['term'].str.lower() == occupation_2_lower]['funniness_scores'].iloc[0]
         if len(rows_occ1) == 0 or len(rows_occ2) == 0:
             raise ValueError("One or both occupation terms have no associated funniness scores.")
+        
         rows_occ1 = np.array(rows_occ1)
         rows_occ2 = np.array(rows_occ2)
 
         n1 = len(rows_occ1)
         n2 = len(rows_occ2)
+
         greater = sum(1 for x in rows_occ1 for y in rows_occ2 if x > y)
         lesser = sum(1 for x in rows_occ1 for y in rows_occ2 if x < y)
 
@@ -1064,6 +986,7 @@ class OccupationAnalysis:
         return delta
 
 
+    #build matrix
     def pairwise_occupation_testing(self, occupation_list, alpha = 0.05):
         pval_matrix = pd.DataFrame(np.ones((len(occupation_list), len(occupation_list))), index=occupation_list, columns=occupation_list)
         delta_matrix = pd.DataFrame(np.zeros((len(occupation_list), len(occupation_list))), index=occupation_list, columns=occupation_list)
@@ -1078,6 +1001,7 @@ class OccupationAnalysis:
             delta_matrix.loc[occ_2, occ_1] = -delta # anti-symmetric
 
         return pval_matrix, delta_matrix
+    
     #--------------------------------------------------------#
     # Categorical analysis functions
     #--------------------------------------------------------#
@@ -1094,19 +1018,13 @@ class OccupationAnalysis:
         df = self.get_category_caption_dataframe().copy()
 
         # Compute category-level statistics
-        stats = (
-            df.groupby("category")["funniness_score"]
-            .agg(["median", "mean", "count", "std"])
-            .reset_index()
-        )
+        stats = df.groupby("category")["funniness_score"].agg(["median", "mean", "count", "std"]).reset_index()
 
         valid_orders = {"median", "mean", "count", "std"}
         if order_by not in valid_orders:
             raise ValueError(f"order_by must be one of {valid_orders}")
 
-        ordered_categories = (
-            stats.sort_values(by=order_by, ascending=False)["category"].tolist()
-        )
+        ordered_categories = stats.sort_values(by=order_by, ascending=False)["category"].tolist()
 
         if plot_method == 'plotly':
             # Create boxplot
@@ -1115,8 +1033,7 @@ class OccupationAnalysis:
                 x="category",
                 y="funniness_score",
                 category_orders={"category": ordered_categories},
-                title=f"Funniness score distribution by occupation category (ordered by {order_by})"
-            )
+                title=f"Funniness score distribution by occupation category (ordered by {order_by})")
 
             # Add sample size annotations
             annotations = []
@@ -1135,8 +1052,7 @@ class OccupationAnalysis:
                         bgcolor="rgba(255,255,255,0.8)",
                         bordercolor="rgba(0,0,0,0.2)",
                         borderwidth=1
-                    )
-                )
+                    ))
             # Final layout
             fig.update_layout(
                 xaxis_title="Occupation category",
@@ -1155,9 +1071,8 @@ class OccupationAnalysis:
                         f"<sub>{len(ordered_categories)} categories • "
                         f"{len(df)} caption-category matches • "
                         f"Global median: {df['funniness_score'].median():.2f}</sub>"
-                    )
-                )
-            )
+                    )))
+            
             fig.update_traces(marker=dict(color=color, line=dict(color="rgba(0,0,0,0.7)", width=1)), selector=dict(type="box"))
             if save_path:
                 fig.write_html(save_path)
@@ -1187,8 +1102,7 @@ class OccupationAnalysis:
                 medianprops=medianprops,
                 whiskerprops=whiskerprops,
                 capprops=capprops,
-                showfliers=True
-            )
+                showfliers=True)
 
             # Color boxes (single color similar to Plotly default)
             for box in bp["boxes"]:
@@ -1221,18 +1135,15 @@ class OccupationAnalysis:
                         boxstyle="round,pad=0.25",
                         linewidth=0.5,
                         alpha=0.8
-                    )
-                )
+                    ))
 
-            # Title + subtitle
+            # Title and subtitle
             ax.set_title(
                 "Funniness score distribution by occupation category\n"
                 f"{len(ordered_categories)} categories • "
                 f"{len(df)} caption-category matches • "
                 f"Global median: {df['funniness_score'].median():.2f}",
-                fontsize=15,
-                pad = 30
-            )
+                fontsize=15, pad = 30)
 
             # Improve layout
             ax.grid(axis="y", linestyle="--", alpha=0.4)
@@ -1240,7 +1151,6 @@ class OccupationAnalysis:
 
             if save_path:
                 plt.savefig(save_path, dpi=300, bbox_inches="tight")
-
             plt.show()
                     
 
@@ -1265,6 +1175,7 @@ class OccupationAnalysis:
                 print(f"The differences in funniness scores across categories are not statistically significant (alpha = {alpha}).")
         return stat, p_value
     
+    # pairwise comparison (same as for occupations)
     def targeted_category_test(self, category1, category2, interpret = False, alpha = 0.05, alternative = 'two-sided'):
         df = self.get_category_caption_dataframe()
         scores_cat1 = df[df['category'] == category1]['funniness_score'].values
@@ -1284,6 +1195,7 @@ class OccupationAnalysis:
                 print(f"The difference in funniness scores between '{category1}' and '{category2}' is not statistically significant (alpha = {alpha}).")
         return stat, p_value
 
+    #Same 
     def cliffs_delta(self, category1, category2, interpret = False, alpha = 0.05):
         '''
         Computes Cliff's Delta effect size between two occupation categories.

@@ -260,5 +260,4 @@ ImageCaptionCenter_C(
 )
 #
 
-
 #SHort summary: The analysis of occupations revealed that while certain jobs appear frequently in humour, they do not consistently lead to funnier captions. Instead, occupational references tend to cluster around low to mid-range funniness scores, with occasional outliers that are percieved as very funny. Grouping occupations into broader categories showed some detectable differences in humour about different types of work, but these differences were generally modest and with small statistical effect sizes. Topic modelling revealed common themes that co-occur with occupational references, highlighting the context in which these jobs are framed in humour. These were often related to workplace culture, social roles, and stereotypes associated with different professions. Sentiment analysis showed that comments with occupations are generally neutral, but with a slight positive tilt, suggesting a balanced approach to occupational humour. 
