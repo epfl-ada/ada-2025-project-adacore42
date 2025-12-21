@@ -6,7 +6,7 @@ BASE = os.path.dirname(__file__)
 tovarischs = [
     Tovarisch("Amélie Menoud", 
               os.path.join(BASE, "assets/profile_img/profile_image.jpeg"), 
-              "Short description of t 1. Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description "),
+              "BSc in Civil Enginnering, MA in Mobility and Transport with a minor in Computer Science. For this project, I was the gender analyst. In general, you can find me playing volleyball at a low level, or on the top lane as Garen."),
     Tovarisch("András Horkay", 
               os.path.join(BASE, "assets/profile_img/profile_image.jpeg"), 
               "Short description of t 2. Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description "),

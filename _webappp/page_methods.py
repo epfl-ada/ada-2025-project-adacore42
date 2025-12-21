@@ -124,7 +124,22 @@ with funisco_c:
     with st.expander("**BERTtopic**", expanded=AP.expanders):
         st.write(
             """
-            ... 
+            BERTopic is a topic modeling framework that combines transformer-based language representations with clustering 
+            techniques to identify latent themes in textual data. It is designed to address limitations of traditional probabilistic 
+            topic models, particularly when applied to short texts or documents with limited word co-occurrence.
+
+            The method begins by transforming each document into a dense vector representation using a pre-trained sentence-level transformer model. 
+            These embeddings encode semantic relationships between documents in a high-dimensional space. To facilitate efficient clustering, dimensionality 
+            reduction is applied, commonly using Uniform Manifold Approximation and Projection (UMAP), which preserves local and global structure while 
+            reducing computational complexity.
+
+            Clustering is then performed on the reduced embeddings, typically using a density-based algorithm such as HDBSCAN. 
+            This approach allows the model to identify clusters of varying sizes and to label documents that do not belong to any coherent cluster as outliers, 
+            rather than forcing all documents into topics.
+
+            For topic representation, BERTopic employs a class-based Term Frequency–Inverse Document Frequency (c-TF–IDF) scheme. In this step, all documents 
+            assigned to a given cluster are treated as a single aggregated document, and TF–IDF scores are computed to identify terms that are both frequent 
+            within the cluster and distinctive relative to other clusters. These terms are used to characterize and interpret each topic.
             """
             )
 
