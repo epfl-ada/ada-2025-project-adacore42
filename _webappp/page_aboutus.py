@@ -9,7 +9,7 @@ tovarischs = [
               "BSc in Civil Enginnering, MA in Mobility and Transport with a minor in Computer Science. For this project, I was the gender analyst. In general, you can find me playing volleyball at a low level, or on the top lane as Garen."),
     Tovarisch("András Horkay", 
               os.path.join(BASE, "assets/profile_img/profile_image.jpeg"), 
-              "Short description of t 2. Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description Short description "),
+              "Bsc in Physics, MA in Computational Science and Engineering. I worked on the occupation analysis and the webapp development. In my free time, I like to... what is free time?"),
     Tovarisch("Cyrielle Manissadjian", 
               os.path.join(BASE, "assets/profile_img/864.jpg"), 
               "BSc in Environmental Sciences and Engineering, MA in Climate Change Anticipation and Adaptation.\nFavorite cartoon caption : “Maybe cut the line about following your instincts.”"),

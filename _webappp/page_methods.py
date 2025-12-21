@@ -23,6 +23,7 @@ Welcome to this section, where we present the methods in more details.
 dataset_c = st.container()
 procpip_c = st.container()
 funisco_c = st.container()
+statistics_c = st.container()
 
 
 
@@ -142,5 +143,17 @@ with funisco_c:
             within the cluster and distinctive relative to other clusters. These terms are used to characterize and interpret each topic.
             """
             )
+        
+with statistics_c:
+    with st.expander("**Statistics and Visualisations**", expanded=AP.expanders):
+        st.write(
+            """
+            In this section, we present some of the key startistical methods in our analysis and highlight why they were chosen.
+            - Descriptive statistics to summarise the main features of the dataset. These include simple visualisation and numerical summaries like means, medians, and standard deviations.
+            - Hypothesis testing to determine if there are significant differences between groups in our dataset. We relied mainly on Whitney U tests when the normality assumption was not met, and t-tests when it was. We also looked a Cliff's delta to quantify the effect size of our observations.
+            """)
+
+        
+
 
 
