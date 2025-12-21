@@ -7,6 +7,7 @@ import numpy as np
 import pickle
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from scipy.stats import mannwhitneyu
 import os
 import sys
@@ -1231,6 +1232,169 @@ class GenderAnalysis:
     # PART 4 - FUNNY SCORE
     # ---------------------------
 
+    def get_stats_funny_score(self, data_caption, plot_distrib = False, plot_evolution = False):
+
+        mean_funny_female = []
+        std_funny_female = []
+        list_funny_female = []
+
+        mean_funny_male = []
+        std_funny_male = []
+        list_funny_male = []
+
+        for contest in data_caption:
+            fem = contest[contest['gender_mention'] == 'female']
+            mean_funny_female.append(fem['funny_score_scaled'].mean())
+            std_funny_female.append(fem['funny_score_scaled'].std())
+            list_funny_female.append(fem['funny_score_scaled'].values)
+            male = contest[contest['gender_mention'] == 'male']
+            mean_funny_male.append(male['funny_score_scaled'].mean())
+            std_funny_male.append(male['funny_score_scaled'].std())
+            list_funny_male.append(male['funny_score_scaled'].values)
+
+        if plot_distrib:
+
+            flatten_funny_male = self.flatten(list_funny_male)
+            flatten_funny_female = self.flatten(list_funny_female)
+
+            # Colorblind-friendly colors
+            MEN_COLOR = "#0072B2"
+            WOMEN_COLOR = "#D55E00"
+
+            fig = go.Figure()
+
+            # Women histogram
+            fig.add_trace(go.Histogram(
+                x=flatten_funny_female,
+                name="Women",
+                histnorm="probability density",
+                opacity=0.5,
+                marker_color=WOMEN_COLOR
+            ))
+
+            # Men histogram
+            fig.add_trace(go.Histogram(
+                x=flatten_funny_male,
+                name="Men",
+                histnorm="probability density",
+                opacity=0.5,
+                marker_color=MEN_COLOR
+            ))
+
+            # Layout
+            fig.update_layout(
+                title="Funniness Distribution by Gender",
+                xaxis_title="Funny Score",
+                yaxis_title="Density",
+                barmode="overlay",
+                template="plotly_white",
+                hovermode="x unified",
+                legend=dict(
+                    orientation="h",  # horizontal
+                    yanchor="bottom",
+                    y=1.02,           # slightly above the plot
+                    xanchor="center",
+                    x=0.5)
+            )
+
+            fig.show()
+            fig.write_html("funniness_distrib_by_gender.html")
+
+        if plot_evolution:
+
+            # Colorblind-friendly colors
+            MEN_COLOR = "rgba(0,114,178,1)"       # solid line
+            MEN_FILL = "rgba(0,114,178,0.2)"      # semi-transparent fill
+            WOMEN_COLOR = "rgba(213,94,0,1)"      # solid line
+            WOMEN_FILL = "rgba(213,94,0,0.2)"     # semi-transparent fill
+
+            # X values
+            x_female = np.linspace(0, len(mean_funny_female), len(mean_funny_female)+1)[1:]
+            x_male = np.linspace(0, len(mean_funny_male), len(mean_funny_male)+1)[1:]
+
+            fig = go.Figure()
+
+            # Women shaded area (mean ± std)
+            fig.add_trace(go.Scatter(
+                x=np.concatenate([x_female, x_female[::-1]]),
+                y=np.concatenate([
+                    np.array(mean_funny_female) + np.array(std_funny_female),
+                    (np.array(mean_funny_female) - np.array(std_funny_female))[::-1]
+                ]),
+                fill='toself',
+                fillcolor=WOMEN_FILL,
+                line=dict(color='rgba(255,255,255,0)'),
+                hoverinfo="skip",
+                name="Women",
+                legendgroup="women",
+                showlegend=True
+            ))
+
+            # Women mean line
+            fig.add_trace(go.Scatter(
+                x=x_female,
+                y=mean_funny_female,
+                mode='lines+markers',
+                name="Women",
+                legendgroup="women",
+                showlegend=False,  # important: only one legend entry
+                line=dict(color=WOMEN_COLOR, width=2),
+                marker=dict(size=2)
+            ))
+
+
+            # Men shaded area (mean ± std)
+            fig.add_trace(go.Scatter(
+                x=np.concatenate([x_male, x_male[::-1]]),
+                y=np.concatenate([
+                    np.array(mean_funny_male) + np.array(std_funny_male),
+                    (np.array(mean_funny_male) - np.array(std_funny_male))[::-1]
+                ]),
+                fill='toself',
+                fillcolor=MEN_FILL,
+                line=dict(color='rgba(255,255,255,0)'),
+                hoverinfo="skip",
+                name="Men",
+                legendgroup="men",
+                showlegend=True
+            ))
+
+            # Men mean line
+            fig.add_trace(go.Scatter(
+                x=x_male,
+                y=mean_funny_male,
+                mode='lines+markers',
+                name="Men",
+                legendgroup="men",
+                showlegend=False,  # important
+                line=dict(color=MEN_COLOR, width=2),
+                marker=dict(size=2)
+            ))
+
+
+            # Layout
+            fig.update_layout(
+                title="Evolution of the Funny Score by Gender",
+                xaxis_title="Contest",
+                yaxis_title="Funny Score",
+                xaxis=dict(range=[0, 240]),
+                template="plotly_white",
+                hovermode="x unified",
+                width=1000,
+                height=500,
+                legend=dict(
+                    orientation="h",
+                    yanchor="bottom",
+                    y=1.02,
+                    xanchor="center",
+                    x=0.5,
+                    groupclick="togglegroup"  
+                )
+            )
+
+            fig.show()
+            fig.write_html("evolution_funny_score.html")
+        
     def flatten(self, lst):
         flattened_list = []
         for i in lst:
@@ -1654,6 +1818,69 @@ class GenderAnalysis:
         )
 
         fig.show()
+
+    @staticmethod
+    def plot_5_percent_distrib_plotly(men_bottom, men_top, women_bottom, women_top, q):
+        
+        # Colorblind-friendly colors
+        MEN_COLOR = "#0072B2"
+        WOMEN_COLOR = "#D55E00"
+        
+        fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=("Worst Captions", "Top Captions"),
+        shared_yaxes=True
+        )
+
+        # Worst captions
+        fig.add_trace(go.Histogram(
+            x=men_bottom["funny_score_scaled"],
+            name="Men",
+            histnorm="probability density",
+            opacity=0.4,
+            marker_color=MEN_COLOR,
+            showlegend=False  # avoid duplicate legend entries
+        ), row=1, col=1)
+
+        fig.add_trace(go.Histogram(
+            x=women_bottom["funny_score_scaled"],
+            name="Women",
+            histnorm="probability density",
+            opacity=0.4,
+            marker_color=WOMEN_COLOR,
+            showlegend=False
+        ), row=1, col=1)
+
+        # Top captions
+        fig.add_trace(go.Histogram(
+            x=men_top["funny_score_scaled"],
+            name="Men",
+            histnorm="probability density",
+            opacity=0.4,
+            marker_color=MEN_COLOR
+        ), row=1, col=2)
+
+        fig.add_trace(go.Histogram(
+            x=women_top["funny_score_scaled"],
+            name="Women",
+            histnorm="probability density",
+            opacity=0.4,
+            marker_color=WOMEN_COLOR
+        ), row=1, col=2)
+
+        fig.update_layout(
+            title=f"Funny Score Distribution by Gender ({int(q*100)}%)",
+            barmode="overlay",
+            template="plotly_white",
+            hovermode="x unified"
+        )
+
+        fig.update_xaxes(title_text="Funny score")
+        fig.update_yaxes(title_text="Density")
+
+        fig.show()
+
+        fig.write_html("funny_score_distrib_5.html")
 
     # ---------------------------
     # LOADING FILES

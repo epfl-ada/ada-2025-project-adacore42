@@ -44,35 +44,33 @@ This dictionary was constructed based on Danielle Sucher's "Jailbreak the Patria
 This part aims to understand which characteristics of a caption explain its perceived funniness.
 
 Data preparation : Each caption is associated with:
-- Its funniness score (target variable).
+- definition of a new funny score : Built a new funniness metric combining (i) vote-type proportions (funny / somewhat_funny / not_funny) and (ii) caption popularity (number of votes), then scaled scores for comparability across contests.
 - A set of linguistic and semantic features, including: Length, Punctuation, Lexical diversity, Sentiment polarity (computed using TextBlob).
-take well into account the numbers of votes. The different group of funninness will then be compared in boxplot and their difference in mena will be assesd with a Student't t test. 
+take well into account the numbers of votes. The different group of funninness will then be compared in boxplot and their difference in mena will be assesd with a Student't t test.
 
-The second research questions will be covered through ... ... To minimize confounding effects, we will construct a caption similarity metric (based on text embeddings or length-normalized vectors) and compare groups of captions with similar distributions of other attributes when testing each factor.
 
-Finally, to capture multivariate and non-linear relationships, we will train a Random Forest model using all features simultaneously. The features of importance would then be deduce as the higher nodes in the decision trees correspond to features with stronger predictive power.
+Topic modelling : Applied BERTopic to captions; selected a suitable min_topic_size using quality criteria (e.g., coherence/diversity/silhouette/outlier-rate trade-offs), then compared humor-score distributions across topics (density/boxplot views + distribution tests). Long-tail distribution effect: Quantified whether topics were over-represented among top captions using a percentile stratification + enrichment score approach.
 
-### **Axis 2: Professions, Politics, and Power** 
+### **Axis 2: Professions in Jokes - Dynamics of Humour and Work** 
 
-First, we build a **comprehensive list of occupations**. This is done by merging aforementioned datasets. 
+This section looks at frequency, distribution of funniness scores of occupations and occupational categories, performs topic and sentiment analysis of captions with occupations. 
+
+**Data Preparation**
+- Created comprehensive occupations list
+- Built TF-IDF matrix
+- Extracted occupation mentions from the dataset with attributes like number of occurences, contest ids, funniness scores. 
 
 **Analysis**
-
-The **jobs in each caption must be extracted**, allowing us to:  
-- Track the **count of occupations**.
-- Analyse **where and when** they occur.
-- Identify **co-occurring words** to label **recurrent stereotypes, ridicule, and mockery** of jobs.
-
-Similar approach taken for the **political research**:
-- Create a **list of political words**.
-- Treat **ambiguous words** with care (e.g., *left* and *right*).
-- Analyse the **funniness score** of the captions and evolution of volume.
+- Identified where occupations/categories appear, their frequency, and compared difference in funniness scores (statistical tests)
+- Performed topic modelling with BERTopic on captions with occupations.
+- Performed sentiment analysis with VADER on captions with different categories of occupations and compared them.
 
 **Visualisations**  
-
-- **Bar charts**: frequency of occupations/political topics.
-- **Bar charts**: average funniness scores per category.
-- **Heatmaps**: cross-tabulating professions and sentiments.
+- Bar charts for frequency of occupations topics, median funniness scores.
+- Box plots for category distributions.
+- treemaps topics co-occuring with occupations
+- Histograms for funniness score/sentiment distribution
+- Heatmaps for statistical test results.
 
 ### **Axis 3: Gender Roles**
 
@@ -80,16 +78,16 @@ This section investigates how men and women are depicted in cartoons and caption
 
 **Data Preparation**
 - Gender annotation: Identify men, women, or gender-neutral characters in cartoons and captions using a gendered dictionary.
-- Feature extraction: Capture lexical features (word frequency, co-occurrences, role categories), sentiment (polarity, subjectivity), and audience metrics (votes, winning captions).
 
 **Analysis**
-- Language Patterns: Analyze word usage and co-occurrences, generate word clouds, and track changes over time.
-- Audience Response: Compare sentiment and success of captions mentioning men vs women, and assess whether stereotypical portrayals are rewarded.
+- Language Patterns: Analyze word usage by generating word clouds, look at topics using BERTopic
+- Audience Response: Compare the funny score of each gender of the whole dataset, then only at the top and worst captions. Use statistical testing to support our hypothesis.
 
 **Visualizations**
 - Bar charts for gender frequencies and mentions.
-- Word clouds and co-occurrence heatmaps.
-- Temporal plots for shifts in depictions and language.
+- Word clouds for words occurences
+- Treemap for topics
+- Histogram for distribution of funny score
 
 
 ### Website 
@@ -100,7 +98,7 @@ URL : https://adacore42-website2025.streamlit.app/
  - General Statistical necessities: Cyrielle
  - Axis 1: Katia & Cyrielle
  - Axis 2: Andras
- - Axis 3: Amelie
+ - Axis 3: Amélie
  - Data preprocessing & website: Dominic & Katia
  - Datastory : All members wrote the part of the website that corresponds to their analysis. 
 
