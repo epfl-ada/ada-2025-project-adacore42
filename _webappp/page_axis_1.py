@@ -22,6 +22,21 @@ plots = PWA.load_plots()
 
 
 
+st.markdown(
+    """
+    <style>
+    /* Justify ALL markdown text in Streamlit */
+    div[data-testid="stMarkdown"] p,
+    div[data-testid="stMarkdown"] li {
+        text-align: justify !important;
+        text-justify: inter-word !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 
 
 
@@ -546,8 +561,9 @@ This graph shows distribution of standardized humor scores for each topic identi
 - KDE (Kernel Density Estimation) curve: indicates the relative probability that a score will take a certain value. The higher the curve, the more likely it is that the scores will fall within that range. KDE allows us to see the overall shape of the distribution, regardless of the exact number of measurements.
 """
 
-plot_jpg("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
-
+col_l, col_ccc, col_r = st.columns([1,8, 1])
+with col_ccc:
+    st.image("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
 
 """   
 All topic distributions observed (except for one) show significant positive asymmetry (statistically significant skewness, p < 0.05), which means that scores tend to be concentrated at lower values with awith a long right tail of very funny captions. This results in a medians relatively similar across topics, and escpecially low (around 25/100). This distribution arises from the fact that we aggregated together all topics from the cartoon, and there is a lot with low funny score values, with only a few of outstanding funny ones.
