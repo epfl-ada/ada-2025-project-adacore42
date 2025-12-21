@@ -250,7 +250,8 @@ with behind_the_scene_2:
         wordcloud.
         """)
     
-    st.image(r"_webappp\assets\graph\wordcloud_gender.png")
+    # st.image(r"_webappp\assets\graph\wordcloud_gender.png")
+    st.image(r"_webappp/assets/graph/wordcloud_gender.png")
 
     # TwoTabGraph_C(
     #     label_1="Verbs",
