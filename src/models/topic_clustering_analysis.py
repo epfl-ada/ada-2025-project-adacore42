@@ -18,14 +18,12 @@ from gensim.models.coherencemodel import CoherenceModel
 
 import plotly.graph_objects as go
 import plotly.express as px
-from plotly.subplots import make_subplots
 
 
-#SEED(42)
+
 class CaptionTopicClusterer:
     """
-    Topic modeling sur des captions avec BERTopic,
-    mapping vers des topics agrégés et analyse des scores.
+    Topic modeling on captions with BERTopic, mapping to aggregated topics, and score analysis.
     """
 
     def __init__(self, embedding_model_name="all-MiniLM-L6-v2", fun_metric="mean", contest_idx=[], min_topic_size=10, n_gram_range=(1, 2), verbose=True):
@@ -55,49 +53,20 @@ class CaptionTopicClusterer:
                               "chess_life_game" : [5, 6, 31]}
         
 
-        self.agg_topic_258 = {
-            # Travail, carrière, corporate, bureau
-            "work_corporate": [2, 4, 11, 12, 15, 19, 23, 28],
-
-            # Télétravail, appels, zoom, téléphone, connexion
-            "remote_work_communication": [1, 2, 23, 28, 35],
-
-            # Avocats, juridique, poursuites, assurances
-            "legal_insurance": [0, 5, 8, 20, 21, 37],
-
-            # Finance, économie, banque, impôts
-            "finance_tax_economy": [10, 18, 25, 32, 34],
-
-            # IRS, taxes, gouvernement, politique
-            "government_politics": [17, 30, 38],
-
-            # Randonnée, montagne, nature, sommet
-            "hiking_mountain_nature": [6, 13, 14, 27],
-
-            # Jeux de mots autour de “hike” (take hike / price hike / tax hike)
-            "hike_wordplay": [6, 14, 29, 34],
-
-            # Être suivi, surveillance, parano
-            "being_followed_surveillance": [9, 22, 33],
-
-            # Sécurité, accidents, responsabilité
-            "safety_accidents": [21, 31],
-
-            # Famille, relations personnelles
-            "family_relationships": [36, 8],
-
-            # Logistique, retard, trafic, timing
-            "delay_traffic_timing": [7, 19],
-
-            # Objets / accessoires absurdes
-            "objects_props": [3, 16, 26, 24],
-
-            # Animaux, métaphores animales
-            "animals_metaphors": [18],
-
-            # Divers / humour difficile à regrouper
-            "misc": [-1]
-        }
+        self.agg_topic_258 = {"work_corporate": [2, 4, 11, 12, 15, 19, 23, 28],
+                            "remote_work_communication": [1, 2, 23, 28, 35],
+                            "legal_insurance": [0, 5, 8, 20, 21, 37],
+                            "finance_tax_economy": [10, 18, 25, 32, 34],
+                            "government_politics": [17, 30, 38],
+                            "hiking_mountain_nature": [6, 13, 14, 27],
+                            "hike_wordplay": [6, 14, 29, 34],
+                            "being_followed_surveillance": [9, 22, 33],
+                            "safety_accidents": [21, 31],
+                            "family_relationships": [36, 8],
+                            "delay_traffic_timing": [7, 19],
+                            "objects_props": [3, 16, 26, 24],
+                            "animals_metaphors": [18],
+                            "misc": [-1]}
 
 
         
@@ -110,15 +79,13 @@ class CaptionTopicClusterer:
 
     def fit_transform(self, captions):
         """
-        Entraîne BERTopic et retourne uniquement les résultats du clustering.
+        Train BERTopic and returns the clustering results.
         """
         embeddings = self.embedding_model.encode(captions, show_progress_bar=True)
 
         topics, probs = self.topic_model.fit_transform(captions, embeddings)
 
         df_topic_info = self.topic_model.get_topic_info()
-
-
 
         return {
             "captions": captions,
@@ -137,14 +104,14 @@ class CaptionTopicClusterer:
         embeddings = fit_results["embeddings"]
         topics = fit_results["topics"]
 
-        # --- texts compatibles bigrams ---
+        # for compatibility of bigrams text
         texts = [
             c.lower().replace(" ", "_").split("_")
             for c in captions
         ]
         dictionary = Dictionary(texts)
 
-        # --- topic words ---
+        # topic words
         topics_dict = self.topic_model.get_topics()
         topic_words = []
 
@@ -160,7 +127,7 @@ class CaptionTopicClusterer:
             if len(words) >= 2:
                 topic_words.append(words)
 
-        # --- Coherence ---
+        # Coherence metric
         coherence_model = CoherenceModel(
             topics=topic_words,
             texts=texts,
@@ -169,11 +136,11 @@ class CaptionTopicClusterer:
         )
         coherence = coherence_model.get_coherence()
 
-        # --- Diversity ---
+        # Diversity metric
         all_words = [w for topic in topic_words for w in topic]
         diversity = len(set(all_words)) / len(all_words) if all_words else np.nan
 
-        # --- Silhouette ---
+        # Silhouette metric
         valid_idx = [i for i, t in enumerate(topics) if t != -1]
         if len(set(np.array(topics)[valid_idx])) > 1:
             silhouette = silhouette_score(
@@ -201,7 +168,7 @@ class CaptionTopicClusterer:
 
     @staticmethod
     def map_topic_to_aggregated(topic_id, agg_mapping):
-        """Retourne le nom du topic agrégé auquel appartient topic_id."""
+        """Returns the name of the aggregated topic to which topic_id belongs."""
         for agg_name, topic_list in agg_mapping.items():
             if topic_id in topic_list:
                 return agg_name
@@ -209,7 +176,7 @@ class CaptionTopicClusterer:
 
     def compute_aggregated_topic_info(self, df_topic_info, agg_topic):
         """
-        Ajoute les topics agrégés et calcule les stats (Count, Name, Representative_Docs).
+        Adds aggregated topics and calculates statistics (Count, Name, Representative_Docs).
         """
         df = df_topic_info.copy()
 
@@ -227,12 +194,12 @@ class CaptionTopicClusterer:
         return agg_topics
 
     # ---------------------------------------------------------
-    # Scores par topic agrégé
+    # Scores by aggregated topic
     # ---------------------------------------------------------
 
     def compute_topic_scores(self, df_data, agg_topic):
         """
-        Merge topics + scores puis calcule les moyennes par topic agrégé.
+        Merge topics + scores, then calculate the averages per aggregated topic.
         """
 
         df_data["aggregated_topic"] = df_data["topic_nb"].apply(lambda x: self.map_topic_to_aggregated(x, agg_topic))
@@ -292,10 +259,10 @@ class CaptionTopicClusterer:
         ### get top by metric
         df_sorted = df.sort_values(self.fun_metric, ascending=False).reset_index(drop=True)
 
-        # df_top : les meilleures lignes (top X %)
+        # df_top : best captions (top X %)
         df_top = df_sorted.iloc[:top_k]
 
-        # middle pct : la tranche centrale
+        # middle pct : baseline average cartoons
         lo = int(math.floor(n * (middle_pct[0]/100.0)))
         hi = int(math.ceil(n * (middle_pct[1]/100.0)))
         df_middle = df_sorted.iloc[lo:hi]
@@ -305,7 +272,7 @@ class CaptionTopicClusterer:
         mid_counts = df_middle["aggregated_topic"].value_counts().rename("mid_count").reset_index().rename(columns={"index":"aggregated_topic"})
         overall = df["aggregated_topic"].value_counts().rename("overall_count").reset_index().rename(columns={"index":"aggregated_topic"})
 
-        # merged : tableau comparatif par topic avec enrichissement
+        # merged : comparative table by topic with enrichment
         merged = overall.merge(top_counts, on="aggregated_topic", how="left").merge(mid_counts, on="aggregated_topic", how="left").fillna(0)
         merged["top_prop"] = merged["top_count"]/merged["overall_count"]
         merged["mid_prop"] = merged["mid_count"]/merged["overall_count"]
@@ -364,85 +331,55 @@ class CaptionTopicClusterer:
     def plot_funny_score_distributions_by_topic_subplots(self, data_m, top_n_topics=6, bins=50, save=None):
         """
         One subplot per topic, density-normalized histogram + KDE
-        Colors are consistent with the overlay plot
         """
 
-        # 🔹 Topics les plus fréquents
-        top_topics = (
-            data_m["aggregated_topic"]
-            .value_counts()
-            .head(top_n_topics)
-            .index
-        )
+        # Most fraquent topics
+        top_topics = (data_m["aggregated_topic"].value_counts().head(top_n_topics).index)
 
         n_topics = len(top_topics)
         n_cols = 3
         n_rows = math.ceil(n_topics / n_cols)
 
-        fig, axes = plt.subplots(
-            n_rows,
-            n_cols,
-            figsize=(5 * n_cols, 4 * n_rows),
-            sharex=True,
-            sharey=True
-        )
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(5 * n_cols, 4 * n_rows), sharex=True, sharey=True)
 
         axes = axes.flatten()
 
         for ax, topic in zip(axes, top_topics):
-            values = (
-                data_m
-                .loc[data_m["aggregated_topic"] == topic, "funny_score_scaled"]
-                .dropna()
-                .values
-            )
+            values = (data_m.loc[data_m["aggregated_topic"] == topic, "funny_score_scaled"].dropna().values)
 
             if len(values) < 5:
                 ax.set_visible(False)
                 continue
 
-            # Histogramme normalisé
-            ax.hist(
-                values,
-                bins=bins,
-                density=True,
-                alpha=0.35,
-                color="#97cee4",
-                edgecolor="black"
-            )
+            # Normalised histogram
+            ax.hist(values, bins=bins, density=True, alpha=0.35, color="#97cee4", edgecolor="black")
 
             # KDE
             kde = stats.gaussian_kde(values)
             x_kde = np.linspace(values.min(), values.max(), 300)
-            ax.plot(
-                x_kde,
-                kde(x_kde),
-                color="#32657a",
-                linewidth=2
-            )
+            ax.plot(x_kde, kde(x_kde), color="#32657a", linewidth=2)
 
             # Skew test
             skew, pval = skewtest(values, alternative='two-sided')
             skew_signif = "significative" if pval < 0.05 else "not significative"
             skew_text = f"Skew: {skew:.2f}\np={pval:.2e}\n({skew_signif})"
 
-            # Médiane de la distribution
+            # Median calculation
             median = np.median(values)
             ax.axvline(median, color="#064661", linestyle="--", linewidth=1.5, label=f"Median: {median:.2f}")
 
-            # Légende
+
+            # General
             ax.legend(
                 handles=[
                     plt.Line2D([0], [0], color="#064661", linestyle="--", linewidth=1.5, label=f"Median: {median:.2f}"),
                     plt.Line2D([0], [0], color="none", label=skew_text)
                 ],
-                loc="upper right"
-            )
+                loc="upper right")
 
             ax.set_title(f"""Topic "{topic}" """)
             ax.grid(True, linestyle="--", alpha=0.4)
 
-        # Supprimer les axes vides
         for ax in axes[len(top_topics):]:
             ax.set_visible(False)
 
@@ -460,7 +397,7 @@ class CaptionTopicClusterer:
 
 
 
-    #plot topic score
+    #plot topic score with plt
     def plot_topic_scores_plt(self, df_data, df_scores, save=None):
         fig = plt.figure(figsize=(10, 6))
         sns.boxplot(data=df_data.sort_values(by=self.fun_metric, ascending=False), x="aggregated_topic", y=self.fun_metric)
@@ -475,25 +412,10 @@ class CaptionTopicClusterer:
     
 
     def plot_topic_scores2(self, df_data, df_scores, order_by="median", show_points="outliers", save=None):
-        """
-        Boxplot interactif Plotly de la distribution du score par topic agrégé.
 
-        Parameters
-        ----------
-        df_data : pd.DataFrame
-            Doit contenir aggregated_topic et self.fun_metric
-        df_scores : pd.DataFrame
-            DataFrame des scores agrégés (non utilisé mais gardé pour compatibilité)
-        order_by : str
-            "median", "mean", "count" ou "variance" pour trier les topics
-        show_points : str
-            "all", "outliers", "suspectedoutliers" ou False
-        """
         df = df_data.dropna(subset=[self.fun_metric]).copy()
 
-        # --- Calcul stats pour l'ordre et annotations ---
-        stats = (
-            df.groupby("aggregated_topic")[self.fun_metric]
+        stats = (df.groupby("aggregated_topic")[self.fun_metric]
             .agg([
                 ("median_val", "median"),
                 ("mean_val", "mean"),
@@ -501,24 +423,17 @@ class CaptionTopicClusterer:
                 ("std", "std"),
                 ("var", "var")
             ])
-            .reset_index()
-        )
-        
-        # Renommer pour compatibilité avec le reste du code
+            .reset_index())
         stats.rename(columns={"median_val": "median", "mean_val": "mean"}, inplace=True)
         
-        # Validation order_by
         valid_orders = {"median", "mean", "count", "variance", "var"}
         if order_by not in valid_orders:
             raise ValueError(f"order_by must be one of {valid_orders}")
         
         sort_col = "var" if order_by == "variance" else order_by
-        ordered_topics = (
-            stats.sort_values(sort_col, ascending=False)["aggregated_topic"].tolist()
-        )
+        ordered_topics = stats.sort_values(sort_col, ascending=False)["aggregated_topic"].tolist()
 
-        # --- Création boxplot avec couleurs dégradées ---
-        # Couleur basée sur la médiane/moyenne
+        # Boxplot
         metric_values = stats.set_index("aggregated_topic")[order_by if order_by != "variance" else "median"]#
         norm_values = (metric_values - metric_values.min()) / (metric_values.max() - metric_values.min())#
         
@@ -536,7 +451,7 @@ class CaptionTopicClusterer:
             title=f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})"
         )
         
-        # Personnaliser les couleurs et le hover
+        # Personnalisation of hovers
         for i, trace in enumerate(fig.data):#
             trace.marker.color = colors[i]#
             trace.marker.line.color = 'rgba(0,0,0,0.7)'#
@@ -544,7 +459,7 @@ class CaptionTopicClusterer:
             trace.boxmean = None  # Affiche moyenne et écart-type #
             trace.marker.size = 7 
 
-        # --- Annotations enrichies ---
+        # Annotation (count)
         annotations = []#
         y_max = df[self.fun_metric].max()#
         y_range = df[self.fun_metric].max() - df[self.fun_metric].min()#
@@ -566,7 +481,7 @@ class CaptionTopicClusterer:
                 )#
             )#
 
-        # --- Layout final ---
+        # Layout
         n_topics = len(ordered_topics)
         n_captions = len(df)
         
@@ -577,15 +492,12 @@ class CaptionTopicClusterer:
             height=600,
             xaxis_tickangle=-45,
             annotations=annotations,#
-            title=dict(
-                text=f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})<br>" +
+            title=dict(text=f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})<br>" +
                     f"<sub>{n_topics} topics • {n_captions} captions • Global median: {df[self.fun_metric].median():.2f}</sub>",
                 x=0.5,
-                xanchor='center'
-            ),
+                xanchor='center'),
             hovermode='closest',
-            showlegend=False
-        )
+            showlegend=False)
         
         if save: 
             fig.write_html(save)
@@ -595,9 +507,7 @@ class CaptionTopicClusterer:
     def plot_topic_scores2_with_winners(self, df_data, df_scores, caption_crowd, caption_tny, order_by="median", show_points="outliers", save=None):
         df = df_data.dropna(subset=[self.fun_metric]).copy()
 
-        # --- Stats pour l'ordre ---
-        stats = (
-            df.groupby("aggregated_topic")[self.fun_metric]
+        stats = (df.groupby("aggregated_topic")[self.fun_metric]
             .agg(
                 median_val="median",
                 mean_val="mean",
@@ -605,9 +515,7 @@ class CaptionTopicClusterer:
                 std="std",
                 var="var"
             )
-            .reset_index()
-        )
-
+            .reset_index())
         stats.rename(columns={"median_val": "median", "mean_val": "mean"}, inplace=True)
 
         valid_orders = {"median", "mean", "count", "variance", "var"}
@@ -617,13 +525,8 @@ class CaptionTopicClusterer:
         sort_col = "var" if order_by == "variance" else order_by
         ordered_topics = stats.sort_values(sort_col, ascending=False)["aggregated_topic"].tolist()
 
-        # --- Couleurs des boxplots ---
-        metric_values = stats.set_index("aggregated_topic")[
-            order_by if order_by != "variance" else "median"
-        ]
-        norm_values = (metric_values - metric_values.min()) / (
-            metric_values.max() - metric_values.min()
-        )
+        metric_values = stats.set_index("aggregated_topic")[order_by if order_by != "variance" else "median"]
+        norm_values = (metric_values - metric_values.min()) / (metric_values.max() - metric_values.min())
 
         colors = [
             f'rgba({int(70+v*120)}, {int(130+v*90)}, {int(180-v*80)}, 0.8)'
@@ -631,7 +534,7 @@ class CaptionTopicClusterer:
             for v in [norm_values.get(topic, 0.5)]
         ]
 
-        # --- Boxplot ---
+        # Boxplot
         fig = px.box(
             df,
             x="aggregated_topic",
@@ -642,13 +545,13 @@ class CaptionTopicClusterer:
             title=f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})"
         )
 
-        # --- Styliser UNIQUEMENT les boxplots ---
+        # Style of boxplots
         for i, trace in enumerate(fig.data):
             if trace.type == "box":
                 trace.marker.color = colors[i]
                 trace.marker.line.color = "rgba(0,0,0,0.7)"
                 trace.marker.line.width = 1
-                trace.marker.size = 7   # outliers plus visibles
+                trace.marker.size = 7
                 trace.boxmean = None
 
         annotations = []
@@ -673,7 +576,7 @@ class CaptionTopicClusterer:
             )
     
 
-        # --- Layout final ---
+        # Layout
         fig.update_layout(
             xaxis_title="Aggregated topic",
             yaxis_title=self.fun_metric,
@@ -684,24 +587,19 @@ class CaptionTopicClusterer:
                 text=(
                     f"{self.fun_metric} score distribution by aggregated topic (ordered by {order_by})<br>"
                     f"<sub>{len(ordered_topics)} topics • {len(df)} captions • "
-                    f"Global median: {df[self.fun_metric].median():.2f}</sub>"
-                ),
-                x=0.5
-            ),
+                    f"Global median: {df[self.fun_metric].median():.2f}</sub>"),
+                x=0.5),
             hovermode="closest",
             showlegend=False,
             annotations = annotations)
-        winner_specs = [
-            (caption_tny, "Winner (TNY)", "#1f77b4"),
-            (caption_crowd, "Winner (Crowd)", "#ff7f0e"),
-        ]
+        winner_specs = [(caption_tny, "Winner (TNY)", "#1f77b4"), (caption_crowd, "Winner (Crowd)", "#ff7f0e")]
 
         for caption, label, color in winner_specs:
             df_winner = df[df["caption"] == caption]
             if not df_winner.empty:
                 row = df_winner.iloc[0]
 
-                # POINT (au-dessus du boxplot)
+                # Points that are above the boxplots
                 fig.add_scatter(
                     x=[row["aggregated_topic"]],
                     y=[row[self.fun_metric]],
@@ -719,7 +617,7 @@ class CaptionTopicClusterer:
                     )
                 )
 
-                # ANNOTATION À CÔTÉ
+                # Side annotation
                 fig.add_annotation(
                     x=row["aggregated_topic"],
                     y=row[self.fun_metric],
@@ -734,9 +632,6 @@ class CaptionTopicClusterer:
                     bordercolor=color,
                     borderwidth=1
                 )
-        print(f"Caption TNY trouvée : {caption_tny in df['caption'].values}")
-        print(f"Caption Crowd trouvée : {caption_crowd in df['caption'].values}")
-
 
         if save:
             fig.write_html(save)
@@ -746,15 +641,9 @@ class CaptionTopicClusterer:
 
 
 
-        print(f"Caption TNY trouvée : {caption_tny in df['caption'].values}")
-        print(f"Caption Crowd trouvée : {caption_crowd in df['caption'].values}")
-
-
-
     def plot_topic_scores2_with_winners_plt(self, df_data, df_scores, caption_crowd, caption_tny, order_by="median", show_points="outliers", save=None):
         df = df_data.dropna(subset=[self.fun_metric]).copy()
 
-        # --- Stats pour l'ordre ---
         stats = (
             df.groupby("aggregated_topic")[self.fun_metric]
             .agg(
@@ -775,22 +664,16 @@ class CaptionTopicClusterer:
 
         ordered_topics = stats["aggregated_topic"].tolist()
 
-        # --- Préparer données boxplot ---
-        data = [
-            df.loc[df["aggregated_topic"] == topic, self.fun_metric].values
-            for topic in ordered_topics
-        ]
+        # Data for the boxplot
+        data = [df.loc[df["aggregated_topic"] == topic, self.fun_metric].values for topic in ordered_topics]
 
-        # --- Couleurs (gradient basé sur le count) ---
         values_for_color = stats["count"]
-        norm = (values_for_color - values_for_color.min()) / (
-            values_for_color.max() - values_for_color.min()
-        )
+        norm = (values_for_color - values_for_color.min()) / (values_for_color.max() - values_for_color.min())
         cmap = cm.get_cmap("Blues")
 
         colors = [cmap(0.3 + 0.6 * v) for v in norm]
 
-        # --- Figure ---
+        # Figure
         fig = plt.figure(figsize=(14, 6))
 
         box = plt.boxplot(
@@ -816,11 +699,8 @@ class CaptionTopicClusterer:
             patch.set_edgecolor("black")
             patch.set_alpha(0.9)
 
-        # --- Winners ---
-        winner_specs = [
-            (caption_tny, "Winner (TNY)", "#1f77b4"),
-            (caption_crowd, "Winner (Crowd)", "#ff7f0e"),
-        ]
+        # Add winners
+        winner_specs = [(caption_tny, "Winner (TNY)", "#1f77b4"), (caption_crowd, "Winner (Crowd)", "#ff7f0e")]
 
         for caption, label, color in winner_specs:
             df_winner = df[df["caption"] == caption]
@@ -828,17 +708,10 @@ class CaptionTopicClusterer:
                 row = df_winner.iloc[0]
                 topic_idx = ordered_topics.index(row["aggregated_topic"]) + 1
 
-                # Point
-                plt.scatter(
-                    topic_idx,
-                    row[self.fun_metric],
-                    s=120,
-                    color=color,
-                    edgecolor="black",
-                    zorder=5
-                )
+                # Points
+                plt.scatter(topic_idx, row[self.fun_metric], s=120, color=color, edgecolor="black", zorder=5)
 
-                # Annotation
+                # Side annotations
                 plt.annotate(
                     label,
                     xy=(topic_idx, row[self.fun_metric]),
@@ -850,19 +723,14 @@ class CaptionTopicClusterer:
                     va="center"
                 )
 
-        # --- Légende pour les boxplots (basé sur le count) ---
+        # Legends
         sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=values_for_color.min(), vmax=values_for_color.max()))
         sm.set_array([])
         cbar = plt.colorbar(sm, ax=plt.gca(), pad=0.02, aspect=30, shrink=0.7)
         cbar.set_label('Number of captions per topic', rotation=270, labelpad=15)
 
-        # --- Axes ---
-        plt.xticks(
-            range(1, len(ordered_topics) + 1),
-            ordered_topics,
-            rotation=45,
-            ha="right"
-        )
+        # Layout
+        plt.xticks(range(1, len(ordered_topics) + 1), ordered_topics, rotation=45, ha="right")
         plt.ylabel(self.fun_metric)
         plt.xlabel("Aggregated topic")
 
@@ -882,25 +750,11 @@ class CaptionTopicClusterer:
 
         plt.show()
 
-        print(f"Caption TNY trouvée : {caption_tny in df['caption'].values}")
-        print(f"Caption Crowd trouvée : {caption_crowd in df['caption'].values}")
-
-
-
     # bubble enrichment
     def plot_bubble_enrichment(self, merged, top_n=30, save=None):
-        df_plot = (
-            merged
-            .sort_values("enrichment_top_vs_overall", ascending=False)
-            .head(top_n)
-            .copy()
-        )
+        df_plot = (merged.sort_values("enrichment_top_vs_overall", ascending=False).head(top_n).copy())
 
-        custom_colorscale = [
-            (0.0, "#f1c40f"),  # jaune
-            (0.5, "#a3cb38"),  # jaune-vert
-            (1.0, "#27ae60")   # vert
-        ]
+        custom_colorscale = [(0.0, "#f1c40f"), (0.5, "#a3cb38"), (1.0, "#27ae60")]
 
         fig = px.scatter(
             df_plot,
@@ -946,11 +800,7 @@ class CaptionTopicClusterer:
             )
         )
 
-        fig.update_yaxes(
-            zeroline=True,
-            zerolinewidth=1,
-            zerolinecolor="gray"
-        )
+        fig.update_yaxes(zeroline=True, zerolinewidth=1, zerolinecolor="gray")
 
         if save:
             fig.write_html(save)
@@ -964,23 +814,23 @@ class CaptionTopicClusterer:
 
         df_plot = (merged.sort_values("enrichment_top_vs_overall", ascending=False).head(top_n).copy())
 
-        x = np.arange(len(df_plot))  # positions numériques pour les topics
+        x = np.arange(len(df_plot))
         y = df_plot["overall_count"]
-        sizes = df_plot["top_count"] * 20  # facteur d’échelle à ajuster
+        sizes = df_plot["top_count"] * 20
         colors = df_plot["enrichment_top_vs_overall"]
 
         fig = plt.figure(figsize=(14, 9))
 
         scatter = plt.scatter(x, y, s=sizes, c=colors, cmap="YlGn", edgecolors="black", linewidths=0.8, alpha=0.9)
         plt.yscale("log")
-        # Axe X : topics triés
+        # Axis X : ordered topics
         plt.xticks(ticks=x, labels=df_plot["aggregated_topic"], rotation=45, ha="right")
 
         plt.xlabel("Topic")
         plt.ylabel("Number of captions in topic")
         plt.title("Topic enrichment vs number of captions (sorted by enrichment)")
 
-        # Colorbar = enrichissement
+        # Colorbar = enrichichment
         cbar = plt.colorbar(scatter)
         cbar.set_label("Enrichment (top / global)")
 
@@ -995,21 +845,14 @@ class CaptionTopicClusterer:
 
     #proportion above threshold
     def plot_proportion_above_threshold(self, df_data, threshold=1.5, save=None):
-        """
-        Barplot interactif de la proportion de captions au-dessus d'un seuil par topic.
-        """
+
         df = df_data.copy()
         df["above"] = (df[self.fun_metric] >= threshold).astype(int)
 
-        prop = (
-            df.groupby("aggregated_topic")["above"]
-            .agg(["mean", "sum", "count"])
-            .reset_index()
-        )
+        prop = (df.groupby("aggregated_topic")["above"].agg(["mean", "sum", "count"]).reset_index())
         prop.columns = ["aggregated_topic", "prop_above", "n_above", "total"]
         prop = prop.sort_values("prop_above", ascending=False)
 
-        # Création de la figure
         fig = go.Figure(
             go.Bar(
                 x=prop["aggregated_topic"],
@@ -1029,7 +872,7 @@ class CaptionTopicClusterer:
             )
         )
 
-        # Mise en forme
+        # Layout
         fig.update_xaxes(tickangle=-45)
         fig.update_yaxes(title_text="Proportion")
 
@@ -1040,9 +883,7 @@ class CaptionTopicClusterer:
                     f"<sub>{len(df)} total captions • "
                     f"{df['above'].sum()} above threshold "
                     f"({df['above'].mean():.1%})</sub>"
-                ),
-                x=0.5
-            ),
+                ), x=0.5),
             height=550,
             showlegend=False,
             template="plotly_white"
@@ -1053,32 +894,26 @@ class CaptionTopicClusterer:
 
 
     def plot_proportion_above_threshold_with_winners(self, df_data, win_topic_crowd, win_topic_tny, threshold=1.5, save=None):
-        """
-        Barplot interactif de la proportion de captions au-dessus d'un seuil par topic.
-        """
+
         df = df_data.copy()
         df["above"] = (df[self.fun_metric] >= threshold).astype(int)
 
-        prop = (
-            df.groupby("aggregated_topic")["above"]
-            .agg(["mean", "sum", "count"])
-            .reset_index()
-        )
+        prop = df.groupby("aggregated_topic")["above"].agg(["mean", "sum", "count"]).reset_index()
         prop.columns = ["aggregated_topic", "prop_above", "n_above", "total"]
         prop = prop.sort_values("prop_above", ascending=False)
 
 
         def topic_color(topic):
             if topic == win_topic_tny:
-                return "#1f77b4"   # bleu: TNY
+                return "#1f77b4"
             elif topic == win_topic_crowd:
-                return "#ff7f0e"   # orange: crowd
+                return "#ff7f0e"
             else:
-                return "#d3e497"   # gris: autres
+                return "#d3e497"
             
         bar_colors = [topic_color(t) for t in prop["aggregated_topic"]]
 
-        # Création de la figure
+        # Figure
         fig = go.Figure(
             go.Bar(
                 x=prop["aggregated_topic"],
@@ -1120,7 +955,7 @@ class CaptionTopicClusterer:
                 )
 
 
-        # Mise en forme
+        # Layout
         fig.update_xaxes(tickangle=-45)
         fig.update_yaxes(title_text="Proportion")
 
@@ -1131,9 +966,7 @@ class CaptionTopicClusterer:
                     f"<sub>{len(df)} total captions • "
                     f"{df['above'].sum()} above threshold "
                     f"({df['above'].mean():.1%})</sub>"
-                ),
-                x=0.5
-            ),
+                ),x=0.5),
             height=550,
             showlegend=False,
             template="plotly_white"
@@ -1145,22 +978,19 @@ class CaptionTopicClusterer:
 
 
     def plot_proportion_above_threshold_with_winners_plt(self, df_data, win_topic_crowd, win_topic_tny, threshold=1.5, save=None):
+        
         df = df_data.copy()
         df["above"] = (df[self.fun_metric] >= threshold).astype(int)
 
-        prop = (
-            df.groupby("aggregated_topic")["above"]
-            .agg(["mean", "sum", "count"])
-            .reset_index()
-        )
+        prop = df.groupby("aggregated_topic")["above"].agg(["mean", "sum", "count"]).reset_index()
         prop.columns = ["aggregated_topic", "prop_above", "n_above", "total"]
         prop = prop.sort_values("prop_above", ascending=False)
 
         def topic_color(topic):
             if topic == win_topic_tny:
-                return "#1f77b4"   # bleu TNY
+                return "#1f77b4"
             elif topic == win_topic_crowd:
-                return "#ff7f0e"   # orange Crowd
+                return "#ff7f0e"
             else:
                 return "#97cee4"
 
@@ -1171,26 +1001,13 @@ class CaptionTopicClusterer:
 
         fig = plt.figure(figsize=(12, 6))
 
-        bars = plt.bar(
-            x,
-            y,
-            color=colors,
-            edgecolor="black",
-            linewidth=0.8
-        )
+        bars = plt.bar(x, y, color=colors, edgecolor="black", linewidth=0.8)
 
-        # Labels en pourcentage au-dessus des barres
+        # Labels above bars
         for bar, val in zip(bars, y):
-            plt.text(
-                bar.get_x() + bar.get_width() / 2,
-                val + 0.005,
-                f"{val:.1%}",
-                ha="center",
-                va="bottom",
-                fontsize=9
-            )
+            plt.text(bar.get_x() + bar.get_width() / 2, val + 0.005, f"{val:.1%}", ha="center", va="bottom", fontsize=9)
 
-        # Annotations des winners
+        # Winners annotations
         y_offset = 0.02
         for topic, label, color in [
             (win_topic_tny, "Winner (TNY)", "#1f77b4"),
@@ -1211,13 +1028,8 @@ class CaptionTopicClusterer:
                     color=color
                 )
 
-        # Axes
-        plt.xticks(
-            x,
-            prop["aggregated_topic"],
-            rotation=45,
-            ha="right"
-        )
+        # Layout
+        plt.xticks(x, prop["aggregated_topic"], rotation=45, ha="right")
         plt.ylabel("Proportion")
 
         title = (
@@ -1240,7 +1052,7 @@ class CaptionTopicClusterer:
 
 
     # ---------------------------------------------------------
-    # Sauvegarde and load
+    # Save and load
     # ---------------------------------------------------------
 
     @staticmethod
