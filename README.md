@@ -107,7 +107,7 @@ URL : https://adacore42-website2025.streamlit.app/
  - Axis 1: Katia & Cyrielle
  - Axis 2: Andras
  - Axis 3: Amelie
- - Data preprocessing & website: Dominic
+ - Data preprocessing & website: Dominic & Katia
  - Datastory : All members wrote the part of the website that corresponds to their analysis. 
 
 ## **Sources**
