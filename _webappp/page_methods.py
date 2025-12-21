@@ -10,6 +10,30 @@ from src.utils.web_app_plots.app_plots import PWA
 from _webappp.assets.app_definitions import AppParams as AP
 from _webappp.assets.app_definitions import *
 from _webappp.assets.app_design import *
+
+
+
+st.markdown(
+    """
+    <style>
+    /* Justify ALL markdown text in Streamlit */
+    div[data-testid="stMarkdown"] p,
+    div[data-testid="stMarkdown"] li {
+        text-align: justify !important;
+        text-justify: inter-word !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
+
+
+
+
+
 st.title("Methods")
 
 """

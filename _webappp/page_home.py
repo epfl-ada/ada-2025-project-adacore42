@@ -3,6 +3,25 @@ from _webappp.assets.app_definitions import HomePageAxis_C
 from _webappp.assets.app_content import PagesData as PD
 from _webappp.assets.app_definitions import AppParams as AP
 from _webappp.assets.app_design import *
+
+
+
+st.markdown(
+    """
+    <style>
+    /* Justify ALL markdown text in Streamlit */
+    div[data-testid="stMarkdown"] p,
+    div[data-testid="stMarkdown"] li {
+        text-align: justify !important;
+        text-justify: inter-word !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 # Definition style button page 
 # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––

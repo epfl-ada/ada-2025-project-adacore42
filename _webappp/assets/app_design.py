@@ -1,29 +1,41 @@
 import streamlit as st
 
+# st.markdown(
+#     """
+#     <style>
+#     p {
+#         text-align: justify;
+#         text-justify: inter-word;
+#     }
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )
+
+# st.markdown(
+#     """
+#     <style>
+#     li {
+#         text-align: justify;
+#         text-justify: inter-word;
+#     }
+#     </style>
+#     """,
+#     unsafe_allow_html=True
+# )
 st.markdown(
     """
     <style>
-    p {
-        text-align: justify;
-        text-justify: inter-word;
+    /* Justify ALL markdown text in Streamlit */
+    div[data-testid="stMarkdown"] p,
+    div[data-testid="stMarkdown"] li {
+        text-align: justify !important;
+        text-justify: inter-word !important;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
-
-st.markdown(
-    """
-    <style>
-    li {
-        text-align: justify;
-        text-justify: inter-word;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 
 st.markdown(
     """

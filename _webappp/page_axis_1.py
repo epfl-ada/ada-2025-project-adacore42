@@ -22,6 +22,21 @@ plots = PWA.load_plots()
 
 
 
+st.markdown(
+    """
+    <style>
+    /* Justify ALL markdown text in Streamlit */
+    div[data-testid="stMarkdown"] p,
+    div[data-testid="stMarkdown"] li {
+        text-align: justify !important;
+        text-justify: inter-word !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 
 
 
@@ -114,77 +129,162 @@ st.divider()
 
 st.header("Let's study what makes captions funny")
 
+#––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Version Tabs
+#––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# """
+# Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
+# Could it be a general pattern? 
+# """
 
-"""
-Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
-Could it be a general pattern? 
-"""
 
 
 
+# def additionalComponent_1():  
+#     st.write(
+#         """
+#         Let’s find out by comparing the funniest and least funny captions, using the 
+#         extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each.
 
-def additionalComponent_1():  
-    st.write(
-        """
-        Let’s find out by comparing the funniest and least funny captions, using the 
-        extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each.
+#         We compared several features such as length and punctuation and assessed the statistical significance of the results using a Student’s t-test.
 
-        We compared several features such as length and punctuation and assessed the statistical significance of the results using a Student’s t-test.
+#         The results show that only subjectivity is significantly different, with funny captions being more objective.
+#         For the other features, the distributions are quite similar, although more variability is found in polarity for the not-funny group.
 
-        The results show that only subjectivity is significantly different, with funny captions being more objective.
-        For the other features, the distributions are quite similar, although more variability is found in polarity for the not-funny group.
-
-        Overall, there are no clear differences in word count or punctuation.
+#         Overall, there are no clear differences in word count or punctuation.
             
 
-        Was our first intuition wrong? Well maybe not totally, because when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
-        suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends. So let's approach the task with another angle.
-        """
-    )
+#         Was our first intuition wrong? Well maybe not totally, because when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
+#         suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends. So let's approach the task with another angle.
+#         """
+#     )
 
 
-def additionalComponent_2():
-    st.write(
-        """
-        We will now compare the best and worth captions for each contest!
-        This give us a dataset with 384 captions for each group.
+# def additionalComponent_2():
+#     st.write(
+#         """
+#         We will now compare the best and worth captions for each contest!
+#         This give us a dataset with 384 captions for each group.
 
-        The results now show a significant difference between the two groups in terms of word count and punctuation usage. The least funny captions tend to be longer and contain more punctuation.
+#         The results now show a significant difference between the two groups in terms of word count and punctuation usage. The least funny captions tend to be longer and contain more punctuation.
 
-        Subjectivity, on the other hand, is no longer significantly different between the groups, and sentiment polarity follows very similar distributions. This suggests that using more positive or negative words does not, by itself, influence the perception of funniness.
+#         Subjectivity, on the other hand, is no longer significantly different between the groups, and sentiment polarity follows very similar distributions. This suggests that using more positive or negative words does not, by itself, influence the perception of funniness.
 
-        A first conclusion we can draw here is that it appear there is a difference in the surface features of funnier cpations and not funny captions. Especially in the number of words and number of punctiations.
-        We can now turn to another question : what are these captions actually talking about?
-        """
-    )
+#         A first conclusion we can draw here is that it appear there is a difference in the surface features of funnier cpations and not funny captions. Especially in the number of words and number of punctiations.
+#         We can now turn to another question : what are these captions actually talking about?
+#         """
+#     )
 
 
 
-TwoTabGraph_C(  
-    label_1="Angle",  
-    path_1="_webappp/assets/graph/plotfunny_vs_not_funny_2.html",
-    label_2="An other angle",
-    path_2="_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
-    center_ratio=CENTER_RATIO+50,
-    isImage=False,
-    height=600,
-    additionalComponent_1=additionalComponent_1,
-    additionalComponent_2=additionalComponent_2
+# TwoTabGraph_C(  
+#     label_1="Angle",  
+#     path_1="_webappp/assets/graph/plotfunny_vs_not_funny_2.html",
+#     label_2="An other angle",
+#     path_2="_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
+#     center_ratio=CENTER_RATIO+50,
+#     isImage=False,
+#     height=600,
+#     additionalComponent_1=additionalComponent_1,
+#     additionalComponent_2=additionalComponent_2
+# )
+
+
+
+
+# st.divider()
+
+
+#––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+# Version Tabs
+#––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+
+
+
+st.markdown(
+    """
+    Looking back at the two captions, the first noticeable difference between them is length: the funnier one is shorter.
+    Could it be a general pattern? 
+    """
 )
+col1, col2 = st.columns([1, 2])
 
+with col1:
+    st.markdown(
+        """
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            Let’s find out by comparing the funniest and least funny captions, using the 
+            extreme quantiles of our funny score distribution (0.9999 and 0.0001). This gives us two balanced groups of about 230 captions each.
+            <br><br>
+            We compared several features such as length and punctuation and assessed the statistical significance of the results using a Student’s t-test.
+            <br><br>
+            The results show that only subjectivity is significantly different, with funny captions being more objective.
+            For the other features, the distributions are quite similar, although more variability is found in polarity for the not-funny group.
+            <br><br>
+            Overall, there are no clear differences in word count or punctuation.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
 
+with col2:
+    plot_html(
+        r"_webappp/assets/graph/plotfunny_vs_not_funny_2.html",
+        height=600
+    )
+
+st.markdown(
+    """
+    Was our first intuition wrong? Well maybe not totally, because when we look at the composition of our not funny group we discover that all captions comes from only four contest, very close in time, 
+    suggesting that our results may be bias toward the specific themes or styles of these contests rather than reflecting general trends. So let's approach the task with another angle.
+    """
+)
+col1, col2 = st.columns([1, 2])
+
+with col1:
+    st.markdown(
+        """
+        <div style="
+            display: flex;
+            align-items: center;
+            height: 600px;
+        ">
+            <p style="font-size:16px; line-height:1.6;">
+            We will now compare the best and worth captions for each contest!
+            This give us a dataset with 384 captions for each group.
+            <br><br>
+            The results now show a significant difference between the two groups in terms of word count and punctuation usage. The least funny captions tend to be longer and contain more punctuation.
+            <br><br>
+            Subjectivity, on the other hand, is no longer significantly different between the groups, and sentiment polarity follows very similar distributions. This suggests that using more positive or negative words does not, by itself, influence the perception of funniness.
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+        text_alignment="justify"
+    )
+
+with col2:
+    plot_html(
+        r"_webappp/assets/graph/plotbest_vs_worst_captions_2.html",
+        height=600
+    )
+
+st.markdown(
+    """
+    A first conclusion we can draw here is that it appear there is a difference in the surface features of funnier cpations and not funny captions. Especially in the number of words and number of punctiations.
+    We can now turn to another question : what are these captions actually talking about?
+    """)
 
 
 st.divider()
-
-
-
-
-
-
-
-
-
 
 
 
@@ -230,8 +330,7 @@ with st.expander("What is the difference between crowd-sourced top-rated caption
     st.write(
         """
         There are two winning captions: one chosen by the public vote (referenced in <span style="color: orange;">orange</span>), and the other selected by the The New Yorker editorial team (referenced in <span style="color: blue;">blue</span>).
-        """,
-        unsafe_allow_html=True
+        """
     )
 
 
@@ -462,8 +561,9 @@ This graph shows distribution of standardized humor scores for each topic identi
 - KDE (Kernel Density Estimation) curve: indicates the relative probability that a score will take a certain value. The higher the curve, the more likely it is that the scores will fall within that range. KDE allows us to see the overall shape of the distribution, regardless of the exact number of measurements.
 """
 
-plot_jpg("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
-
+col_l, col_ccc, col_r = st.columns([1,8, 1])
+with col_ccc:
+    st.image("_webappp/assets/graph/distribution_funnyscore_kde_topics_289.jpg")
 
 """   
 All topic distributions observed (except for one) show significant positive asymmetry (statistically significant skewness, p < 0.05), which means that scores tend to be concentrated at lower values with awith a long right tail of very funny captions. This results in a medians relatively similar across topics, and escpecially low (around 25/100). This distribution arises from the fact that we aggregated together all topics from the cartoon, and there is a lot with low funny score values, with only a few of outstanding funny ones.
